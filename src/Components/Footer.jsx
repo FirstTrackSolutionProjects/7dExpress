@@ -1,12 +1,12 @@
 const Footer = () =>{
     return(
         <>
-            <footer className=" font-bold text-gray-700 py-8">
+            <footer className=" bg-sky-950 font-bold text-gray-300 py-8">
       <div className="container mx-auto px-4">
-        <div className="flex flex-wrap justify-between">
+        <div className="flex flex-wrap justify-evenly">
           {/* Company Info */}
-          <div className="w-full md:w-1/3 mb-6 md:mb-0">
-            <h2 className="text-xl font-bold mb-4">7D EXPRESS</h2>
+          <div className="w-full md:w-1/3 mb-6 md:mb-0 justify-evenly">
+            <h2 className="text-xl font-bold mb-4">7D XPRESS</h2>
             <p>Delivering excellence in logistics solutions worldwide. Your reliable partner for international and domestic shipping services.</p>
           </div>
           
@@ -31,7 +31,7 @@ const Footer = () =>{
         </div>
 
         <div className="mt-8 text-center">
-          <p>&copy; {new Date().getFullYear()} First Track Solution Technologies. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()}  First Track Solution Technologies. All rights reserved.</p>
         </div>
       </div>
     </footer>

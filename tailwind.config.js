@@ -7,7 +7,8 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        'custom-bg': "url('/src/assets/images/bg2.jpg')",
+        'bg-header': "url('/src/assets/images/rainbow.jpg')",
+        'bg-landing': "url('/src/assets/images/landing.jpg')",
       },
     },
   },

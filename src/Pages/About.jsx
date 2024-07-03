@@ -2,26 +2,26 @@ const teamMembers = [
     {
       name: 'Secure Delivery',
       role: '',
-      imageUrl: 'https://via.placeholder.com/150',
+      imageUrl: "/src/assets/images/bg1.jpg",
       description: 'Secure delivery and easy payments.',
     },
     {
       name: 'Shipping',
       role: '',
-      imageUrl: 'https://via.placeholder.com/150',
+      imageUrl: "/src/assets/images/bg2.jpg",
       description: 'One stop solution for all shipping needs.',
     },
     {
       name: 'Easy assistance',
       role: '',
-      imageUrl: 'https://via.placeholder.com/150',
+      imageUrl: "/src/assets/images/bg1.jpg",
       description: 'User Friendly Client Panel',
     },
   ];
   
   const About = () => {
     return (
-      <div className="bg-gray-100 py-12">
+      <div className="bg-transparent py-12">
         <div className="container mx-auto px-4">
           <h1 className="text-4xl font-bold text-center mb-8">About Us</h1>
           <p className="text-center mb-12 text-lg">

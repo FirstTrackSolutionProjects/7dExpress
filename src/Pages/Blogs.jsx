@@ -6,21 +6,21 @@ const blogPosts = [
     date: 'July 5, 2024',
     author: 'Jane Doe',
     summary: 'Discover the top trends shaping the future of logistics, from automation to sustainability.',
-    imageUrl: "/src/assets/images/image1.jpg",
+    imageUrl: "images/image1.jpg",
   },
   {
     title: 'How Technology is Revolutionizing Supply Chain Management',
     date: 'June 20, 2024',
     author: 'John Smith',
     summary: 'Learn how the latest technologies are transforming supply chain management for businesses.',
-    imageUrl: "/src/assets/images/image1.jpg",
+    imageUrl: "images/image1.jpg",
   },
   {
     title: 'Best Practices for Efficient Warehouse Operations',
     date: 'June 10, 2024',
     author: 'Emily Johnson',
     summary: 'Explore the best practices for improving efficiency and productivity in warehouse operations.',
-    imageUrl: "/src/assets/images/image1.jpg",
+    imageUrl: "images/image1.jpg",
   },
   // Add more blog posts as needed
 ];

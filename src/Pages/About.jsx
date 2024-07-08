@@ -2,27 +2,27 @@ const teamMembers = [
     {
       name: 'Secure Delivery',
       role: '',
-      imageUrl: "/src/assets/images/bg1.jpg",
+      imageUrl: "/public/bg1.jpg",
       description: 'Secure delivery and easy payments.',
     },
     {
       name: 'Shipping',
       role: '',
-      imageUrl: "/src/assets/images/bg2.jpg",
+      imageUrl: "/public/bg2.jpg",
       description: 'One stop solution for all shipping needs.',
     },
     {
       name: 'Easy assistance',
       role: '',
-      imageUrl: "/src/assets/images/bg1.jpg",
+      imageUrl: "/public/bg1.jpg",
       description: 'User Friendly Client Panel',
     },
   ];
   
   const About = () => {
     return (
-      <div className="bg-bg-about bg-cover py-12">
-        <div className="container bg-white rounded-md py-6 mx-auto px-4">
+      <div className="bg-bg-about bg-cover p-6 md:py-12">
+        <div className="container bg-white rounded-md py-6 mx-autopx-4">
           <div className="text-4xl font-bold text-center m-5">Who We Are</div>
           <div className="text-xl text-left m-5">
             Welcome to 7D EXPRESS, your reliable partner in efficient and secure delivery services. Our mission is to provide seamless, dependable, and cost-effective shipping solutions to meet all your logistics needs.
@@ -38,7 +38,7 @@ const teamMembers = [
 
           <div className="container bg-white rounded-md mt-24 mx-auto py-5 px-4">
           <div className="text-4xl font-bold text-center ">Why 7D Express</div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 md:gap-8">
             {teamMembers.map((member, index) => (
               <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden my-10 mx-5 ">
                 <img className="w-full h-48 object-cover" src={member.imageUrl} alt={member.name} />

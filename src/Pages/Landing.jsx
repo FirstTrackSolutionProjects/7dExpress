@@ -19,7 +19,7 @@ const Landing = () => {
         <div class="grid grid-rows-2 md:grid-rows-1 md:grid-cols-2 gap-4">
 
           <div className=" flex flex-col justify-center items-center ">
-            <img src="/public/logo1.png" alt="" className='lg:w-[200px] lg:h-[200px]  w-[160px] h-[120px] mb-5'></img>
+            <img src="images/logo1.png" alt="" className='lg:w-[200px] lg:h-[200px]  w-[160px] h-[120px] mb-5'></img>
             <div className="text-xl md:text-4xl italic font-bold text-sky-950 hover:text-sky-800">7D-On Time, Every Time</div>
             
             {/*<h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-red-500 to-yellow-500">
@@ -42,9 +42,9 @@ const Landing = () => {
     </div>
     </div>
     <div className="grid grid-cols-1 md:grid-cols-3 md:gap-8 my-4 ml-4 md:my-10 md:ml-24 ">
-                <ReasonCard className="mt-2"  title={"Pan India Presence"} icon={'/public/india.png'}/>
-                <ReasonCard  title={"Multimodal Logisitics Solution"} icon={'/public/image2.png'}/>
-                <ReasonCard  title={"Door to Door pick up and delivery"} icon={'/public/image3.png'}/>
+                <ReasonCard className="mt-2"  title={"Pan India Presence"} icon={'images/india.png'}/>
+                <ReasonCard  title={"Multimodal Logisitics Solution"} icon={'images/image2.png'}/>
+                <ReasonCard  title={"Door to Door pick up and delivery"} icon={'images/image3.png'}/>
             </div>
     <div className="bg-slate-200 p-4">
     <Pricing/>

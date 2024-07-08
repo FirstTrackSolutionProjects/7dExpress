@@ -15,12 +15,12 @@ const Partner = () => {
   };
 
   const images = [
-    "/public/images/partners/bluedart.jpeg",
-    "/public/images/partners/delhivery.jpeg",
-    "/public/images/partners/dhl.jpeg",
-    "/public/images/partners/Ecom.png",
-    "/public/images/partners/gati.png",
-    "/public/images/partners/xpress.jpeg",
+    "images/partners/bluedart.jpeg",
+    "images/partners/delhivery.jpeg",
+    "images/partners/dhl.jpeg",
+    "images/partners/Ecom.png",
+    "images/partners/gati.png",
+    "images/partners/xpress.jpeg",
   ];
 
   return (

@@ -2,19 +2,19 @@ const teamMembers = [
     {
       name: 'Secure Delivery',
       role: '',
-      imageUrl: "/public/bg1.jpg",
+      imageUrl: "images/bg1.jpg",
       description: 'Secure delivery and easy payments.',
     },
     {
       name: 'Shipping',
       role: '',
-      imageUrl: "/public/bg2.jpg",
+      imageUrl: "images/bg2.jpg",
       description: 'One stop solution for all shipping needs.',
     },
     {
       name: 'Easy assistance',
       role: '',
-      imageUrl: "/public/bg1.jpg",
+      imageUrl: "images/bg1.jpg",
       description: 'User Friendly Client Panel',
     },
   ];

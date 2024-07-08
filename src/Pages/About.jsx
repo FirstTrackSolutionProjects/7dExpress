@@ -21,16 +21,26 @@ const teamMembers = [
   
   const About = () => {
     return (
-      <div className="bg-transparent py-12">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold text-center mb-8">About Us</h1>
-          <p className="text-center mb-12 text-lg">
-            We are a leading logistics company dedicated to providing reliable and efficient shipping solutions both domestically and internationally.
-          </p>
-  
+      <div className="bg-bg-about bg-cover py-12">
+        <div className="container bg-white rounded-md py-6 mx-auto px-4">
+          <div className="text-4xl font-bold text-center m-5">Who We Are</div>
+          <div className="text-xl text-left m-5">
+            Welcome to 7D EXPRESS, your reliable partner in efficient and secure delivery services. Our mission is to provide seamless, dependable, and cost-effective shipping solutions to meet all your logistics needs.
+            We are a leading logistics company dedicated to providing reliable and efficient shipping solutions all over nation.
+          </div>
+          <div className="text-xl text-left m-5">
+          7D EXPRESS was born out of a passion for enhancing the delivery experience. 
+          Over the years, we have grown from a small local courier service to a nationwide logistics provider. Our dedication to innovation, customer satisfaction, and continuous improvement has been the driving force behind our expansion and success.
+        </div>
+          </div>
+
+
+
+          <div className="container bg-white rounded-md mt-24 mx-auto py-5 px-4">
+          <div className="text-4xl font-bold text-center ">Why 7D Express</div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {teamMembers.map((member, index) => (
-              <div key={index} className="bg-white shadow-md rounded-lg overflow-hidden">
+              <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden my-10 mx-5 ">
                 <img className="w-full h-48 object-cover" src={member.imageUrl} alt={member.name} />
                 <div className="p-6">
                   <h2 className="text-2xl font-bold mb-2">{member.name}</h2>
@@ -40,7 +50,13 @@ const teamMembers = [
               </div>
             ))}
           </div>
-        </div>
+          </div>
+
+
+
+          
+
+
       </div>
     );
 }

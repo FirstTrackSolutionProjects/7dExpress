@@ -4,11 +4,11 @@ import React from 'react';
 
 const Pricing = () => {
   return (
-    <div className="bg-slate-200">
-    <div className="mx-2 md:mx-32  ">
+    
+    <div className="mx-3 md:mx-44 ">
     <div className="container">
-    <div className="text-sky-950 text-[20px] md:text-[25px] font-bold items-center justify-center text-center mb-4">Calculate Your Shipping Price</div>
-      <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div className="text-sky-950 text-2xl md:text-3xl items-center justify-center text-center mb-4">Calculate Your Shipping Price</div>
+      <form className="bg-slate-400 shadow-md rounded px-6 md:px-10 pt-6 pb-8 mb-4">
         
         {/* First Row */}
         <div className="mb-4 flex flex-wrap -mx-3">
@@ -112,11 +112,11 @@ const Pricing = () => {
           </div>
           <div className="w-full md:w-1/2 px-3">
           
-            <div className="flex-1 md:mx-2 mb-2 min-w-[300px] flex">
+            <div className="flex-1 md:mx-2 mb-2 min-w-[250px] flex">
             <div className="flex-1 md:mx-2 mb-2 min-w-[90px] space-y-2">
               <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="length">L (in cm)</label>
               <input
-                className="shadow  border rounded w-[70px] py-2 px-3 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow  border rounded w-[70px] md:w-36 py-2 px-2 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="text"
                 id="length"
                 name="length"
@@ -126,7 +126,7 @@ const Pricing = () => {
             <div className="flex-1 md:mx-2 mb-2 min-w-[90px] space-y-2">
               <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="breadth">B (in cm)</label>
               <input
-                className="shadow  border rounded w-[70px] py-2 px-3 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow  border rounded w-[70px] md:w-36 py-2 px-2 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="text"
                 id="breadth"
                 name="breadth"
@@ -136,7 +136,7 @@ const Pricing = () => {
             <div className="flex-1 md:mx-2 mb-2 min-w-[90px] space-y-2">
               <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="height">H (in cm)</label>
               <input
-                className="shadow  border rounded w-[70px] py-2 px-3 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow  border rounded w-[70px] md:w-36 py-2 px-2 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="text"
                 id="height"
                 name="height"
@@ -160,7 +160,7 @@ const Pricing = () => {
       </form>
     </div>
     </div>
-    </div>
+    
   );
 }
 

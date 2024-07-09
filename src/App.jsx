@@ -14,11 +14,12 @@ import PrivacyPolicy from './Components/PrivacyPolicy'
 import Blogs from './Pages/Blogs'
 import TermsOfUse from './Components/TermsOfUse'
 import SignupForm from './Pages/SignupForm'
+import HeaderTemp from './Components/HeaderTemp'
 
 const App = () => {
   return (
     <div className=''>
-      <Header/>
+      <HeaderTemp/>
       <Routes>
         <Route path='/' element={<Landing/>}></Route>
         <Route path='/login' element={<Login/>} />

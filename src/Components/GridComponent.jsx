@@ -8,13 +8,15 @@ const GridComponent = () => {
                 <div className="text-3xl text-sky-950">Industry</div>
                 <div className="text-6xl text-yellow-500">Expertise</div>
             </div>
-            <div className="grid grid-cols-2 gap-0.5">
-                <div className="flex items-center justify-center h-60 bg-blue-500 text-white">
-                    Item 1
+            <div className="grid grid-cols-2 gap-0 mt-5 md:-mt-5">
+                <div className="flex items-center justify-center h-40 bg-blue-500 text-white">
+                    <img src="images/bg1.jpg" alt='img' className="h-40 object-cover"/>
                 </div>
-                <div className="flex items-center justify-center h-60 bg-blue-500 text-white">Item 2</div>
-                <div className="flex items-center justify-center h-60 bg-blue-500 text-white">Item 3</div>
-                <div className="flex items-center justify-center h-60 bg-blue-500 text-white">Item 4</div>
+                <div className="flex items-center justify-center h-40 bg-blue-500 text-white">Item 2</div>
+                <div className="flex items-center justify-center h-40 bg-blue-500 text-white">Item 3</div>
+                <div className="flex items-center justify-center h-40 bg-blue-500 text-white">
+                <img src="images/bg1.jpg" alt='img' className="h-40 object-cover"/>
+                </div>
             </div>
 
         </div>

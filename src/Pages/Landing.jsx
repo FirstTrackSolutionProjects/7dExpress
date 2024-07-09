@@ -41,14 +41,14 @@ const Landing = () => {
 
     </div>
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-3 md:gap-8 my-4 ml-4 md:my-10 md:ml-24 ">
-                <ReasonCard className="mt-2"  title={"Pan India Presence"} icon={'images/india.png'}/>
+    <div className="grid grid-cols-1 md:grid-cols-3 md:gap-8 my-4 ml-4 md:my-10 md:ml-24 mb-8">
+                <ReasonCard className="mr-2"  title={"Pan India Presence"} icon={'images/india.png'}/>
                 <ReasonCard  title={"Multimodal Logisitics Solution"} icon={'images/image2.png'}/>
                 <ReasonCard  title={"Door to Door pick up and delivery"} icon={'images/image3.png'}/>
             </div>
-    <div className="bg-slate-200 p-4">
+    
     <Pricing/>
-    </div>
+    
     <GridComponent/>
    
     <Partner/>

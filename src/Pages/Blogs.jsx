@@ -6,28 +6,28 @@ const blogPosts = [
     date: 'July 5, 2024',
     author: 'Jane Doe',
     summary: 'Discover the top trends shaping the future of logistics, from automation to sustainability.',
-    imageUrl: "/src/assets/images/image1.jpg",
+    imageUrl: "images/blog1.jpg",
   },
   {
     title: 'How Technology is Revolutionizing Supply Chain Management',
     date: 'June 20, 2024',
     author: 'John Smith',
     summary: 'Learn how the latest technologies are transforming supply chain management for businesses.',
-    imageUrl: "/src/assets/images/image1.jpg",
+    imageUrl: "images/blog2.jpg",
   },
   {
     title: 'Best Practices for Efficient Warehouse Operations',
     date: 'June 10, 2024',
     author: 'Emily Johnson',
     summary: 'Explore the best practices for improving efficiency and productivity in warehouse operations.',
-    imageUrl: "/src/assets/images/image1.jpg",
+    imageUrl: "images/blog3.jpg",
   },
   // Add more blog posts as needed
 ];
 
 const BlogCard = ({ post }) => {
   return (
-    <div className="bg-cyan-500 bg-opacity-20 rounded-lg shadow-md overflow-hidden">
+    <div className=" rounded-lg shadow-md overflow-hidden ">
       <img src={post.imageUrl} alt={post.title} className="w-full h-48 object-cover" />
       <div className="p-4">
         <h2 className="text-xl font-bold mb-2">{post.title}</h2>

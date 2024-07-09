@@ -1,7 +1,6 @@
 import React from 'react'
 
 import {Routes, Route} from 'react-router-dom'
-import Header from './Components/Header'
 import Landing from './Pages/Landing'
 import Contact from './Pages/Contact'
 import About from './Pages/About'
@@ -14,11 +13,12 @@ import PrivacyPolicy from './Components/PrivacyPolicy'
 import Blogs from './Pages/Blogs'
 import TermsOfUse from './Components/TermsOfUse'
 import SignupForm from './Pages/SignupForm'
+import HeaderTemp from './Components/HeaderTemp'
 
 const App = () => {
   return (
     <div className=''>
-      <Header/>
+      <HeaderTemp/>
       <Routes>
         <Route path='/' element={<Landing/>}></Route>
         <Route path='/login' element={<Login/>} />
@@ -33,7 +33,6 @@ const App = () => {
         <Route path='/privacy' element={<PrivacyPolicy/>}></Route>
       </Routes>
       <Footer/>
-      
     </div>
   )
 }

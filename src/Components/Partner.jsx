@@ -24,7 +24,7 @@ const Partner = () => {
   ];
 
   return (
-    <div className="  p-4 my-4">
+    <div className="w-full p-4 my-4">
       <div className="text-center mb-6">
         <h2 className="text-2xl md:text-3xl text-sky-950">Our Delivery Partners</h2>
         {/*<p className="text-gray-600">Here are some images sliding automatically.</p>*/}

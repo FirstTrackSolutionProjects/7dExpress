@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-
 const faqs = [
   {
     question: 'What is your return policy?',
@@ -14,7 +13,6 @@ const faqs = [
     question: 'Do you offer international shipping?',
     answer: 'Yes, we offer international shipping to most countries. Shipping fees may vary based on the destination.'
   },
-  // Add more FAQs as needed
 ];
 
 const FAQ = ({ faq, index, toggleFAQ }) => {

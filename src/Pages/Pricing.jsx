@@ -17,7 +17,7 @@ const Pricing = () => {
               Shipping Method
             </label>
             <select
-              className="block w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+              className="block w-full bg-white border border-gray-400 hover:border-gray-500 md:px-2 lg:px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
               id="dropdown1"
             >
               <option value="">Select shipping method</option>
@@ -87,7 +87,7 @@ const Pricing = () => {
               Payment Mode
             </label>
             <select
-              className="block  w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+              className="block  w-full bg-white border border-gray-400 hover:border-gray-500 md:px-2 lg:px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
               id="payment"
             >
               <option value="">Select a payment option</option>
@@ -112,31 +112,31 @@ const Pricing = () => {
           </div>
           <div className="w-full md:w-1/2 px-3">
           
-            <div className="flex-1 md:mx-2 mb-2 min-w-[250px] flex">
-            <div className="flex-1 md:mx-2 mb-2 min-w-[90px] space-y-2">
+            <div className="flex-1  mb-2 lg:min-w-[250px] flex">
+            <div className="flex-1 lg:mx-2 mb-2 lg:min-w-[90px] space-y-2">
               <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="length">L (in cm)</label>
               <input
-                className="shadow  border rounded w-[70px] md:w-36 py-2 px-2 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow  border rounded w-[70px] md:w-16 lg:w-24 py-2 px-2 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="text"
                 id="length"
                 name="length"
                 placeholder="Ex. 2.5"
               />
             </div>
-            <div className="flex-1 md:mx-2 mb-2 min-w-[90px] space-y-2">
+            <div className="flex-1 lg:mx-2 mb-2 lg:min-w-[90px] space-y-2">
               <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="breadth">B (in cm)</label>
               <input
-                className="shadow  border rounded w-[70px] md:w-36 py-2 px-2 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow  border rounded w-[70px] md:w-16 lg:w-24 py-2 px-2 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="text"
                 id="breadth"
                 name="breadth"
                 placeholder="Ex. 2.5"
               />
             </div>
-            <div className="flex-1 md:mx-2 mb-2 min-w-[90px] space-y-2">
+            <div className="flex-1 lg:mx-2 mb-2 lg:-w-[90px] space-y-2">
               <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="height">H (in cm)</label>
               <input
-                className="shadow  border rounded w-[70px] md:w-36 py-2 px-2 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow  border rounded w-[70px] md:w-16 lg:w-24 py-2 px-2 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="text"
                 id="height"
                 name="height"

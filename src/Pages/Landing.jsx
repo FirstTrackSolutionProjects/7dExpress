@@ -11,8 +11,8 @@ const Landing = () => {
 
   return (
     <>
-    <div>
-    <div class="bg-bg-landing bg-cover flex items-center justify-center min-h-screen">
+    <div className='flex flex-col items-center w-full overflow-x-hidden'>
+    <div class="bg-bg-landing bg-cover flex w-full items-center justify-center min-h-screen">
 
     <div class="container mx-auto ">
 
@@ -41,8 +41,13 @@ const Landing = () => {
 
     </div>
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-3 md:gap-8 my-4 ml-4 md:my-10 md:ml-24 mb-8">
-                <ReasonCard className="mr-2"  title={"Pan India Presence"} icon={'images/india.png'}/>
+    {/* <div className="grid grid-cols-1 md:grid-cols-3 md:gap-8 my-4 ml-4 md:my-10 md:ml-24 mb-8">
+                <ReasonCard  title={"Pan India Presence"} icon={'images/india.png'}/>
+                <ReasonCard  title={"Multimodal Logisitics Solution"} icon={'images/image2.png'}/>
+                <ReasonCard  title={"Door to Door pick up and delivery"} icon={'images/image3.png'}/>
+            </div> */}
+              <div className="grid grid-cols-1 w-full px-2 sm:px-8 lg:grid-cols-3 md:gap-8 my-8">
+                <ReasonCard  title={"Pan India Presence"} icon={'images/india.png'}/>
                 <ReasonCard  title={"Multimodal Logisitics Solution"} icon={'images/image2.png'}/>
                 <ReasonCard  title={"Door to Door pick up and delivery"} icon={'images/image3.png'}/>
             </div>

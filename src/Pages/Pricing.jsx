@@ -52,7 +52,7 @@ const Pricing = () => {
               className="shadow  border rounded w-full py-2 px-3 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="sourcePin"
               type="text"
-              placeholder="Ex:411037"
+              placeholder="Ex: 411037"
             />
           </div>
           <div className="w-full md:w-1/2 px-3">
@@ -63,7 +63,7 @@ const Pricing = () => {
               className="shadow  border rounded w-full py-2 px-3 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="destPin"
               type="text"
-              placeholder="Ex:411001"
+              placeholder="Ex: 411001"
             />
           </div>
         </div>

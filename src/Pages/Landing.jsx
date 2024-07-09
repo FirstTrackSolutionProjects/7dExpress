@@ -27,8 +27,8 @@ const Landing = () => {
       </h1>*/}
             
             <div className="flex p-10 space-x-10">
-            <Link to="/signup" className=" text-center p-3 h-14 w-40 border-sky-950 rounded-md shadow-white shadow-md bg-sky-950 text-gray-300 font-bold">Signup for free</Link>
-            <Link to="/login" className=" text-center p-3 h-14 w-20 border-sky-950 rounded-md shadow-white shadow-md bg-sky-950 text-gray-300 font-bold">Login</Link>
+            <Link to="/signup" className=" text-center p-3 h-14 w-40 border-sky-950 rounded-md shadow-white shadow-md bg-sky-950 text-gray-300 font-semibold">Signup for Free</Link>
+            <Link to="/login" className=" text-center p-3 h-14 w-20 border-sky-950 rounded-md shadow-white shadow-md bg-sky-950 text-gray-300 font-semibold">Login</Link>
           </div>
           </div>
           

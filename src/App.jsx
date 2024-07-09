@@ -1,7 +1,6 @@
 import React from 'react'
 
 import {Routes, Route} from 'react-router-dom'
-import Header from './Components/Header'
 import Landing from './Pages/Landing'
 import Contact from './Pages/Contact'
 import About from './Pages/About'
@@ -34,7 +33,6 @@ const App = () => {
         <Route path='/privacy' element={<PrivacyPolicy/>}></Route>
       </Routes>
       <Footer/>
-      
     </div>
   )
 }

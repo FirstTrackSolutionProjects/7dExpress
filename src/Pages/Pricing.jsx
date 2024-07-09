@@ -146,6 +146,7 @@ const Pricing = () => {
             
             
           </div>
+          </div>
         </div>
 
         {/* Submit Button */}

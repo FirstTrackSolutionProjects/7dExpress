@@ -110,33 +110,33 @@ const Pricing = () => {
               placeholder="0"
             />
           </div>
-          <div className="md:w-1/2 w-full px-1 flex space-x-4 sm:space-x-0 justify-between sm:justify-evenly mx-2 sm:mx-0">
+          <div className="md:w-1/2 w-full  flex space-x-4 sm:space-x-0 justify-between sm:justify-evenly px-3 lg:px-1">
           
             <div className="flex-1  mb-2 lg:min-w-[250px] flex">
-            <div className="flex-1 lg:mx-2 mb-2 lg:min-w-[90px] space-y-2">
+            <div className="flex-1 lg:mx-2 mb-2 lg:min-w-[80px] space-y-2">
               <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="length">L (in cm)</label>
               <input
-                className="shadow  border rounded w-[70px] md:w-16 lg:w-24 py-2 px-2 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow  border rounded w-full py-2 px-2 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="text"
                 id="length"
                 name="length"
                 placeholder="Ex. 2.5"
               />
             </div>
-            <div className="flex-1 lg:mx-2 mb-2 lg:min-w-[90px] space-y-2">
+            <div className="flex-1 lg:mx-2 mb-2 lg:min-w-[80px] space-y-2">
               <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="breadth">B (in cm)</label>
               <input
-                className="shadow  border rounded w-[70px] md:w-16 lg:w-24 py-2 px-2 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow  border rounded w-full py-2 px-2 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="text"
                 id="breadth"
                 name="breadth"
                 placeholder="Ex. 2.5"
               />
             </div>
-            <div className="flex-1 lg:mx-2 mb-2 lg:-w-[90px] space-y-2">
+            <div className="flex-1 lg:mx-2 mb-2 lg:min-w-[80px] space-y-2">
               <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="height">H (in cm)</label>
               <input
-                className="shadow  border rounded w-[70px] md:w-16 lg:w-24 py-2 px-2 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow  border rounded w-full py-2 px-2 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="text"
                 id="height"
                 name="height"

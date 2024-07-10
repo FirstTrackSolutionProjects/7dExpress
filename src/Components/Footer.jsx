@@ -18,7 +18,7 @@ const Footer = () =>{
          {/* Company Info */}
          <div className="w-full md:w-1/4 mb-6 md:mb-0 ">
             <h2 className="text-xl font-bold mb-4 hover:underline">7D EXPRESS</h2>
-            <p className='pr-4'>Delivering excellence in logistics solutions PAN India.<br/> Your reliable partner for domestic shipping services.</p>
+            <p className='pr-4'>Delivering excellence in logistics solutions entire PAN India.<br/> Your reliable partner for domestic shipping services.</p>
           </div>
 
             
@@ -39,7 +39,7 @@ const Footer = () =>{
           <div className="w-full md:w-1/4">
             <h2 className="text-xl font-bold mb-4 hover:underline">Contact Us</h2>
             <p className="mb-2">Room No 356, Floor -G, Shahid<br/>Bhagat Singh Nagar, Sant Gora,<br/>Kumbhar Road, 5th Kumbharwada,<br/>Sec 2, Dharavi, Mumbai, Maharashtra, India-400017</p>
-            <p className="mb-2 mt-3">Email:  info@7dexpress.com </p>
+            <p className="mt-3 mb-8 md:-mb-4">Email:  info@7dexpress.com </p>
           </div>
         
 

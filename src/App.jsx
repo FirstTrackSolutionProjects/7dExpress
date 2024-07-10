@@ -14,7 +14,7 @@ import Blogs from './Pages/Blogs'
 import TermsOfUse from './Components/TermsOfUse'
 import SignupForm from './Pages/SignupForm'
 import HeaderTemp from './Components/HeaderTemp'
-import ReachCount from './Components/ReachCount'
+import Tracking from './Pages/Tracking'
 
 const App = () => {
   return (
@@ -25,7 +25,7 @@ const App = () => {
         <Route path='/login' element={<Login/>} />
         <Route path='/signup' element={<SignupForm/>} />
         <Route path='/about' element={<About/>}></Route>
-        <Route path='/track' element={<Track/>}></Route>
+        <Route path='/track' element={<Tracking/>}></Route>
         <Route path='/blog' element={<Blogs/>}></Route>
         <Route path='/pricing' element={<Pricing/>}></Route>
         <Route path='/contact' element={<Contact/>}></Route>

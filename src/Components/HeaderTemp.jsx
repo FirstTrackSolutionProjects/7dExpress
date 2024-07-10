@@ -12,7 +12,7 @@ const HeaderTemp = () => {
   return (
     <header className="bg-bg-header bg-cover p-4">
       <div className="container h-10 mx-auto flex items-center justify-between">
-      <img src="images/logo1.png" alt="" className='lg:w-[90px] lg:h-[65px]  w-16 h-14'></img>
+      <Link to="/"><img src="images/logo1.png" onClick="" alt="" className='lg:w-[90px] lg:h-[65px]  w-16 h-14'></img></Link>
         <div className="hidden md:flex space-x-10">
         <Link to="/" className="text-sky-950 font-bold">Home</Link>
           <Link to="/about" className="text-sky-950 font-bold">About</Link>

@@ -22,7 +22,7 @@ const teamMembers = [
   const About = () => {
     return (
       <div className="bg-bg-about bg-cover p-6 md:py-12">
-        <div className="container bg-white rounded-md py-6 mx-autopx-4">
+        <div className="container bg-white rounded-md py-6 mx-auto px-4">
           <div className="text-2xl md:text-4xl font-bold text-center m-5">Who We Are</div>
           <div className="text-lg md:text-xl text-left m-5">
             Welcome to 7D EXPRESS, your reliable partner in efficient and secure delivery services. Our mission is to provide seamless, dependable, and cost-effective shipping solutions to meet all your logistics needs.

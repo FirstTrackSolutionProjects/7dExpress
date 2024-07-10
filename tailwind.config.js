@@ -11,7 +11,7 @@ export default {
         'bg-landing': "url('/src/assets/images/landing.jpg')",
         'bg-login': "url('/src/assets/images/loginbg.jpeg')",
         'bg-about': "url('/src/assets/images/logisticbg.jpg')",
-        'bg-partner': "url('/src/assets/images/bg-partner.png')",
+        'bg-rainbow': "url('/src/assets/images/bg-rainbow.jpg')",
       },
     },
   },

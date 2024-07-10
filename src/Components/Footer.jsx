@@ -18,7 +18,7 @@ const Footer = () =>{
          {/* Company Info */}
          <div className="w-full md:w-1/4 mb-6 md:mb-0 ">
             <h2 className="text-xl font-bold mb-4 hover:underline">7D EXPRESS</h2>
-            <p>Delivering excellence in logistics<br/>solutions PAN India.<br/> Your reliable partner for domestic shipping services.</p>
+            <p className='pr-4'>Delivering excellence in logistics solutions PAN India.<br/> Your reliable partner for domestic shipping services.</p>
           </div>
 
             

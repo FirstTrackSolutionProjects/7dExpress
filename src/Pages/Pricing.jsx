@@ -7,8 +7,8 @@ const Pricing = () => {
     
     <div className="mx-3  ">
     <div className="container">
-    <div className="text-sky-950 text-2xl md:text-3xl items-center justify-center text-center mb-4">Calculate Your Shipping Price</div>
-      <form className="bg-slate-400 shadow-md rounded px-6 md:px-10 pt-6 pb-8 mb-4">
+    <div className="text-sky-950 text-2xl md:text-4xl items-center justify-center text-center mb-4">Calculate Your Shipping Price</div>
+      <form className="bg-slate-400 bg-opacity-40 shadow-md rounded px-6 md:px-10 pt-6 pb-8 mb-4">
         
         {/* First Row */}
         <div className="mb-4 flex flex-wrap -mx-3">

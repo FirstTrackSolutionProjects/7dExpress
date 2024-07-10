@@ -63,7 +63,7 @@ const AutoSlider = () => {
   useEffect(() => {
     const slideInterval = setInterval(() => {
       setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
-    }, 2500); 
+    }, 4000); 
 
     return () => clearInterval(slideInterval);
   }, [slides.length]);

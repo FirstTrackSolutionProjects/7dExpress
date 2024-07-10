@@ -14,6 +14,7 @@ import Blogs from './Pages/Blogs'
 import TermsOfUse from './Components/TermsOfUse'
 import SignupForm from './Pages/SignupForm'
 import HeaderTemp from './Components/HeaderTemp'
+import ReachCount from './Components/ReachCount'
 
 const App = () => {
   return (
@@ -33,6 +34,7 @@ const App = () => {
         <Route path='/privacy' element={<PrivacyPolicy/>}></Route>
       </Routes>
       <Footer/>
+      
     </div>
   )
 }

@@ -6,6 +6,7 @@ import Pricing from './Pricing'
 import { Link } from 'react-router-dom'
 import ReasonCard from '../Components/ReasonCard'
 import GridComponent from '../Components/GridComponent'
+import ReachCount from '../Components/ReachCount'
 
 const Landing = () => {
 
@@ -46,12 +47,21 @@ const Landing = () => {
                 <ReasonCard  title={"Multimodal Logisitics Solution"} icon={'images/image2.png'}/>
                 <ReasonCard  title={"Door to Door pick up and delivery"} icon={'images/image3.png'}/>
             </div> */}
+            <div>
+            <div className='text-4xl text-center text-sky-950 flex-col mt-8'>Why Choose Us?</div>
+            
               <div className="grid grid-cols-1 w-full px-2 sm:px-8 lg:grid-cols-3 md:gap-8 my-8">
+                
                 <ReasonCard  title={"Pan India Presence"} icon={'images/india.png'}/>
                 <ReasonCard  title={"Multimodal Logisitics Solution"} icon={'images/image2.png'}/>
                 <ReasonCard  title={"Door to Door pick up and delivery"} icon={'images/image3.png'}/>
             </div>
-    
+            </div>
+
+            <div className='mb-5'>
+            <div className='text-4xl text-center text-sky-950 flex-col my-8'>7D Express Superiority</div>
+              <ReachCount/>
+            </div>
     <Pricing/>
     
     <GridComponent/>

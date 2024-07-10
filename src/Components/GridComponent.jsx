@@ -11,22 +11,7 @@ const GridComponent = () => {
                 <div className="text-xl md:text-2xl text-sky-950 mt-5">We are logistic experts in your industry through<br/>our in-depth experience.</div>
             </div>
             <AutoSlider/>
-            {/*<div className="grid grid-cols-2 gap-0 mt-5 md:-mt-5">
-                <div className="flex items-center justify-center h-36 md:h-52 bg-blue-500 text-white">
-                    <img src="images/bg1.jpg" alt='img' className="h-36 md:h-52 w-full object-cover"/>
-                </div>
-                <div className="flex-col flex justify-center h-36 md:h-52">
-                <div className="text-[12px] sm:text-[16px] text-sky-950 my-5 text-center">Streamlining Textile and Garment Logistics with Precision, Efficiency, and Industry Expertise</div>
-                <div className="text-[12px] sm:text-2xl text-yellow-500 text-center">Textile & Garments</div>
-                </div>
-                <div className="flex-col flex justify-center h-36 md:h-52">
-                <div className="text-[12px] sm:text-lg text-sky-950 my-5 text-center">Reliable pharmaceutical logistics ensuring safe, timely, and efficient delivery of critical medications</div>
-                <div className="text-[12px] sm:text-2xl text-yellow-500 text-center">Pharmaceuticals</div>
-                </div>
-                <div className="flex items-center justify-center h-36 md:h-52 bg-blue-500 text-white">
-                <img src="images/bg1.jpg" alt='img' className="h-36 md:h-52 w-full object-cover"/>
-                </div>
-            </div> */}
+            
 
         </div>
         

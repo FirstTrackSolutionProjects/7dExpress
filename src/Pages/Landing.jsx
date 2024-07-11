@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import ReasonCard from '../Components/ReasonCard'
 import GridComponent from '../Components/GridComponent'
 import ReachCount from '../Components/ReachCount'
+import Newsletter from '../Components/NewsLetter'
 
 const Landing = () => {
 
@@ -22,7 +23,7 @@ const Landing = () => {
           <div className=" flex flex-col justify-center items-center ">
             <img src="images/logo1.png" alt="" className='lg:w-[200px] lg:h-[200px]  w-[160px] h-[120px] mb-5'></img>
             <div className="text-xl md:text-4xl italic font-bold text-sky-950 hover:text-sky-800">7D-On Time, Every Time</div>
-            <div className="text-xl md:text-xl italic font-bold text-black mt-4">Your Reliable Partner For Domestic Shipping Services.</div>
+            <div className="text-[12px] md:text-xl italic font-bold text-black mt-4">Your Reliable Partner For Domestic Shipping Services.</div>
             {/*<h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-red-500 to-yellow-500">
             7D-On Time, Every Time
       </h1>*/}
@@ -35,6 +36,7 @@ const Landing = () => {
           
           
           <div className=" flex flex-col md:items-center justify-center -mt-8 md:m-7">
+          <h1 className="text-30px lg:text-xl text-sky-950 font-bold mb-5 text-center">Track Your Parcel</h1>
             <Track/>
           </div>
 

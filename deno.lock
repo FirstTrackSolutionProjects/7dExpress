@@ -28,6 +28,7 @@
         "npm:netlify@^13.1.20",
         "npm:postcss@^8.4.39",
         "npm:react-dom@^18.3.1",
+        "npm:react-modal@^3.16.1",
         "npm:react-router-dom@^6.24.1",
         "npm:react-slick@^0.30.2",
         "npm:react-tilt@^1.0.2",

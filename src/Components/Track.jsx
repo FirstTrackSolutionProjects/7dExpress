@@ -6,7 +6,7 @@ const Track = () => {
   return (
     <div className="flex flex-col justify-center bg-transparent items-center ">
       {/*<div className="bg-white p-4 rounded-lg shadow-lg">*/}
-        <h1 className="text-30px lg:text-xl text-sky-950 font-bold mb-5">Track Your Parcel</h1>
+        
         <form className="flex">
           <input 
             type="text" 

@@ -3,7 +3,7 @@ import React from 'react';
 const Calculator = ()=>{
     return(
         <>
-        <form className="bg-slate-400 bg-opacity-40 shadow-md rounded p-4 md:p-8 w-[600px]">
+        <form className="bg-slate-400 bg-opacity-40 shadow-md rounded p-4 md:p-8 w-[300px] md:w-[600px]">
         
         {/* First Row */}
         <div className="mb-4 flex flex-wrap ">

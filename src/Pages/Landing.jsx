@@ -68,7 +68,7 @@ const Landing = () => {
     <Pricing/>
     
     <GridComponent/>
-   
+      <Newsletter/>
     <Partner/>
     </div>
     </>

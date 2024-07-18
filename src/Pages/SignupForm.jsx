@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faUserTag, faPhone, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '../contexts/AuthContext';
 
 const SignupForm = () => {
     const [businessName, setBusinessName] = useState('');
@@ -9,13 +10,19 @@ const SignupForm = () => {
     const [mobile, setMobile] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const {authState, register, message, error} = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Email:', email, 'Password:', password);
+    await register(email, password, fullName, businessName, mobile)
   };
+
+  useEffect(() => {
+    if (authState.authenticated) {
+      navigate('/dashboard');
+    }
+  },[authState])
 
   const navigateToLogin = () => {
     navigate('/login');
@@ -101,6 +108,7 @@ const SignupForm = () => {
               Sign Up
             </button>
           </div>
+          {message}
           <div className="mt-4 text-center">
               <p className="text-gray-700">
                 Already have an account?{' '}

@@ -14,7 +14,6 @@ const Footer = () =>{
             <footer className=" bg-sky-950 font-bold text-gray-300 py-8">
       <div className="container mx-auto px-2">
         <div className="flex flex-wrap ">
-      
          {/* Company Info */}
          <div className="w-full md:w-1/4 mb-6 md:mb-0 ">
             <h2 className="text-xl font-bold mb-4 hover:underline">7D EXPRESS</h2>

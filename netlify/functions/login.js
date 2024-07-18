@@ -12,7 +12,8 @@ const dbConfig = {
 };
 
 // Secret key for JWT
-const SECRET_KEY = process.env.JWT_SECRET;
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -33,23 +34,28 @@ exports.handler = async (event) => {
       const id = rows[0].uid;
       const name = rows[0].fullName;
       const verified = rows[0].isVerified;
+      const emailVerified = rows[0].emailVerified;
       const admin = rows[0].isAdmin;
       const business_name = rows[0].businessName;
-      const token = jwt.sign({  email, verified, name, id, business_name, admin }, SECRET_KEY, { expiresIn: '12h' });
+      const accessToken = jwt.sign({  email , verified , name, id, business_name , admin, emailVerified}, ACCESS_TOKEN_SECRET, { expiresIn: '2h' });
+      const refreshToken = jwt.sign({  email , verified , name, id, business_name , admin, emailVerified }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
       return {
         statusCode: 200,
-        body: JSON.stringify({ token : token, success:true, verified: verified })
+        headers: {
+          'Set-Cookie': [`accessToken=${accessToken}; HttpOnly; Secure; Path=/; Max-Age=900` , `refreshToken=${refreshToken}; HttpOnly; Secure; Path=/; Max-Age=604800`],
+        },
+        body: JSON.stringify({ message: 'Login Successfull', success : true })
       };
     } else {
       return {
         statusCode: 401,
-        body: JSON.stringify({ message: 'Invalid credentials' }),
+        body: JSON.stringify({ message: 'Invalid credentials', success : false }),
       };
     }
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: 'Error logging in', error: error.message }),
+      body: JSON.stringify({ message: 'Error logging in', error: error.message, success : false }),
     };
   } finally {
     await connection.end();

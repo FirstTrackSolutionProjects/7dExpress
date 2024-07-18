@@ -15,11 +15,13 @@ import TermsOfUse from './Components/TermsOfUse'
 import SignupForm from './Pages/SignupForm'
 import HeaderTemp from './Components/HeaderTemp'
 import Tracking from './Pages/Tracking'
+import Dashboard from './Pages/Dashboard'
 
 const App = () => {
   return (
     <div className=''>
       <HeaderTemp/>
+      <div className='h-[72px]'></div>
       <Routes>
         <Route path='/' element={<Landing/>}></Route>
         <Route path='/login' element={<Login/>} />
@@ -32,6 +34,7 @@ const App = () => {
         <Route path='/faq' element={<FAQs/>}></Route>
         <Route path='/terms' element={<TermsOfUse/>}></Route>
         <Route path='/privacy' element={<PrivacyPolicy/>}></Route>
+        <Route path='/dashboard' element={<Dashboard/>}></Route>
       </Routes>
       <Footer/>
       

@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
-import { Link } from 'react-router-dom'
-
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext';
 const HeaderTemp = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const navigate = useNavigate();
+  const {authState, logout} = useAuth()
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-
   return (
-    <header className="bg-bg-header bg-cover p-4">
+    <header className="fixed w-full bg-bg-header bg-cover p-4">
       <div className="container h-10 mx-auto flex items-center justify-between">
       <Link to="/"><img src="images/logo1.png" onClick="" alt="" className='lg:w-[90px] lg:h-[65px]  w-16 h-14'></img></Link>
         <div className="hidden md:flex space-x-10">
@@ -20,6 +20,7 @@ const HeaderTemp = () => {
           <Link to="/blog" className="text-sky-950 font-bold">Blogs</Link>
           <Link to="/pricing" className="text-sky-950 font-bold">Pricing</Link>
           <Link to="/contact" className="text-sky-950 font-bold">Contact</Link>
+          {authState.authenticated && <p className="text-sky-950 font-bold" onClick={()=>{logout(); navigate('/')}}>Logout</p>}
         </div>
         <div className="md:hidden">
           <button onClick={toggleMenu} className="text-sky-950 focus:outline-none">

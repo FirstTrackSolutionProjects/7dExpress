@@ -12,9 +12,10 @@ const dbConfig = {
   database: process.env.DB_NAME,
 };
 
-const SECRET_KEY = process.env.JWT_SECRET;
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 
-let transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST, 
   port: process.env.EMAIL_PORT,
   secure: process.env.EMAIL_SECURE,
@@ -30,7 +31,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({ message: 'Method Not Allowed' }),
     };
   }
-
+  
   const { reg_email, reg_password, name, mobile, business_name } = JSON.parse(event.body);
   const hashedPassword = await bcrypt.hash(reg_password, 10);
 
@@ -41,28 +42,31 @@ exports.handler = async (event) => {
     if (users.length){
       return {
         statusCode: 400,
-        body: JSON.stringify({ message: "User is already registered. Please login"}),
+        body: JSON.stringify({ message: "User is already registered. Please login", success: false}),
       };
     }
-    await connection.execute('INSERT INTO USERS (businessName, email, password, fullName, phone ) VALUES (?, ?, ?, ?,?)', [business_name, reg_email, hashedPassword, name, mobile]);
+    const [user] = await connection.execute('INSERT INTO USERS (businessName, email, password, fullName, phone ) VALUES (?, ?, ?, ?,?)', [business_name, reg_email, hashedPassword, name, mobile]);
+    const id = user.insertId;
+    const accessToken = jwt.sign({  email : reg_email , verified : 0, name, id, business_name : business_name, admin : 0, emailVerified: 0 }, ACCESS_TOKEN_SECRET, { expiresIn: '2h' });
+    const refreshToken = jwt.sign({  email : reg_email , verified : 0, name, id, business_name : business_name, admin : 0, emailVerified : 0  }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
     let mailOptions = {
       from: process.env.EMAIL_USER,
       to: `${reg_email},${process.env.EMAIL_USER},${process.env.VERIFY_EMAIL}`, 
       subject: 'Registration Incomplete', 
-      text: `Dear ${name}, \nYour registration on Jupiter Xpress is incomplete. Please verify your details to experience robust features of Jupiter Xpress. \n\n Regards, \nJupiter Xpress`
+      text: `Dear ${name}, \nYour registration on 7D Express is incomplete. Please verify your details to experience robust features of 7D Express. \n\n Regards, \n7D Express`
     };
     await transporter.sendMail(mailOptions)
-    const [rows] = await connection.execute('SELECT * FROM USERS  WHERE email = ?', [reg_email]);
-    const id = rows[0].uid
-    const token = jwt.sign({  email : reg_email , verified : 0, name, id, business_name : business_name }, SECRET_KEY, { expiresIn: '12h' });
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ token : token ,message: 'User registered', success: true }),
-    };
+      return {
+        statusCode: 200,
+        headers: {
+          'Set-Cookie': [`accessToken=${accessToken}; HttpOnly; Secure; Path=/; Max-Age=900` , `refreshToken=${refreshToken}; HttpOnly; Secure; Path=/; Max-Age=604800`],
+        },
+        body: JSON.stringify({ message: 'Registration Successfull', success : true })
+      };
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: error.message}),
+      body: JSON.stringify({ message: error.message, success: false}),
     };
   } finally {
     await connection.end();

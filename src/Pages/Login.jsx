@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-
+import { useAuth } from '../contexts/AuthContext';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const {authState, message ,login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Email:', email, 'Password:', password);
+    await login(email, password)
   };
+
+  useEffect(() => {
+    if(authState.authenticated){
+      navigate('/dashboard')
+    }
+  }, [authState])
 
   const navigateToSignup = () => {
     navigate('/signup');
@@ -62,6 +67,7 @@ const Login = () => {
             </button>
           </div>
 
+            {message}
           <div className="mt-4 text-center">
               <button
                 className="w-full flex justify-center text-gray-700 font-bold py-2 rounded-md border-gray-500 border-2"
@@ -80,7 +86,7 @@ const Login = () => {
                 </button>
               </p>
             </div>
-
+            
         </form>
       </div>
     </div>

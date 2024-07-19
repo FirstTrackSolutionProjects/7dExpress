@@ -3,10 +3,12 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 
-const SECRET_KEY = process.env.JWT_SECRET;
+const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event, context) => {
-  const token = event.headers.authorization;
+  try {
+  const cookies = event.headers.cookie;
+  const token = cookies.split('; ').find(row => row.startsWith('accessToken')).split('=')[1];
   if (!token) {
     return {
       statusCode: 401,
@@ -52,6 +54,11 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 400,
       body: JSON.stringify({ message: 'Invalid Token' }),
+    };
+  } } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: error.message , message: 'Invalid Token'}),
     };
   }
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import {Routes, Route} from 'react-router-dom'
 import Landing from './Pages/Landing'
@@ -16,8 +16,12 @@ import SignupForm from './Pages/SignupForm'
 import HeaderTemp from './Components/HeaderTemp'
 import Tracking from './Pages/Tracking'
 import Dashboard from './Pages/Dashboard'
-
+import { useAuth } from './contexts/AuthContext'
 const App = () => {
+  const { authState } = useAuth()
+  useEffect(()=> {
+    console.log(authState)
+  },[authState])
   return (
     <div className=''>
       <HeaderTemp/>

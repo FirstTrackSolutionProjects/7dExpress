@@ -2,7 +2,7 @@
 const mysql = require('mysql2/promise');
 const jwt = require('jsonwebtoken');
 
-const SECRET_KEY = process.env.JWT_SECRET
+const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET
 
 exports.handler = async (event, context) => {
     const {

@@ -8,9 +8,9 @@ import ReasonCard from '../Components/ReasonCard'
 import GridComponent from '../Components/GridComponent'
 import ReachCount from '../Components/ReachCount'
 import Newsletter from '../Components/NewsLetter'
-
+import { useAuth } from '../contexts/AuthContext'
 const Landing = () => {
-
+  const { authState } = useAuth()
   return (
     <>
     <div className='flex flex-col items-center w-full overflow-x-hidden'>
@@ -29,8 +29,10 @@ const Landing = () => {
       </h1>*/}
             
             <div className="flex p-10 space-x-10">
-            <Link to="/signup" className=" text-center p-3 h-14 w-40 border-sky-950 rounded-md shadow-white shadow-md bg-sky-950 text-gray-300 font-semibold">Signup for Free</Link>
+            {!authState.authenticated ? <>
+              <Link to="/signup" className=" text-center p-3 h-14 w-40 border-sky-950 rounded-md shadow-white shadow-md bg-sky-950 text-gray-300 font-semibold">Signup for Free</Link>
             <Link to="/login" className=" text-center p-3 h-14 w-20 border-sky-950 rounded-md shadow-white shadow-md bg-sky-950 text-gray-300 font-semibold">Login</Link>
+            </> : <Link to="/dashboard" className=" text-center p-3 h-14 w-40 border-sky-950 rounded-md shadow-white shadow-md bg-sky-950 text-gray-300 font-semibold">Dashboard</Link>}
           </div>
           </div>
           

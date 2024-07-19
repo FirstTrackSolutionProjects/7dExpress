@@ -8,7 +8,16 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const INITIAL_AUTH = { authenticated: false, emailVerified: false, verified : false, admin : false, name : null, businessName : null, id : null, email : null}
-  const [authState, setAuthState] = useState(INITIAL_AUTH);
+  const getInitialAuthState = () => {
+    const storedState = localStorage.getItem('token');
+    try {
+      return JSON.parse(storedState);
+    } catch (e) {
+      return INITIAL_AUTH;
+    }
+  };
+
+  const [authState, setAuthState] = useState(getInitialAuthState);
   const [message, setMessage] = useState(null)
   const clear = () => {
     setMessage(null)
@@ -38,10 +47,11 @@ export const AuthProvider = ({ children }) => {
     clear()
     checkAuth();
   }, []);
-  useEffect(() => {clear()}, [navigate]);
+  useEffect(() => {clear(); checkAuth()}, [navigate]);
   const login = async (email, password) => {
       try{
-      await axios.post('/.netlify/functions/login', { email, password });
+      const response = await axios.post('/.netlify/functions/login', { email, password });
+      localStorage.setItem('token', response.data.token);
       clear()
       await checkAuth();
       } catch (e) {
@@ -52,7 +62,8 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (email, password, fullName, businessName, mobile) => {
     try{
-      await axios.post('/.netlify/functions/register', {  reg_password : password, reg_email : email, name : fullName, business_name : businessName, mobile });;
+      const response = await axios.post('/.netlify/functions/register', {  reg_password : password, reg_email : email, name : fullName, business_name : businessName, mobile });
+      localStorage.setItem('token', response.data.token);
       clear()
       await checkAuth();
       } catch (e) {
@@ -73,7 +84,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authState, message ,login, logout, register}}>
+    <AuthContext.Provider value={{ authState, message ,login, logout, register, checkAuth}}>
       {children}
     </AuthContext.Provider>
   );

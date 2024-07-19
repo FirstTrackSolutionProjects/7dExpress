@@ -37,7 +37,7 @@ exports.handler = async (event) => {
       const emailVerified = rows[0].emailVerified;
       const admin = rows[0].isAdmin;
       const business_name = rows[0].businessName;
-      const accessToken = jwt.sign({  email , verified , name, id, business_name , admin, emailVerified}, ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
+      const accessToken = jwt.sign({authenticated: true,  email , verified , name, id, business_name , admin, emailVerified}, ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
       // const refreshToken = jwt.sign({  email , verified , name, id, business_name , admin, emailVerified }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
       return {
         statusCode: 200,
@@ -45,7 +45,7 @@ exports.handler = async (event) => {
           // 'Set-Cookie': [`accessToken=${accessToken}; HttpOnly; Secure; Path=/; Max-Age=900` , `refreshToken=${refreshToken}; HttpOnly; Secure; Path=/; Max-Age=604800`],
           'Set-Cookie': `accessToken=${accessToken}; HttpOnly; Secure; Path=/; Max-Age=${60*60*24}` ,
         },
-        body: JSON.stringify({ message: 'Login Successfull', success : true })
+        body: JSON.stringify({ message: 'Login Successfull', success : true , token : accessToken})
       };
     } else {
       return {

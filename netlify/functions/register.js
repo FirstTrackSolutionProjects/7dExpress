@@ -47,7 +47,7 @@ exports.handler = async (event) => {
     }
     const [user] = await connection.execute('INSERT INTO USERS (businessName, email, password, fullName, phone ) VALUES (?, ?, ?, ?,?)', [business_name, reg_email, hashedPassword, name, mobile]);
     const id = user.insertId;
-    const accessToken = jwt.sign({  email : reg_email , verified : 0, name, id, business_name : business_name, admin : 0, emailVerified: 0 }, ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
+    const accessToken = jwt.sign({ authenticated: true, email : reg_email , verified : 0, name, id, business_name : business_name, admin : 0, emailVerified: 0 }, ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
     // const refreshToken = jwt.sign({  email : reg_email , verified : 0, name, id, business_name : business_name, admin : 0, emailVerified : 0  }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
     let mailOptions = {
       from: process.env.EMAIL_USER,
@@ -61,7 +61,7 @@ exports.handler = async (event) => {
         headers: {
           'Set-Cookie': `accessToken=${accessToken}; HttpOnly; Secure; Path=/; Max-Age=${60*60*24}` ,
         },
-        body: JSON.stringify({ message: 'Registration Successfull', success : true })
+        body: JSON.stringify({ message: 'Registration Successfull', success : true, token : accessToken })
       };
   } catch (error) {
     return {

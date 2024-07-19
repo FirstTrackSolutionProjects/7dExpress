@@ -9,7 +9,7 @@ const dbConfig = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
 };
-const SECRET_KEY = process.env.JWT_SECRET;
+const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event) => {
   const connection = await mysql.createConnection(dbConfig);

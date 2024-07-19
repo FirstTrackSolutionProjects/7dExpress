@@ -10,7 +10,7 @@ const dbConfig = {
   database: process.env.DB_NAME,
 };
 
-const SECRET_KEY = process.env.JWT_SECRET;
+const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event) => {
   const token = event.headers.authorization;

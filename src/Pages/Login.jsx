@@ -1,30 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-const Login = () => {
+
+const LoginForm = ({authState, message, login}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {authState, message ,login } = useAuth();
   const navigate = useNavigate();
-
+  useEffect(() => {
+    if(authState.verified){
+      navigate('/dashboard')
+    }
+  }, [authState])
   const handleSubmit = async (e) => {
     e.preventDefault();
     await login(email, password)
   };
-
-  useEffect(() => {
-    if(authState.authenticated){
-      navigate('/dashboard')
-    }
-  }, [authState])
-
   const navigateToSignup = () => {
     navigate('/signup');
   };
-
   return (
-    <div className="flex items-center justify-center min-h-screen bg-bg-login bg-cover">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold mb-5 text-center text-sky-950">Hello! Sign in to continue</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -89,6 +84,25 @@ const Login = () => {
             
         </form>
       </div>
+  )
+}
+
+const Login = () => {
+  const navigate = useNavigate()
+  const [verifyEmail, setVerifyEmail] = useState(false);
+  const {authState, message ,login } = useAuth();
+
+  useEffect(() => {
+    if(authState.verified){
+      navigate('/dashboard')
+    }
+  }, [authState])
+
+  
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-bg-login bg-cover">
+      <LoginForm authState={authState} message={message} login={login}/>
     </div>
   );
 };

@@ -10,10 +10,8 @@ export const AuthProvider = ({ children }) => {
   const INITIAL_AUTH = { authenticated: false, emailVerified: false, verified : false, admin : false, name : null, businessName : null, id : null, email : null}
   const [authState, setAuthState] = useState(INITIAL_AUTH);
   const [message, setMessage] = useState(null)
-  const [error, setError] = useState(null)
   const clear = () => {
     setMessage(null)
-    setError(null)
   }
   const checkAuth = async () => {
     try {
@@ -45,7 +43,6 @@ export const AuthProvider = ({ children }) => {
       await checkAuth();
       } catch (e) {
         setMessage(e.response.data.message);
-        setError(e.message.data.error ? e.message.data.error : null);
         setAuthState(INITIAL_AUTH);
       }
   };
@@ -57,7 +54,6 @@ export const AuthProvider = ({ children }) => {
       await checkAuth();
       } catch (e) {
         setMessage(e.response.data.message);
-        setError(e.message.data.error ? e.message.data.error : null);
         setAuthState(INITIAL_AUTH);
       }
   };
@@ -74,7 +70,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authState, message, error ,login, logout, register}}>
+    <AuthContext.Provider value={{ authState, message ,login, logout, register}}>
       {children}
     </AuthContext.Provider>
   );

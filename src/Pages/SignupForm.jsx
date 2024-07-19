@@ -10,7 +10,7 @@ const SignupForm = () => {
     const [mobile, setMobile] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {authState, register, message, error} = useAuth();
+  const {authState, register, message} = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {

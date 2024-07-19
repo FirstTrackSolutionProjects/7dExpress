@@ -19,16 +19,19 @@ export const AuthProvider = ({ children }) => {
       const {emailVerified, verified, admin, name, businessName, id, email} = response.data
       setAuthState({ authenticated: true,  emailVerified : emailVerified, verified : verified, admin : admin, name : name, businessName : businessName, id : id, email : email});
     } catch {
-      try {
-        await axios.post('/.netlify/functions/refreshAuth');
-        const response = await axios.post('/.netlify/functions/checkAuth');
-        const {emailVerified, verified, admin, name, businessName, id, email} = response.data
-        setAuthState({ authenticated: true,  emailVerified : emailVerified, verified : verified, admin : admin, name : name, businessName : businessName, id : id, email : email});
-      } catch (e) {
-        if (authState.authenticated) {
-          logout();
-        }
+      if (authState.authenticated) {
+        logout();
       }
+      // try {
+      //   await axios.post('/.netlify/functions/refreshAuth');
+      //   const response = await axios.post('/.netlify/functions/checkAuth');
+      //   const {emailVerified, verified, admin, name, businessName, id, email} = response.data
+      //   setAuthState({ authenticated: true,  emailVerified : emailVerified, verified : verified, admin : admin, name : name, businessName : businessName, id : id, email : email});
+      // } catch (e) {
+      //   if (authState.authenticated) {
+      //     logout();
+      //   }
+      // }
     }
   };
   useEffect(() => {

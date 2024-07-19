@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext';
 const HeaderTemp = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
   const {authState, logout} = useAuth()
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -20,7 +19,7 @@ const HeaderTemp = () => {
           <Link to="/blog" className="text-sky-950 font-bold">Blogs</Link>
           <Link to="/pricing" className="text-sky-950 font-bold">Pricing</Link>
           <Link to="/contact" className="text-sky-950 font-bold">Contact</Link>
-          {authState.authenticated && <p className="text-sky-950 font-bold" onClick={()=>{logout(); navigate('/')}}>Logout</p>}
+          {authState.authenticated && <p className="text-sky-950 font-bold" onClick={()=>{logout();}}>Logout</p>}
         </div>
         <div className="md:hidden">
           <button onClick={toggleMenu} className="text-sky-950 focus:outline-none">
@@ -36,6 +35,7 @@ const HeaderTemp = () => {
           <Link to="/blog" className="text-sky-950 font-bold">Blogs</Link>
           <Link to="/pricing" className="text-sky-950 font-bold">Pricing</Link>
           <Link to="/contact" className="text-sky-950 font-bold">Contact</Link>
+          {authState.authenticated && <p className="text-sky-950 font-bold" onClick={()=>{logout(); setIsOpen(false)}}>Logout</p>}
         </div>
       )}
     </header>

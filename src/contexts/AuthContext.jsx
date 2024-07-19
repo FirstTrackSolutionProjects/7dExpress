@@ -61,9 +61,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await axios.post('/.netlify/functions/logout');
-    if (location.pathname == '/dashboard')
+    try{
+      await axios.post('/.netlify/functions/logout');
+      if (location.pathname == '/dashboard')
       navigate('/');
+    } catch (e) {
+      console.error(e);
+    }
     setAuthState(INITIAL_AUTH);
   };
 

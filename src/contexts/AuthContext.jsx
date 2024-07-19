@@ -8,13 +8,15 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const INITIAL_AUTH = { authenticated: false, emailVerified: false, verified : false, admin : false, name : null, businessName : null, id : null, email : null}
-  const getInitialAuthState = () => {
-    const storedState = localStorage.getItem('token');
-    try {
-      return JSON.parse(storedState);
-    } catch (e) {
-      return INITIAL_AUTH;
-    }
+  const getInitialAuthState =  () => {
+    axios.get('/.netlify/functions/getTokenData', {headers : {'Authorization': localStorage.getItem('token')}}).then(response =>{
+      try {
+        return JSON.parse(response.data);
+      } catch (e) {
+        console.log(response.data);
+        return INITIAL_AUTH;
+      }
+    })
   };
 
   const [authState, setAuthState] = useState(getInitialAuthState);
@@ -28,9 +30,8 @@ export const AuthProvider = ({ children }) => {
       const {emailVerified, verified, admin, name, businessName, id, email} = response.data
       setAuthState({ authenticated: true,  emailVerified : emailVerified, verified : verified, admin : admin, name : name, businessName : businessName, id : id, email : email});
     } catch {
-      if (authState.authenticated) {
+        setAuthState(INITIAL_AUTH)
         logout();
-      }
       // try {
       //   await axios.post('/.netlify/functions/refreshAuth');
       //   const response = await axios.post('/.netlify/functions/checkAuth');
@@ -75,6 +76,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try{
       await axios.post('/.netlify/functions/logout');
+      localStorage.removeItem('token');
       if (location.pathname == '/dashboard')
       navigate('/');
     } catch (e) {

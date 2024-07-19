@@ -13,7 +13,7 @@ const HeaderTemp = () => {
   };
   useEffect(()=>{
     const getBalance = async () => {
-      if (authState.verified){
+      if (authState?.verified){
         try{
           const response = await axios.get('/.netlify/functions/getBalance')
           setBalance(response.data.balance);
@@ -35,9 +35,9 @@ const HeaderTemp = () => {
           <Link to="/blog" className="text-sky-950 font-bold">Blogs</Link>
           <Link to="/pricing" className="text-sky-950 font-bold">Pricing</Link>
           <Link to="/contact" className="text-sky-950 font-bold">Contact</Link>
-          {authState.authenticated &&<p className="text-sky-950 font-bold" onClick={()=>navigate('/dashboard')}>{authState.businessName}{authState.verified &&<span className="mx-2 text-sky-950 font-bold" >₹{balance}</span>}</p>}
+          {authState?.authenticated &&<p className="text-sky-950 font-bold" onClick={()=>navigate('/dashboard')}>{authState?.businessName}{authState?.verified &&<span className="mx-2 text-sky-950 font-bold" >₹{balance}</span>}</p>}
           
-          {authState.authenticated && <p className="text-sky-950 font-bold" onClick={()=>{logout();}}>Logout</p>}
+          {authState?.authenticated && <p className="text-sky-950 font-bold" onClick={()=>{logout();}}>Logout</p>}
         </div>
         <div className="md:hidden">
           <button onClick={toggleMenu} className="text-sky-950 focus:outline-none">
@@ -53,7 +53,7 @@ const HeaderTemp = () => {
           <Link to="/blog" className="text-sky-950 font-bold">Blogs</Link>
           <Link to="/pricing" className="text-sky-950 font-bold">Pricing</Link>
           <Link to="/contact" className="text-sky-950 font-bold">Contact</Link>
-          {authState.authenticated && <p className="text-sky-950 font-bold" onClick={()=>{logout(); setIsOpen(false)}}>Logout</p>}
+          {authState?.authenticated && <p className="text-sky-950 font-bold" onClick={()=>{logout(); setIsOpen(false)}}>Logout</p>}
         </div>
       )}
     </header>

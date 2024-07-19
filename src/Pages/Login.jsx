@@ -7,7 +7,7 @@ const LoginForm = ({authState, message, login}) => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   useEffect(() => {
-    if(authState.verified){
+    if(authState?.verified){
       navigate('/dashboard')
     }
   }, [authState])

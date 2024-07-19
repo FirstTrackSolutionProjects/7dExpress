@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext} from "react"
+import { useState, useEffect} from "react"
 import { useNavigate } from "react-router-dom"
 import DashboardMain from "../Components/DashboardMain"
 import MenuItem from "../Components/MenuItem"
@@ -28,12 +28,12 @@ const Dashboard = () => {
   const navigate = useNavigate()
     useEffect(() => {
       const auth = async () => {
-        const a = await checkAuth()
-        a.then(()=>{if (!authState.authenticated) {
-          navigate('/')
-        } })
+        await checkAuth()
+        if (!authState?.authenticated) {
+          navigate('/');
+        }
       }
-      auth()
+     auth()
     }, [])
   const loggingOut = () => {
     logout();
@@ -41,11 +41,11 @@ const Dashboard = () => {
   }
   return (
      <>
-        <>
-            <div className="absolute inset-0 flex  pt-16">
+       
+            {authState?.authenticated && <div className="absolute inset-0 flex  pt-16">
               <div className="min-w-[250px]  md:block hidden  h-full relative bg-blue-100 overflow-y-auto overflow-x-hidden">
                 {menuItems.map((item,index) =>{
-                  if (item.admin && !authState.admin)
+                  if (item.admin && !authState?.admin)
                     return;
                   return (
                   <MenuItem key={index} setShowRecharge={setShowRecharge} icon={item.icon} menuID={item.menuID} setMenuID={setMenuID} name={item.name} isDropdown={item.isDropdown} dropDownOptions={item.dropDownOptions} />
@@ -62,8 +62,8 @@ const Dashboard = () => {
                 {(menuID[0] == 9 && menuID[1] == 3) ? <AllParcels/> : null}
                 {(menuID[0] == 9 && menuID[1] == 4) ? <AllShipmentReports/> : null}
                 {(menuID[0] == 5) ? <NDR/> : null}
-                {((menuID[0] == 6 && menuID[1] == 0) && authState.admin)  ?  <AdminProfile/> :null }
-                {((menuID[0] == 6 && menuID[1] == 0) && !authState.admin)  ?  <Profile/> : null }
+                {((menuID[0] == 6 && menuID[1] == 0) && authStat?.admin)  ?  <AdminProfile/> :null }
+                {((menuID[0] == 6 && menuID[1] == 0) && !authState?.admin)  ?  <Profile/> : null }
                 {(menuID[0] == 6 && menuID[1] == 1) ? <ChangePassword/> : null}
                 {(menuID[0] == 9 && menuID[1] == 0) ? <MerchantManage/> : null}
                 {(menuID[0] == 9 && menuID[1] == 1) ? <NonVerifiedMerchantManage/> : null}
@@ -72,8 +72,8 @@ const Dashboard = () => {
                 {(menuID[0] == 12) ? <ManualRecharge/> : null}
                 {(menuID[0] == 7) && (loggingOut())}
               </div>
-            </div>
-        </>
+            </div>}
+       
     </>
   )
 }

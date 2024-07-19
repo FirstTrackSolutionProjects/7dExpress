@@ -17,6 +17,7 @@ import HeaderTemp from './Components/HeaderTemp'
 import Tracking from './Pages/Tracking'
 import Dashboard from './Pages/Dashboard'
 import { useAuth } from './contexts/AuthContext'
+import Verify from './Pages/Verify'
 const App = () => {
   const { authState } = useAuth()
   useEffect(()=> {
@@ -39,6 +40,7 @@ const App = () => {
         <Route path='/terms' element={<TermsOfUse/>}></Route>
         <Route path='/privacy' element={<PrivacyPolicy/>}></Route>
         <Route path='/dashboard' element={<Dashboard/>}></Route>
+        <Route path='/verify' element={<Verify/>}></Route>
       </Routes>
       <Footer/>
       

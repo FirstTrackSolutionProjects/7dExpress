@@ -27,7 +27,9 @@ export const AuthProvider = ({ children }) => {
         const {emailVerified, verified, admin, name, businessName, id, email} = response.data
         setAuthState({ authenticated: true,  emailVerified : emailVerified, verified : verified, admin : admin, name : name, businessName : businessName, id : id, email : email});
       } catch (e) {
-        logout();
+        if (authState.authenticated) {
+          logout();
+        }
       }
     }
   };
@@ -43,7 +45,7 @@ export const AuthProvider = ({ children }) => {
       await checkAuth();
       } catch (e) {
         setMessage(e.response.data.message);
-        setError(e.message.data.error);
+        setError(e.message.data.error ? e.message.data.error : null);
         setAuthState(INITIAL_AUTH);
       }
   };
@@ -55,7 +57,7 @@ export const AuthProvider = ({ children }) => {
       await checkAuth();
       } catch (e) {
         setMessage(e.response.data.message);
-        setError(e.message.data.error);
+        setError(e.message.data.error ? e.message.data.error : null);
         setAuthState(INITIAL_AUTH);
       }
   };

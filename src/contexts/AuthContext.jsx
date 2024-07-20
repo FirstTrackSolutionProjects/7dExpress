@@ -75,8 +75,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try{
-      await axios.post('/.netlify/functions/logout');
       localStorage.removeItem('token');
+      await axios.post('/.netlify/functions/logout');
       if (location.pathname == '/dashboard')
       navigate('/');
     } catch (e) {

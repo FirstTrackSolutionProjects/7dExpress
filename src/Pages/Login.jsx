@@ -63,13 +63,13 @@ const LoginForm = ({authState, message, login}) => {
           </div>
 
             {message}
-          <div className="mt-4 text-center">
+          {/* <div className="mt-4 text-center">
               <button
                 className="w-full flex justify-center text-gray-700 font-bold py-2 rounded-md border-gray-500 border-2"
               >
                 Sign in with <img src='/src/assets/images/googlebg.png' className='w-6 h-6 ml-2 mt-0'/>
               </button>
-            </div>
+            </div> */}
             <div className="mt-4 text-center">
               <p className="text-gray-700">
                 Don't have an account?{' '}

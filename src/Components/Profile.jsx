@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { jwtDecode } from 'jwt-decode'
+import {useAuth} from '../contexts/AuthContext'
 const Profile = () => {
-  const admin = jwtDecode(localStorage.getItem('token')).admin;
+  const { authState} = useAuth()
+  const admin = authState.admin;
   const INITIAL_STATE = {
     name : '',
     business_name : '',

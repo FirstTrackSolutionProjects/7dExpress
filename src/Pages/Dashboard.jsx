@@ -62,7 +62,7 @@ const Dashboard = () => {
                 {(menuID[0] == 9 && menuID[1] == 3) ? <AllParcels/> : null}
                 {(menuID[0] == 9 && menuID[1] == 4) ? <AllShipmentReports/> : null}
                 {(menuID[0] == 5) ? <NDR/> : null}
-                {((menuID[0] == 6 && menuID[1] == 0) && authStat?.admin)  ?  <AdminProfile/> :null }
+                {((menuID[0] == 6 && menuID[1] == 0) && authState?.admin)  ?  <AdminProfile/> :null }
                 {((menuID[0] == 6 && menuID[1] == 0) && !authState?.admin)  ?  <Profile/> : null }
                 {(menuID[0] == 6 && menuID[1] == 1) ? <ChangePassword/> : null}
                 {(menuID[0] == 9 && menuID[1] == 0) ? <MerchantManage/> : null}

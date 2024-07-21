@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 
-import {Routes, Route} from 'react-router-dom'
+import {Routes, Route, useLocation} from 'react-router-dom'
 import Landing from './Pages/Landing'
 import Contact from './Pages/Contact'
 import About from './Pages/About'
@@ -18,15 +18,18 @@ import Tracking from './Pages/Tracking'
 import Dashboard from './Pages/Dashboard'
 import { useAuth } from './contexts/AuthContext'
 import Verify from './Pages/Verify'
+import Header from './Components/Header'
 const App = () => {
   const { authState } = useAuth()
-  useEffect(()=> {
+  const location= useLocation()
+  useEffect(()=> { 
     console.log(authState)
   },[authState])
   return (
-    <div className=''>
-      <HeaderTemp/>
+    <>
+      {location.pathname != '/dashboard' ? <HeaderTemp/> : <Header/>}
       <div className='h-[72px]'></div>
+    <div className=''>
       <Routes>
         <Route path='/' element={<Landing/>}></Route>
         <Route path='/login' element={<Login/>} />
@@ -42,9 +45,10 @@ const App = () => {
         <Route path='/dashboard' element={<Dashboard/>}></Route>
         <Route path='/verify' element={<Verify/>}></Route>
       </Routes>
-      <Footer/>
       
     </div>
+      {location.pathname != '/dashboard' && <Footer/>}
+      </>
   )
 }
 

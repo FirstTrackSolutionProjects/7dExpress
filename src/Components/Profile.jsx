@@ -97,14 +97,14 @@ const Profile = () => {
       </div> */}
       <div className=' border-2  relative p-6 max-w-[500px] bg-white rounded-2xl overflow-hidden space-y-8'>
                     <div className='w-full space-y-6'>
-                        <div className='w-full flex items-center justify-center space-x-8'>
+                        <div className='w-full flex items-center flex-wrap justify-center space-x-8'>
                             <div className='flex justify-center items-center w-32 h-32'>
                                 <img src='user.webp'/>
                             </div>
-                            <div className=''>
+                            <div className='text-wrap'>
                                 <p className='font-medium text-xl'>{profileData.business_name}</p>
                                 <p className='font-medium text-sm text-gray-600'>({profileData.name})</p>
-                                <p className='font-medium text-sm text-gray-600'>{profileData.email}</p>
+                                <p className='font-medium text-sm text-wrap text-gray-600'>{profileData.email}</p>
                                 <p className='font-medium text-sm text-gray-600'>{profileData.phone}</p>
                                 <p className='font-medium text-sm text-green-400'>Balance(Coming Soon)</p>
                             </div>

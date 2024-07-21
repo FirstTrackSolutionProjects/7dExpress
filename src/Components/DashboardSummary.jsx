@@ -4,10 +4,10 @@ import { jwtDecode } from "jwt-decode"
 
 const DashboardSummaryCard = ({title, number}) => {
   return (
-    <div className="rounded-xl flex-1 m-2  min-w-64 h-32 transition-all flex space-x-5 p-8 items-center duration-300 text-[rgba(37,168,229)] font-medium bg-white hover:text-white hover:bg-[rgba(37,168,229,0.8)]">
-      <img src="images/logo1.png" alt=""className="w-16" />
+    <div className="rounded-xl border-purple-500 border-2 flex-1 m-2  min-w-64 max-w-64 h-32 transition-all flex space-x-5 p-8 items-center duration-300 text-purple-500 font-medium bg-white hover:text-white hover:bg-purple-500">
+      {/* <img src="images/logo1.png" alt=""className="w-16" /> */}
       <div>
-        <div>{title}</div>
+        <div className="text-lg">{title}</div>
         <div className="text-xl">{number}</div>
       </div>
     </div>

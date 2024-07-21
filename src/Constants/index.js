@@ -1,4 +1,42 @@
 
+export const navItems = [
+    {
+        name : 'Home',
+        url : '/'
+    },
+    {
+        name : 'About',
+        url : '/about'
+    },
+    {
+        name : 'Tracking',
+        url : '/track',
+    },
+    {
+        name : 'Blogs',
+        url : '/blog'
+    },
+    {
+        name : 'Pricing',
+        isDropdown : false,
+        url : '/pricing',
+        options : [{
+            name : 'Domestic',
+            url : '/domestic',
+        },{
+            name : 'International',
+            url : '/international',
+        }]
+    },
+    
+   
+    {
+        name : 'Contact',
+        url : '/contact'
+    }
+]
+
+
 export const menuItems = [
     {
         icon : "images/logo1.png",

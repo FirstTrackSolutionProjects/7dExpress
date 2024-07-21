@@ -93,7 +93,7 @@ const Login = () => {
   const {authState, message ,login } = useAuth();
 
   useEffect(() => {
-    if(authState.verified){
+    if(authState?.verified){
       navigate('/dashboard')
     }
   }, [authState])

@@ -21,10 +21,12 @@ import NonVerifiedMerchantManage from "../Components/NonVerifiedMerchantManage"
 import AllTransactions from "../Components/AllTransactions"
 import AllParcels from "../Components/AllParcels"
 import AllShipmentReports from "../Components/AllShipmentReports"
+import { XIcon, MenuIcon } from "@heroicons/react/outline"
 const Dashboard = () => {
   const {logout, authState, checkAuth } = useAuth()
   const [menuID, setMenuID] = useState([0])
   const [showRecharge, setShowRecharge] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate()
     useEffect(() => {
       const auth = async () => {
@@ -35,6 +37,9 @@ const Dashboard = () => {
       }
      auth()
     }, [])
+    useEffect(()=>{
+      setIsOpen(false)
+    },[menuID])
   const loggingOut = () => {
     logout();
     navigate('/');
@@ -42,8 +47,8 @@ const Dashboard = () => {
   return (
      <>
        
-            {authState?.authenticated && <div className="absolute inset-0 flex  pt-16">
-              <div className="min-w-[250px]  md:block hidden  h-full relative bg-blue-100 overflow-y-auto overflow-x-hidden">
+            {authState?.authenticated && <div className="absolute inset-0 flex pt-[72px]">
+              <div className="min-w-[250px]  md:block hidden  h-full relative bg-white overflow-y-auto overflow-x-hidden">
                 {menuItems.map((item,index) =>{
                   if (item.admin && !authState?.admin)
                     return;
@@ -51,8 +56,22 @@ const Dashboard = () => {
                   <MenuItem key={index} setShowRecharge={setShowRecharge} icon={item.icon} menuID={item.menuID} setMenuID={setMenuID} name={item.name} isDropdown={item.isDropdown} dropDownOptions={item.dropDownOptions} />
                   )})}
               </div>
+                
+              
+              <div className={`relative ${isOpen?'w-full':'w-0'}  block md:hidden  h-full  bg-white  pt-12`}>
+              {isOpen? <XIcon className="absolute h-8 z-[1] top-3 left-3" onClick={()=>setIsOpen(false)} /> : <MenuIcon className="absolute h-8 z-50 top-3 left-3" onClick={()=>setIsOpen(true)}  />}
+                <div className={`relative w-full block md:hidden  h-full  bg-white overflow-y-auto overflow-x-hidden`}>
+                {menuItems.map((item,index) =>{
+                  if (item.admin && !authState?.admin)
+                    return;
+                  return (
+                  <MenuItem key={index} setShowRecharge={setShowRecharge} icon={item.icon} menuID={item.menuID} setMenuID={setMenuID} name={item.name} isDropdown={item.isDropdown} dropDownOptions={item.dropDownOptions} />
+                  )})}
+                </div>
+           
+              </div>
               {showRecharge ? <Recharge setShowRecharge={setShowRecharge}/> : null}
-              <div className="relative w-full bg-gray-100 overflow-y-auto overflow-x-hidden">
+              <div className={`relative ${isOpen?'w-0 overflow-hidden': 'w-full'} bg-white overflow-y-auto overflow-x-hidden`}>
                 {menuID[0] == 0 ? <DashboardMain/> : null}
                 {(menuID[0] == 1) ? <CreateOrder/> : null}
                 {(menuID[0] == 2) ? <Warehouse/> : null}

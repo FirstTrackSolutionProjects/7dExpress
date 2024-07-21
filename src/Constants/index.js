@@ -129,26 +129,26 @@ export const menuItems = [
             dropDownOptions : [{}]
         }]
     },
-    {
-        icon : "images/logo1.png",
-        name : "Users",
-        admin : true,
-        isDropdown : true,
-        menuID : [10],
-        dropDownOptions : [{
-            icon : "images/logo1.png",
-            name : "Accounts",
-            isDropdown : false,
-            menuID : [10,0],
-            dropDownOptions : [{}]
-        },{
-            icon : "images/logo1.png",
-            name : "Admin",
-            isDropdown : false,
-            menuID : [10,1],
-            dropDownOptions : [{}]
-        },]
-    },
+    // {
+    //     icon : "images/logo1.png",
+    //     name : "Users",
+    //     admin : true,
+    //     isDropdown : true,
+    //     menuID : [10],
+    //     dropDownOptions : [{
+    //         icon : "images/logo1.png",
+    //         name : "Accounts",
+    //         isDropdown : false,
+    //         menuID : [10,0],
+    //         dropDownOptions : [{}]
+    //     },{
+    //         icon : "images/logo1.png",
+    //         name : "Admin",
+    //         isDropdown : false,
+    //         menuID : [10,1],
+    //         dropDownOptions : [{}]
+    //     },]
+    // },
     {
         icon : "images/logo1.png",
         name : "Submission",

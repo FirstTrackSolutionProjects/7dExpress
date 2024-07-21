@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { jwtDecode } from "jwt-decode"
-
+import { useAuth } from "../contexts/AuthContext"
 
 const DashboardSummaryCard = ({title, number}) => {
   return (
@@ -17,6 +17,7 @@ const DashboardSummaryCard = ({title, number}) => {
 
 const DashboardSummary = () => { 
   const [summary, setSummary] = useState(null)
+  const {authState} = useAuth()
   useEffect(() => {
       const getStatistics = async () => {
         await fetch(`/.netlify/functions/getStatistics`, {
@@ -31,6 +32,7 @@ const DashboardSummary = () => {
   },[])
     return (
         <div className="w-full max-w-[1220px] flex flex-wrap justify-center px-4">
+            {authState?.admin ? <DashboardSummaryCard title="Total Merchants" number={summary?summary.merchant:0} /> : null}
             <DashboardSummaryCard title="Total Warehouses" number={summary?summary.warehouse:0} />
             <DashboardSummaryCard title="Total Shipments" number={summary?summary.shipment:0} />
             <DashboardSummaryCard title="Total Delivered" number="0" />

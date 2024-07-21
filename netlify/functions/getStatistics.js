@@ -34,9 +34,11 @@ exports.handler = async (event, context) => {
          const warehouse = warehouses[0].warehouses;
          const [shipments] = await connection.execute('SELECT COUNT(*) AS shipments FROM SHIPMENTS');
          const shipment = shipments[0].shipments;
+         const [merchants] = await connection.execute('SELECT COUNT(*) AS merchants FROM USERS WHERE isAdmin=0 AND isVerified=1 ')
+         const merchant = merchants[0].merchants;
          return {
             statusCode: 200,
-            body: JSON.stringify({ warehouse, shipment , success : true }),
+            body: JSON.stringify({ warehouse, shipment , merchant, success : true }),
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)

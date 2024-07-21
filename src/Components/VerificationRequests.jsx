@@ -36,7 +36,7 @@ const View = ({request, reqId, uid ,fullName, email, phone, gst, setView, busine
             }).then((response)=>response.json()).then(result => setProfilePhoto(result.downloadURL))
         }
         getProfilePhoto()
-    })
+    },[])
     const handleDownload = async (name) => {
         await fetch('/.netlify/functions/getGetSignedUrl', {
         method : 'POST',

@@ -43,7 +43,7 @@ exports.handler = async (event) => {
               from: process.env.EMAIL_USER,
               to: email, 
               subject: 'Email Verified Successfully', 
-              text: `Dear ${fullName}, \nYour account email has been verified.\nRegards,\nJupiter Xpress`
+              text: `Dear ${fullName}, \nYour account email has been verified.\nRegards,\n7dExpress`
             };
           await transporter.sendMail(mailOptions);
           return {

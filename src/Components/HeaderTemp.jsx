@@ -35,7 +35,7 @@ const HeaderTemp = () => {
           <Link to="/blog" className="text-sky-950 font-bold">Blogs</Link>
           <Link to="/pricing" className="text-sky-950 font-bold">Pricing</Link>
           <Link to="/contact" className="text-sky-950 font-bold">Contact</Link>
-          {authState?.authenticated &&<p className="text-sky-950 font-bold" onClick={()=>navigate('/dashboard')}>{authState?.businessName}{authState?.verified &&<span className="mx-2 text-sky-950 font-bold" >₹{balance}</span>}</p>}
+          {authState?.authenticated &&<p className="text-sky-950 font-bold" onClick={()=>navigate('/dashboard')}>{authState?.businessName}{authState?.verified ?<span className="mx-2 text-sky-950 font-bold" >₹{balance}</span> : null}</p>}
           
           {authState?.authenticated && <p className="text-sky-950 font-bold" onClick={()=>{logout();}}>Logout</p>}
         </div>

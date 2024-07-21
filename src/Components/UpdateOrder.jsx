@@ -149,7 +149,6 @@ const ManageForm = ({isManage, setIsManage,  shipment, isShipped}) => {
           },
           body: JSON.stringify({waybill, act, date})
         }).then(response => response.json()).then(result => console.log(result.data));
-
       }
     return (
       <>

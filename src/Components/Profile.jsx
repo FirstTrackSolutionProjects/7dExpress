@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import {useAuth} from '../contexts/AuthContext'
+import { jwtDecode } from 'jwt-decode'
 const Profile = () => {
+  const decoded = jwtDecode(localStorage.getItem('token'))
   const { authState} = useAuth()
   const admin = authState.admin;
   const INITIAL_STATE = {
@@ -41,7 +43,10 @@ const Profile = () => {
     account_number : '',
     ifsc : ''
   })
+  const [profilePhoto, setProfilePhoto] = useState(null)
+  
   useEffect(()=>{
+    const decoded = jwtDecode(localStorage.getItem('token'))
     fetch('/.netlify/functions/getProfile', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json',
@@ -68,7 +73,16 @@ const Profile = () => {
         ifsc : data.ifsc
       })
     })
-  }, [])
+    fetch('/.netlify/functions/getGetSignedUrl', {
+      method : 'POST',
+      headers : {
+          'Content-Type' : 'application/json',
+          'Accept' : 'application/json',
+          'Authorization' : localStorage.getItem('token')
+      },
+      body : JSON.stringify({key : decoded.photo})
+  }).then((response)=>response.json()).then(result => setProfilePhoto(result.downloadURL))
+  }, [authState])
   return (
     <div className=" w-full h-full flex flex-col items-center overflow-x-hidden">
       <div className='w-full h-full bg-white p-8 flex flex-col items-center'>
@@ -99,7 +113,7 @@ const Profile = () => {
                     <div className='w-full space-y-6'>
                         <div className='w-full flex items-center flex-wrap justify-center space-x-8'>
                             <div className='flex justify-center items-center w-32 h-32'>
-                                <img src='user.webp'/>
+                            <img src={`${profilePhoto?profilePhoto:"user.webp"}`}/>
                             </div>
                             <div className='text-wrap'>
                                 <p className='font-medium text-xl'>{profileData.business_name}</p>

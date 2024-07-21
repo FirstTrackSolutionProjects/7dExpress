@@ -44,7 +44,7 @@ exports.handler = async (event, context) => {
               from: process.env.EMAIL_USER,
               to: email,  
               subject: 'Your account has been deactivated', 
-              text: `Dear ${fullName}, \nYour account has been deactivated, if you think it's a mistake contact us.\nRegards,\nJupiter Xpress`
+              text: `Dear ${fullName}, \nYour account has been deactivated, if you think it's a mistake contact us.\nRegards,\n7dExpress`
             };
             await transporter.sendMail(mailOptions);
 

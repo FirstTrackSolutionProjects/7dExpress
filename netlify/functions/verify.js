@@ -71,14 +71,14 @@ exports.handler = async (event) => {
             from: process.env.EMAIL_USER,
             to: email, 
             subject: 'Verification Request is Incomplete', 
-            text: `Dear ${name}, \n Your Request for verification of account on Jupiter Xpress is incomplete. Please upload your documents to finish the verification request.  \n\nRegards, \nJupiter Xpress`,
+            text: `Dear ${name}, \n Your Request for verification of account on 7dExpress is incomplete. Please upload your documents to finish the verification request.  \n\nRegards, \n7dExpress`,
             
           };
           let mailOptions2 = {
             from: process.env.EMAIL_USER,
             to: `${process.env.VERIFY_EMAIL},${process.env.EMAIL_USER}`,  
             subject: 'Incomplete merchant Verification Request Received', 
-            text: `Dear Owner, \n${name} has submitted a incomplete verification request for verification of account on Jupiter Xpress.`,
+            text: `Dear Owner, \n${name} has submitted a incomplete verification request for verification of account on 7dExpress.`,
             
           };
         await transporter.sendMail(mailOptions);

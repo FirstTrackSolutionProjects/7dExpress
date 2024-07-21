@@ -33,12 +33,12 @@ const DashboardSummary = () => {
         <div className="w-full max-w-[1220px] flex flex-wrap justify-center px-4">
             <DashboardSummaryCard title="Total Warehouses" number={summary?summary.warehouse:0} />
             <DashboardSummaryCard title="Total Shipments" number={summary?summary.shipment:0} />
-            <DashboardSummaryCard title="Total Delivered" number="3" />
-            <DashboardSummaryCard title="Total Undelivered" number="2" />
-            <DashboardSummaryCard title={jwtDecode(localStorage.getItem('token')).admin?`Total Revenue`:`Total Wallet Recharge`} number="₹1563" />
-            <DashboardSummaryCard title="Parcel on process" number="4" />
-            <DashboardSummaryCard title="Parcel Return" number="1" />
-            <DashboardSummaryCard title="NDR Parcel" number="1" />
+            <DashboardSummaryCard title="Total Delivered" number="0" />
+            <DashboardSummaryCard title="Total Undelivered" number="0" />
+            <DashboardSummaryCard title={jwtDecode(localStorage.getItem('token')).admin?`Total Revenue`:`Total Wallet Recharge`} number="₹0" />
+            <DashboardSummaryCard title="Parcel on process" number="0" />
+            <DashboardSummaryCard title="Parcel Return" number="0" />
+            <DashboardSummaryCard title="NDR Parcel" number="0" />
         </div>
     )
 }

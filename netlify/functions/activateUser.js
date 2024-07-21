@@ -43,7 +43,7 @@ exports.handler = async (event, context) => {
               from: process.env.EMAIL_USER,
               to: email,  
               subject: 'Your account has been activated', 
-              text: `Dear ${fullName}, \nYour account has been re-activated.\n\nRegards,\nJupiter Xpress`
+              text: `Dear ${fullName}, \nYour account has been re-activated.\n\nRegards,\n7dExpress`
             };
             await transporter.sendMail(mailOptions);
     return {

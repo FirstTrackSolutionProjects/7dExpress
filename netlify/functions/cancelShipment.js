@@ -73,7 +73,7 @@ exports.handler = async (event) => {
       from: process.env.EMAIL_USER,
       to: email, 
       subject: 'Shipment cancelled successfully', 
-      text: `Dear Merchant, \nYour shipment request for Order id : ${order} is successfully cancelled and the corresponding refund is credited to your wallet.\nRegards,\nJupiter Xpress`
+      text: `Dear Merchant, \nYour shipment request for Order id : ${order} is successfully cancelled and the corresponding refund is credited to your wallet.\nRegards,\n7dExpress`
     };
     await transporter.sendMail(mailOptions)
     return {

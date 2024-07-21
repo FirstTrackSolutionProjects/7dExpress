@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const FileUploadForm = () => {
   const [reqId, setReqId] = useState(null)
+  const {authState} = useAuth()
   const [fileData, setFileData] = useState({
     aadhar_doc: null,
     pan_doc: null,
@@ -18,6 +19,7 @@ const FileUploadForm = () => {
     cancelledCheque: false,
     selfie_doc: false,
   });
+  useEffect(()=>{},[authState])
   useEffect(() => {
     const getDocumentStatus = async () => {
       await fetch('/.netlify/functions/getDocumentStatus', {
@@ -113,7 +115,7 @@ const FileUploadForm = () => {
   }).then(response => response.json()).then(result => alert(result.message));
 }
   return (
-    <form className="w-[1024px] flex flex-col bg-white pt-8 px-4" onSubmit={handleSubmit}>
+    <form className="lg:w-[1024px] flex flex-col bg-white pt-8 px-4" onSubmit={handleSubmit}>
       {/* File input required fields */}
       <div className="w-full flex mb-2 flex-wrap ">
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
@@ -277,7 +279,7 @@ const TextForm = ({ onNext }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-[1024px] flex flex-col bg-white pt-8 px-4"
+      className="lg:w-[1024px] flex flex-col bg-white pt-8 px-4"
     >
       <div className="w-full flex mb-2 flex-wrap "></div>
       <div className="w-full flex mb-2 flex-wrap ">
@@ -466,6 +468,10 @@ const Verify = () => {
   const [step, setStep] = useState(1);
 
   useEffect(() => {
+    if (!authState?.emailVerified){
+      navigate('/')
+      return;
+    }
     const getStatus = async () => {
       await fetch('/.netlify/functions/getVerificationStatus', {
         method: 'GET',
@@ -479,22 +485,7 @@ const Verify = () => {
     getStatus()
   }, [])
 
-  const {  } = useAuth()
-
-    useEffect(() => {
-      const auth = async () => {
-        const a = await checkAuth()
-        a.then(()=>{
-            if (!authState.authenticated) {
-                navigate('/')
-            } 
-            if (authState.verified) {
-                navigate('/dashboard')
-            }
-        })
-      }
-      auth()
-    }, [])
+    useEffect(() => {if (authState?.verified) navigate('/dashboard')},[authState]);
 
   const handleNextStep = () => {
     setStep(2);

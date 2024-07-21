@@ -44,7 +44,7 @@ exports.handler = async (event) => {
               from: process.env.EMAIL_USER,
               to: email, 
               subject: 'Password changed successfully', 
-              text: `Dear ${fullName}, \nYour account password has been changed successfully. If this action is not done by you. Contact support center immediately.\nRegards,\nJupiter Xpress`
+              text: `Dear ${fullName}, \nYour account password has been changed successfully. If this action is not done by you. Contact support center immediately.\nRegards,\n7dExpress`
             };
           await transporter.sendMail(mailOptions);
           return {

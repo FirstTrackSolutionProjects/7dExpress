@@ -64,7 +64,7 @@ exports.handler = async (event, context) => {
       from: process.env.EMAIL_USER,
       to: email, 
       subject: 'Wallet Recharge Successfull', 
-      text: `Dear ${fullName}, \nYour wallet recharge for amount ₹${amount} and order Id : ${transactionDetails.razorpay_order_id} has been verified and credited to your wallet.\nRegards,\nJupiter Xpress`
+      text: `Dear ${fullName}, \nYour wallet recharge for amount ₹${amount} and order Id : ${transactionDetails.razorpay_order_id} has been verified and credited to your wallet.\nRegards,\n7dExpress`
     };
   await transporter.sendMail(mailOptions);
     return {

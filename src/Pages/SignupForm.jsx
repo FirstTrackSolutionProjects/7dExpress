@@ -3,33 +3,26 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faUserTag, faPhone, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../contexts/AuthContext';
+import EmailVerification from '../Components/EmailVerification';
 
-const SignupForm = () => {
-    const [businessName, setBusinessName] = useState('');
+
+const Form = ({register, message}) => {
+  const [businessName, setBusinessName] = useState('');
     const [fullName, setFullName] = useState('');
     const [mobile, setMobile] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {authState, register, message} = useAuth();
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     await register(email, password, fullName, businessName, mobile)
   };
 
-  useEffect(() => {
-    if (authState.authenticated) {
-      navigate('/dashboard');
-    }
-  },[authState])
-
   const navigateToLogin = () => {
     navigate('/login');
   };
-
   return (
-    <div className="flex items-center justify-center min-h-screen bg-bg-login bg-cover">
+    <>
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg my-3">
         <div className="text-3xl font-bold mb-5 text-sky-950">Sign Up</div>
         <div className="text-[14px] font-bold mb-5 text-sky-900">Signing up is easy. It only takes a few steps</div>
@@ -122,6 +115,28 @@ const SignupForm = () => {
             </div>
         </form>
       </div>
+    </>
+  )
+}
+
+const SignupForm = () => {
+  const [verify, setVerify] = useState(false)
+  const {authState, register, message} = useAuth();
+  const navigate = useNavigate();
+
+ 
+
+  useEffect(() => {
+    if (authState?.authenticated) {
+      setVerify(true)
+    }
+  },[authState])
+
+  
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-bg-login bg-cover">
+      {verify?<EmailVerification /> :<Form register={register} message={message}/>}
     </div>
   );
 };

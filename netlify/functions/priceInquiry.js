@@ -29,7 +29,7 @@ exports.handler = async (event) => {
       from: process.env.EMAIL_USER,
       to: `${process.env.EMAIL_USER},${process.env.CONTACT_EMAIL}`,
       subject: "Inquiry : International Pricing",
-      text: `Dear Owner,\nA merchant has submitted a inquiry for the International Pricing.\nHere are the following details,\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nOrigin Country: ${originCountry}\nOrigin Pin : ${origin}\nDestination Country: ${destCountry}\nDestination Pin : ${dest}\nPayment Mode : ${payMode}\nWeight : ${weight}\nLength : ${length}\nBreadth : ${breadth}\nHeight : ${height}\n\nRegards,\nJupiter Xpress`,
+      text: `Dear Owner,\nA merchant has submitted a inquiry for the International Pricing.\nHere are the following details,\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nOrigin Country: ${originCountry}\nOrigin Pin : ${origin}\nDestination Country: ${destCountry}\nDestination Pin : ${dest}\nPayment Mode : ${payMode}\nWeight : ${weight}\nLength : ${length}\nBreadth : ${breadth}\nHeight : ${height}\n\nRegards,\n7dExpress`,
     };
     await transporter.sendMail(mailOptions);
     return {

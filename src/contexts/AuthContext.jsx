@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
       setAuthState({ authenticated: true,  emailVerified : emailVerified, verified : verified, admin : admin, name : name, businessName : businessName, id : id, email : email});
     } catch {
         setAuthState(INITIAL_AUTH)
-        logout();
+        // logout();
       // try {
       //   await axios.post('/.netlify/functions/refreshAuth');
       //   const response = await axios.post('/.netlify/functions/checkAuth');
@@ -75,9 +75,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try{
-      localStorage.removeItem('token');
       await axios.post('/.netlify/functions/logout');
-      if (location.pathname == '/dashboard')
+      localStorage.removeItem('token');
       navigate('/');
     } catch (e) {
       console.error(e);

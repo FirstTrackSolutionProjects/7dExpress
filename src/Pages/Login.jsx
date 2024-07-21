@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import EmailVerification from '../Components/EmailVerification';
+import ResetPassword from '../Components/ResetPassword';
+import { set } from 'react-hook-form';
 
-const LoginForm = ({authState, message, login}) => {
+const LoginForm = ({authState, message, login, setReset}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -49,9 +52,9 @@ const LoginForm = ({authState, message, login}) => {
                   <input type="checkbox" className="form-checkbox" />
                   <span className="ml-2 text-gray-700 text-[12px] md:text-[15px]">Keep me signed in</span>
                 </label>
-                <a href="#" className="text-sky-900 hover:underline text-[12px] md:text-[15px]">
+                <p  className="text-sky-900 hover:underline text-[12px] md:text-[15px] cursor-pointer" onClick={()=>setReset(true)}>
                   Forgot password?
-                </a>
+                </p>
               </div>
           <div>
             <button
@@ -89,9 +92,8 @@ const LoginForm = ({authState, message, login}) => {
 
 const Login = () => {
   const navigate = useNavigate()
-  const [verifyEmail, setVerifyEmail] = useState(false);
   const {authState, message ,login } = useAuth();
-
+  const [reset, setReset] = useState(false)
   useEffect(() => {
     if(authState?.verified){
       navigate('/dashboard')
@@ -102,7 +104,7 @@ const Login = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-bg-login bg-cover">
-      <LoginForm authState={authState} message={message} login={login}/>
+      {(authState?.authenticated && !authState.verified) ? <EmailVerification />  : reset? <ResetPassword setReset={setReset}/> : <LoginForm setReset={setReset} authState={authState} message={message} login={login}/> }
     </div>
   );
 };

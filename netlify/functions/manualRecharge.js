@@ -64,7 +64,7 @@ exports.handler = async (event) => {
               from: process.env.EMAIL_USER,
               to: email, 
               subject: 'Manual Recharge Received', 
-              text: `Dear Merchant, \nYour wallet got manually ${amount>=0?"credited":"debited"} by ₹${amount}.\nRegards,\nJupiter Xpress`
+              text: `Dear Merchant, \nYour wallet got manually ${amount>=0?"credited":"debited"} by ₹${amount}.\nRegards,\n7dExpress`
             };
             await transporter.sendMail(mailOptions);
           return {

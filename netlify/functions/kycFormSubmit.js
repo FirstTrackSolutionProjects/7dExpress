@@ -72,7 +72,7 @@ exports.handler = async (event) => {
             from: process.env.EMAIL_USER,
             to: email, 
             subject: 'KYC Update Request is Incomplete', 
-            text: `Dear ${name}, \n Your Request for KYC update of account on Jupiter Xpress is incomplete. Please upload your documents to finish the KYC update request.  \n\nRegards, \nJupiter Xpress`,
+            text: `Dear ${name}, \n Your Request for KYC update of account on 7dExpress is incomplete. Please upload your documents to finish the KYC update request.  \n\nRegards, \n7dExpress`,
             
           };
         await transporter.sendMail(mailOptions);

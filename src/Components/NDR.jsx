@@ -27,7 +27,7 @@ const View  = ({report, setIsView}) => {
             {
               status ? <div>
               <p>AWB : {report.awb}</p>
-              <p>Ref Id: JUP{report.ref_id}</p>
+              <p>Ref Id: 7DXP{report.ref_id}</p>
               <p>Status : {status.Status.Status}</p>
               {
                 (status.Scans).map((scan,index)=> {
@@ -60,7 +60,7 @@ const Card = ({ report }) => {
     <>
       {view && <View report={report} setIsView={setIsView}/>}
       <div className="w-full h-16 bg-white relative items-center px-4 sm:px-8 flex border-b">
-        <div><div>{report.ord_id}</div><div>JUP{report.ref_id}</div></div>
+        <div><div>{report.ord_id}</div><div>7DXP{report.ref_id}</div></div>
         <div className="absolute right-4 sm:right-8 flex space-x-2">
         {report.status}
         <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={()=>setIsView(true)}>View</div>

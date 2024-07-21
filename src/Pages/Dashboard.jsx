@@ -33,6 +33,8 @@ const Dashboard = () => {
         await checkAuth()
         if (!authState?.authenticated) {
           navigate('/');
+        } else if (!authState?.verified){
+          navigate('/verify')
         }
       }
      auth()
@@ -47,7 +49,7 @@ const Dashboard = () => {
   return (
      <>
        
-            {authState?.authenticated && <div className="absolute inset-0 flex pt-[72px]">
+            {authState?.authenticated && <div className={`absolute inset-0 flex pt-16`}>
               <div className="min-w-[250px]  md:block hidden  h-full relative bg-white overflow-y-auto overflow-x-hidden">
                 {menuItems.map((item,index) =>{
                   if (item.admin && !authState?.admin)

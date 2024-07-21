@@ -77,7 +77,7 @@ exports.handler = async (event) => {
         "state": "Delhi",
         "country": "India",
         "phone": "1234567890",
-        "order": `JUP${refId}`,
+        "order": `7DXP${refId}`,
         "payment_mode": "Pre-paid",
         "return_pin": "",
         "return_city": "",
@@ -144,7 +144,7 @@ exports.handler = async (event) => {
       from: process.env.EMAIL_USER,
       to: email, 
       subject: 'Shipment created successfully', 
-      text: `Dear Merchant, \nYour shipment request for Ref id : JUP${refId} is successfully created at Delhivery Courier Service and the corresponding charge is deducted from your wallet.\nRegards,\nJupiter Xpress`
+      text: `Dear Merchant, \nYour shipment request for Ref id : 7DXP${refId} is successfully created at Delhivery Courier Service and the corresponding charge is deducted from your wallet.\nRegards,\n7dExpress`
     };
     await transporter.sendMail(mailOptions)
     return {

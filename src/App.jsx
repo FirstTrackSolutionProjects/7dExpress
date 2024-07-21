@@ -28,8 +28,8 @@ const App = () => {
   return (
     <>
       {location.pathname != '/dashboard' ? <HeaderTemp/> : <Header/>}
-      <div className='h-[72px]'></div>
-    <div className=''>
+      <div className={location.pathname!='/dashboard'?`h-[72px]`:'h-16'}></div>
+    <div >
       <Routes>
         <Route path='/' element={<Landing/>}></Route>
         <Route path='/login' element={<Login/>} />

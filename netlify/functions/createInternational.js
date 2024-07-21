@@ -58,7 +58,7 @@ exports.handler = async (event) => {
     }
     const downloadURL = await s3.getSignedUrlPromise('getObject', params);
       const req = {
-        "tracking_no": `JUPINT${iid}`,
+        "tracking_no": `7DXPINT${iid}`,
         "origin_code": "IN",
         "customer_id"  : "181",
         "product_code": "NONDOX",
@@ -69,7 +69,7 @@ exports.handler = async (event) => {
         "shipment_value": total_amount,
         "shipment_value_currency": "INR",
         "actual_weight": shipment.actual_weight,
-        "shipment_invoice_no": `JUPINT${iid}`,
+        "shipment_invoice_no": `7DXPINT${iid}`,
         "shipment_invoice_date": shipment.invoice_date,
         "shipment_content": shipment.contents,
         "new_docket_free_form_invoice": "0",
@@ -169,7 +169,7 @@ exports.handler = async (event) => {
     //   from: process.env.EMAIL_USER,
     //   to: email, 
     //   subject: 'Shipment created successfully', 
-    //   text: `Dear Merchant, \nYour shipment request for Order id : ${order} is successfully created at Delhivery Courier Service and the corresponding charge is deducted from your wallet.\nRegards,\nJupiter Xpress`
+    //   text: `Dear Merchant, \nYour shipment request for Order id : ${order} is successfully created at Delhivery Courier Service and the corresponding charge is deducted from your wallet.\nRegards,\n7dExpress`
     // };
     // await transporter.sendMail(mailOptions)
     return {

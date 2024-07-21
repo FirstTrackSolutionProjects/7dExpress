@@ -37,7 +37,9 @@ exports.handler = async (event) => {
       const emailVerified = rows[0].emailVerified;
       const admin = rows[0].isAdmin;
       const business_name = rows[0].businessName;
-      const accessToken = jwt.sign({authenticated: true,  email , verified , name, id, business_name , admin, emailVerified}, ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
+      const userData = await connection.execute('SELECT * FROM USER_DATA WHERE uid = ? ', [rows[0].uid])
+      const photo = userData.length? userData[0].selfie_doc : null
+      const accessToken = jwt.sign({authenticated: true,  email , verified , name, id, business_name , admin, emailVerified, photo}, ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
       // const refreshToken = jwt.sign({  email , verified , name, id, business_name , admin, emailVerified }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
       return {
         statusCode: 200,

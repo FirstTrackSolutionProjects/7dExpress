@@ -12,7 +12,11 @@ const Header = () => {
   const [showRecharge, setShowRecharge] = useState(false)
   const {authState, logout} = useAuth()
   const [balance, setBalance] = useState(0)
+  const [isMenu,setIsMenu] = useState(false)
 
+  const toggleMenu = () => {
+    setIsMenu(!isMenu);
+    }
   useEffect(()=>{
     const getBalance = async () => {
       if (authState?.verified){
@@ -29,14 +33,24 @@ const Header = () => {
   return (
     <>
     {showRecharge && <Recharge setShowRecharge={setShowRecharge}/>}
-    <div className="fixed bg-purple-500 z-10 top-0 hidden sm:flex justify-center items-center w-full h-16 ">
-      <nav className="w-full relative z-3 lg:w-4/5 flex justify-evenly text-white items-center h-16">
-        <Link to="/" className="flex items-center">
-          <img src="logo1.png" alt="" className="h-8" />
+    
+    <div className="fixed bg-purple-500 z-10 top-0 flex justify-center items-center w-full h-16 ">
+    <div className="">
+    <button onClick={toggleMenu} className={`fixed block md:hidden z-50 top-3 right-4 px-4 py-2 bg-blue-600 text-white font-bold rounded-md`}>
+        {isMenu ? 'X' : '☰'}
+      </button>
+      
+        <Link to="/" className="flex md:items-center">
+          <img src="images/logo2.png" alt="" className="h-14" />
         </Link>
+        </div>
+        <nav className="w-full relative z-3 lg:w-4/5 flex justify-evenly text-white items-center h-16">
+        <div className="hidden md:flex justify-evenly items-center flex-1">
         {navItems.map((item, index) => (
           <NavItem key={index} name={item.name} url={item.url} isDropdown={item.isDropdown} options={item.options} />
         ))}
+        </div>
+        
 
         {authState?.authenticated && (
           <div className="h-16 flex space-x-3 items-center">
@@ -50,7 +64,7 @@ const Header = () => {
               </div> */}
               </>
             ):null}
-            <div className="flex space-x-4">
+            <div className="hidden md:flex space-x-4">
               <p className="bg-white text-black flex items-center font-medium rounded-xl px-2 py-2 cursor-pointer" onClick={()=>navigate('/dashboard')}>
                 {authState?.businessName}
               </p>

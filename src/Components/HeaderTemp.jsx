@@ -26,14 +26,14 @@ const HeaderTemp = () => {
           
           {authState?.authenticated && <p className="text-sky-950 font-bold" onClick={()=>{logout();}}>Logout</p>}
         </div>
-        <div className="lg:hidden">
+        <div className="md:hidden flex">
           <button onClick={toggleMenu} className="text-sky-950 focus:outline-none">
             {isOpen ? <XIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
           </button>
         </div>
       </div>
       {isOpen && (
-        <div className="lg:hidden items-center flex flex-col space-y-2 mt-2">
+        <div className="md:hidden items-center flex flex-col space-y-2 mt-2">
           <Link to="/" className="text-sky-950 font-bold">Home</Link>
           <Link to="/about" className="text-sky-950 font-bold">About</Link>
           <Link to="/track" className="text-sky-950 font-bold">Tracking</Link>

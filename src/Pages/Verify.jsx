@@ -19,7 +19,13 @@ const FileUploadForm = () => {
     cancelledCheque: false,
     selfie_doc: false,
   });
-  useEffect(()=>{},[authState])
+  useEffect(()=>{
+    if(authState?.verified){
+      navigate('/dashboard')
+    } else if (authState?.emailVerified){
+      navigate('/signup')
+    }
+  },[authState])
   useEffect(() => {
     const getDocumentStatus = async () => {
       await fetch('/.netlify/functions/getDocumentStatus', {

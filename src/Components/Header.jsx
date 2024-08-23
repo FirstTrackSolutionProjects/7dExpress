@@ -21,7 +21,7 @@ const Header = () => {
     const getBalance = async () => {
       if (authState?.verified){
         try{
-          const response = await axios.get('/.netlify/functions/getBalance')
+          const response = await axios.get('/.netlify/functions/getBalance',{headers : {'Authorization' : localStorage.getItem('token')}})
           setBalance(response.data.balance);
         } catch(e){
           

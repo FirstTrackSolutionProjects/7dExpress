@@ -10,7 +10,7 @@ const dbConfig = {
 };
 
 // Secret key for JWT
-const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
+const SECRET_KEY = process.env.JWT_SECRET;
 
 exports.handler = async (event) => {
   const token = event.headers.authorization;
@@ -26,6 +26,7 @@ exports.handler = async (event) => {
     const id = verified.id;
     try {
       const {
+        iid,
         wid,
         contents,
         serviceCode,
@@ -53,30 +54,27 @@ exports.handler = async (event) => {
       try {
         await connection.beginTransaction();
         const [shipment] = await connection.execute(
-          `INSERT INTO INTERNATIONAL_SHIPMENTS (
-  uid,
-  wid,
-  contents,
-  service_code,
-  consignee_name,
-  consignee_company_name,
-  consignee_country_code,
-  consignee_contact_no,
-  consignee_email,
-  consignee_address_1,
-  consignee_address_2,
-  consignee_address_3,
-  consignee_city,
-  consignee_state,
-  consignee_country,
-  consignee_zip_code,
-  shippingType,
-  gst,
-  shipping_price,
-  actual_weight
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,  ?, ?, ?, ?, ?)`,
+          `UPDATE INTERNATIONAL_SHIPMENTS SET
+  wid = ?,
+  contents = ?,
+  service_code = ?,
+  consignee_name = ?,
+  consignee_company_name = ?,
+  consignee_country_code = ?,
+  consignee_contact_no = ?,
+  consignee_email = ?,
+  consignee_address_1 = ?,
+  consignee_address_2 = ?,
+  consignee_address_3 = ?,
+  consignee_city = ?,
+  consignee_state = ?,
+  consignee_country = ?,
+  consignee_zip_code = ?,
+  shippingType = ?,
+  gst = ?,
+  shipping_price = ?,
+  actual_weight = ? WHERE iid = ?`,
           [
-            id,
             wid,
             contents,
             serviceCode,
@@ -95,12 +93,14 @@ exports.handler = async (event) => {
             shippingType,
             gst,
             price,
-            actual_weight
+            actual_weight,
+            iid
           ]
         );
-        const iid = shipment.insertId;
+        await connection.execute('DELETE FROM DOCKET_ITEMS WHERE iid = ?', [iid])
+        await connection.execute('DELETE FROM DOCKETS WHERE iid = ?', [iid])
         for (let i = 0; i < dockets.length; i++) {
-          const [docket] =  await connection.execute(
+          const [docket] = await connection.execute(
             `INSERT INTO DOCKETS (box_no, iid, docket_weight, length, breadth, height ) VALUES (?, ?, ?, ?, ?, ?)`,
             [
               dockets[i].box_no,
@@ -112,7 +112,7 @@ exports.handler = async (event) => {
             ]
           );
           const did = docket.insertId;
-          const docketItems = items.filter(item => item.box_no == i+1)
+          const docketItems = items.filter(item => item.box_no == i + 1)
           for (let j = 0; j < docketItems.length; j++) {
             await connection.execute(
               `INSERT INTO DOCKET_ITEMS (did, hscode, box_no, quantity, rate, description, unit, unit_weight, igst_amount, iid) VALUES (?,?,?,?,?,?,?,?,?,?)`,
@@ -134,14 +134,14 @@ exports.handler = async (event) => {
         await connection.commit();
         return {
           statusCode: 200,
-          body: JSON.stringify({ success: true, message: "Order Created" }),
+          body: JSON.stringify({ success: true, message: "Order Updated" }),
         };
       } catch (error) {
         return {
           statusCode: 500,
           body: JSON.stringify({
-            message: error.message + id,
-            error: error.message
+            message: error.message,
+            error: error.message,
           }),
         };
       } finally {

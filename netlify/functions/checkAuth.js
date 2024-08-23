@@ -11,8 +11,7 @@ const dbConfig = {
 require('dotenv').config();
 exports.handler = async (event) => {
 try{
-  const cookies = event.headers.cookie;
-  const accessToken = cookies.split('; ').find(row => row.startsWith('accessToken')).split('=')[1];
+  const accessToken = event.headers.authorization;
 
   if (!accessToken) {
     return {

@@ -29,7 +29,7 @@ exports.handler = async (event) => {
   const connection = await mysql.createConnection(dbConfig);
 
   try {
-    const [rows] = await connection.execute('SELECT * FROM DOCKETS WHERE iid = ?', [iid]);
+    const [rows] = await connection.execute('SELECT * FROM DOCKET_ITEMS WHERE iid = ?', [iid]);
     if (rows.length > 0) {
       return {
         statusCode: 200,
@@ -44,7 +44,7 @@ exports.handler = async (event) => {
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
+      body: JSON.stringify({ message: 'Error logging in', error: error.message }),
     };
   } finally {
     await connection.end();

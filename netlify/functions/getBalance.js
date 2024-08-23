@@ -7,8 +7,7 @@ const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event, context) => {
   try {
-  const cookies = event.headers.cookie;
-  const token = cookies.split('; ').find(row => row.startsWith('accessToken')).split('=')[1];
+  const token = event.headers.authorization;
   if (!token) {
     return {
       statusCode: 401,

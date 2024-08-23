@@ -127,8 +127,10 @@ const SignupForm = () => {
  
 
   useEffect(() => {
-    if (authState?.authenticated) {
+    if (authState?.authenticated && !authState.emailVerified) {
       setVerify(true)
+    } else if (authState?.authenticated) {
+      navigate('/dashboard')
     }
   },[authState])
 

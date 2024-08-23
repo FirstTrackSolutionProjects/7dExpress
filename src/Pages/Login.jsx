@@ -104,7 +104,7 @@ const Login = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-bg-login bg-cover">
-      {(authState?.authenticated && !authState.verified) ? <EmailVerification />  : reset? <ResetPassword setReset={setReset}/> : <LoginForm setReset={setReset} authState={authState} message={message} login={login}/> }
+      {(authState?.authenticated && !authState?.emailVerified) ? <EmailVerification />  : reset? <ResetPassword setReset={setReset}/> : <LoginForm setReset={setReset} authState={authState} message={message} login={login}/> }
     </div>
   );
 };

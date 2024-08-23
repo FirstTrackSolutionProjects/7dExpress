@@ -43,10 +43,6 @@ exports.handler = async (event) => {
       // const refreshToken = jwt.sign({  email , verified , name, id, business_name , admin, emailVerified }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
       return {
         statusCode: 200,
-        headers: {
-          // 'Set-Cookie': [`accessToken=${accessToken}; HttpOnly; Secure; Path=/; Max-Age=900` , `refreshToken=${refreshToken}; HttpOnly; Secure; Path=/; Max-Age=604800`],
-          'Set-Cookie': `accessToken=${accessToken}; HttpOnly; Secure; Path=/; Max-Age=${60*60*24}` ,
-        },
         body: JSON.stringify({ message: 'Login Successfull', success : true , token : accessToken})
       };
     } else {

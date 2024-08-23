@@ -12,8 +12,7 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({ message: 'Method Not Allowed' }),
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-        
+        'Access-Control-Allow-Origin': '*'
       },
     };
   }

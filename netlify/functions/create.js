@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-const nodemailer = require('nodemailer');
+// const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -10,15 +10,15 @@ const dbConfig = {
   database: process.env.DB_NAME,
 };
 
-let transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST, 
-  port: process.env.EMAIL_PORT,
-  secure: process.env.EMAIL_SECURE,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+// let transporter = nodemailer.createTransport({
+//   host: process.env.EMAIL_HOST, 
+//   port: process.env.EMAIL_PORT,
+//   secure: process.env.EMAIL_SECURE,
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// });
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event) => {
@@ -32,6 +32,7 @@ exports.handler = async (event) => {
     const {order,  price,serviceId , categoryId} = JSON.parse(event.body);
     const [shipments] = await connection.execute('SELECT * FROM SHIPMENTS WHERE ord_id = ? ', [order]);
     const shipment = shipments[0];
+    const [boxes] = await connection.execute('SELECT * FROM SHIPMENT_PACKAGES WHERE ord_id = ? ', [order]);
     const [orders] = await connection.execute('SELECT * FROM ORDERS WHERE ord_id = ? ', [order]);
     const [warehouses] = await connection.execute('SELECT * FROM WAREHOUSES WHERE uid = ? AND wid = ?', [id, shipment.wid]);
     const warehouse = warehouses[0]
@@ -49,6 +50,16 @@ exports.handler = async (event) => {
       product_description += `${orders[i].product_name} (${orders[i].product_quantity}) (₹${orders[i].selling_price})\n`
     }
     if (serviceId === "1") {
+      if (boxes.length > 1){
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ success : false, message : "More than 1 box is not allowed on this service"}),
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          },
+        };
+      }
       const res = await fetch(`https://track.delhivery.com/waybill/api/bulk/json/?count=1`, {
         method : 'GET',
         headers: {
@@ -75,7 +86,7 @@ exports.handler = async (event) => {
         "state": shipment.shipping_state,
         "country": shipment.shipping_country,
         "phone": shipment.customer_mobile,
-        "order": `7DXP${refId}`,
+        "order": `JUP${refId}`,
         "payment_mode": shipment.pay_method == "topay"?"COD":shipment.pay_method,
         "return_pin": "",
         "return_city": "",
@@ -86,7 +97,7 @@ exports.handler = async (event) => {
         "products_desc": product_description,
         "hsn_code": (shipment.hsn)?(shipment.hsn):(""),
         "cod_amount": shipment.cod_amount,
-        "order_date": shipment.date,
+        "order_date": shipment.date.toISOString().split("T")[0],
         "total_amount": total_amount,
         "seller_add": warehouse.address,
         "seller_name": warehouse.warehouseName,
@@ -127,7 +138,6 @@ exports.handler = async (event) => {
       await connection.commit();
     }
     else{
-      await connection.execute('INSERT INTO SHIPMENT_REPORTS VALUES (?,?,?)',[refId,order,"FAILED"])
       return {
         statusCode: 200,
         body: JSON.stringify({ success : false, message : response}),
@@ -137,13 +147,132 @@ exports.handler = async (event) => {
         },
       };
     }
-    let mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email, 
-      subject: 'Shipment created successfully', 
-      text: `Dear Merchant, \nYour shipment request for Order id : ${order} is successfully created at Delhivery Courier Service and the corresponding charge is deducted from your wallet.\nRegards,\n7dExpress`
+    // let mailOptions = {
+    //   from: process.env.EMAIL_USER,
+    //   to: email, 
+    //   subject: 'Shipment created successfully',
+    //   text: `Dear Merchant, \n
+    //          Your shipment request for Order id : ${order} is successfully created at Delhivery Courier Service 
+    //          and the corresponding charge is deducted from your wallet.\n
+    //          Regards,\n
+    //          Jupiter Xpress`
+    // };
+    // await transporter.sendMail(mailOptions)
+    return {
+      statusCode: 200,
+      body: JSON.stringify({response : response, success : true}),
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
     };
-    await transporter.sendMail(mailOptions)
+    } else if (serviceId == '2'){
+      const loginPayload = {
+        grant_type: "client_credentials",
+        client_id: process.env.MOVIN_CLIENT_ID,
+        client_secret: process.env.MOVIN_CLIENT_SECRET,
+        Scope: `${process.env.MOVIN_SERVER_ID}/.default`,
+      };
+      const formBody = Object.entries(loginPayload).map(
+	        ([key, value]) =>
+	        encodeURIComponent(key) + "=" + encodeURIComponent(value)
+      ).join("&");
+      const login = await fetch(`https://login.microsoftonline.com/${process.env.MOVIN_TENANT_ID}/oauth2/v2.0/token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
+        },
+        body : formBody
+      })
+      const loginRes = await login.json()
+      const token = loginRes.access_token
+      const req = {
+        communication_email : "xpressjupiter@gmail.com",
+        payload : [
+          {shipment : {
+            shipment_unique_id : `JUP${refId}`,
+        shipment_type : 'Forward',
+        forward_shipment_number : `JUP${refId}`,
+        ship_from_account : process.env.MOVIN_ACCOUNT_NUMBER,
+        ship_from_company : users[0].businessName,
+        ship_from_address_line1 : warehouse.address,
+        ship_from_address_line2 : warehouse.address,
+        ship_from_address_line3 : warehouse.address,
+        ship_from_zipcode : warehouse.pin,
+        ship_from_email : "xpressjupiter@gmail.com",
+        ship_from_phone : users[0].phone,
+        shipment_date : "2024-08-12",
+        shipment_priority : categoryId==1?'Express End of Day':'Standard Premium',
+        ship_to_first_name : shipment.customer_name.split(" ")[0],
+        ship_to_last_name : shipment.customer_name.split(" ")[1],
+        ship_to_company : "Customer",
+        ship_to_address_line1 : shipment.shipping_address,
+        ship_to_address_line2 : shipment.shipping_address_2,
+        ship_to_address_line3 : shipment.shipping_address_2,
+        ship_to_zipcode : shipment.shipping_postcode,
+        ship_to_email : "xpressjupiter@gmail.com",
+        ship_to_phone : shipment.customer_mobile,
+        package_type : 'Package',
+        goods_general_description : product_description,
+        goods_value : total_amount.toString(),
+        bill_to : 'Shipper',
+        include_insurance : 'No',
+        email_notification : 'Yes',
+        mobile_notification : 'Yes',
+        add_adult_signature : 'Yes',
+        cash_on_delivery : shipment.pay_method=="Pre-paid"?"No":"Yes"
+          },
+        package : []
+      }]}
+      for (let i = 0; i < boxes.length; i++){
+        req.payload[0].package.push({
+          "package_unique_id": `PACK_${i+1}`,
+          "length": categoryId==1?30:36,
+          "width" : categoryId==1?30:36,
+          "height" : categoryId==1?30:36,
+          "weight_actual" : categoryId==1?5:10,
+          "identical_package_count" : 1
+        })
+      }
+      const responseDta = await fetch('https://apim.iristransport.co.in/rest/v2/shipment/sync/create', {
+        method : 'POST',
+        headers : {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Ocp-Apim-Subscription-Key' : process.env.MOVIN_SUBSCRIPTION_KEY
+        },
+        body : JSON.stringify(req)
+      })
+      const response = await responseDta.json()
+    if (response.status == 200){
+      await connection.beginTransaction();
+      await connection.execute('UPDATE SHIPMENTS set serviceId = ?, categoryId = ?, awb = ? WHERE ord_id = ?', [serviceId, categoryId, response.response.success[`JUP${refId}`].parent_shipment_number[0] ,order])
+      await connection.execute('INSERT INTO SHIPMENT_REPORTS VALUES (?,?,?)',[refId,order,"SHIPPED"])
+      if (shipment.pay_method != "topay"){
+        await connection.execute('UPDATE WALLET SET balance = balance - ? WHERE uid = ?', [price, id]);
+        await connection.execute('INSERT INTO EXPENSES (uid, expense_order, expense_cost) VALUES  (?,?,?)',[id, order, price])
+      }
+      await connection.commit();
+    }
+    else{
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ success : false, message : response, request:req}),
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
+      };
+    }
+    // let mailOptions = {
+    //   from: process.env.EMAIL_USER,
+    //   to: email, 
+    //   subject: 'Shipment created successfully', 
+    //   text: `Dear Merchant, \nYour shipment request for Order id : ${order} is successfully created at Delhivery Courier Service and the corresponding charge is deducted from your wallet.\nRegards,\nJupiter Xpress`
+    // };
+    // await transporter.sendMail(mailOptions)
     return {
       statusCode: 200,
       body: JSON.stringify({response : response, success : true}),
@@ -154,7 +283,10 @@ exports.handler = async (event) => {
     };
     }
     
-  } catch (error) {
+   
+    
+  } 
+  catch (error) {
     return {
       statusCode: 504,
       body: JSON.stringify({response : error, success : true}),
@@ -163,7 +295,8 @@ exports.handler = async (event) => {
         'Access-Control-Allow-Origin': '*'
       },
     };
-  }  finally {
+  }  
+  finally {
     connection.end()
   }
 };

@@ -25,15 +25,17 @@ exports.handler = async (event) => {
   try {
     const verified = jwt.verify(token, SECRET_KEY);
     const id = verified.id;
-    const {iid} = JSON.parse(event.body);
+    const admin = verified.admin;
+
   const connection = await mysql.createConnection(dbConfig);
 
   try {
-    const [rows] = await connection.execute('SELECT * FROM DOCKETS WHERE iid = ?', [iid]);
+    if (admin){
+      const [rows] = await connection.execute('SELECT * FROM INTERNATIONAL_SHIPMENTS s JOIN WAREHOUSES w ON s.wid=w.wid JOIN USERS u ON u.uid=s.uid WHERE s.awb IS NOT NULL');
     if (rows.length > 0) {
       return {
         statusCode: 200,
-        body: JSON.stringify({success:true, dockets : rows }),
+        body: JSON.stringify({success:true, order : rows }),
       };
     } else {
       return {
@@ -41,10 +43,24 @@ exports.handler = async (event) => {
         body: JSON.stringify({ message: 'No shipments found' }),
       };
     }
+    } else {
+      const [rows] = await connection.execute('SELECT * FROM INTERNATIONAL_SHIPMENTS s JOIN WAREHOUSES w ON s.wid=w.wid WHERE s.uid = ? AND s.awb IS NOT NULL', [id]);
+    if (rows.length > 0) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({success:true, order : rows }),
+      };
+    } else {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ message: 'No shipments found' }),
+      };
+    }
+    }
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
+      body: JSON.stringify({ message: 'Error logging in', error: error.message }),
     };
   } finally {
     await connection.end();

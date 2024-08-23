@@ -1,47 +1,26 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-
+import { jwtDecode } from 'jwt-decode';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const INITIAL_AUTH = { authenticated: false, emailVerified: false, verified : false, admin : false, name : null, businessName : null, id : null, email : null}
-  const getInitialAuthState =  () => {
-    axios.get('/.netlify/functions/getTokenData', {headers : {'Authorization': localStorage.getItem('token')}}).then(response =>{
-      try {
-        return JSON.parse(response.data);
-      } catch (e) {
-        console.log(response.data);
-        return INITIAL_AUTH;
-      }
-    })
-  };
 
-  const [authState, setAuthState] = useState(getInitialAuthState);
+  const [authState, setAuthState] = useState(localStorage.getItem('token')?jwtDecode(localStorage.getItem('token')):INITIAL_AUTH);
+
   const [message, setMessage] = useState(null)
   const clear = () => {
     setMessage(null)
   }
   const checkAuth = async () => {
     try {
-      const response = await axios.post('/.netlify/functions/checkAuth');
+      const response = await axios.get('/.netlify/functions/checkAuth', {headers : {'Authorization': localStorage.getItem('token')}});
       const {emailVerified, verified, admin, name, businessName, id, email} = response.data
       setAuthState({ authenticated: true,  emailVerified : emailVerified, verified : verified, admin : admin, name : name, businessName : businessName, id : id, email : email});
     } catch {
         setAuthState(INITIAL_AUTH)
-        // logout();
-      // try {
-      //   await axios.post('/.netlify/functions/refreshAuth');
-      //   const response = await axios.post('/.netlify/functions/checkAuth');
-      //   const {emailVerified, verified, admin, name, businessName, id, email} = response.data
-      //   setAuthState({ authenticated: true,  emailVerified : emailVerified, verified : verified, admin : admin, name : name, businessName : businessName, id : id, email : email});
-      // } catch (e) {
-      //   if (authState.authenticated) {
-      //     logout();
-      //   }
-      // }
     }
   };
   useEffect(() => {
@@ -75,8 +54,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try{
-      await axios.post('/.netlify/functions/logout');
       localStorage.removeItem('token');
+      setAuthState(INITIAL_AUTH);
       navigate('/');
     } catch (e) {
       console.error(e);

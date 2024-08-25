@@ -42,21 +42,25 @@ exports.handler = async (event, context) => {
          const unDelivered = unDelivereds[0].unDelivereds;
          const [inTransits] = await connection.execute('SELECT COUNT(*) AS inTransits FROM SHIPMENT_REPORTS WHERE status = "In Transit" ')
          const inTransit = inTransits[0].inTransits;
-         const expense = await connection.execute('SELECT * FROM EXPENSES')
-         const refunds = await connection.execute('SELECT * FROM REFUND')
+         const [expense] = await connection.execute('SELECT * FROM EXPENSES')
+         const [refunds] = await connection.execute('SELECT * FROM REFUND')
          let total_expense = 0;
-         for (let i = 0; i < expense[0].length; i++) {
-           total_expense += parseFloat(expense[0][i].expense_cost)
+         if (expense.length){
+          for (let i = 0; i < expense.length; i++) {
+            total_expense += parseFloat(expense[i].expense_cost)
+          }
          }
          let total_refund = 0;
-         for (let i = 0; i < refunds[0].length; i++){
-          total_refund += parseFloat(refunds[0][i].refund_amount)
-         }
+        if (refunds.length){
+          for (let i = 0; i < refunds.length; i++){
+            total_refund += parseFloat(refunds[i].refund_amount)
+           }
+        }
          const net_expense = total_expense - total_refund;
          const revenue = ((net_expense/1.3)*0.3).toFixed(2)
           return {
             statusCode: 200,
-            body: JSON.stringify({ warehouse, shipment , merchant, delivered, unDelivered ,inTransit, revenue, expense: expense[0][0].expense_cost, refunds ,success : true }),
+            body: JSON.stringify({ warehouse, shipment , merchant, delivered, unDelivered ,inTransit, revenue, expense: total_expense, refunds : total_refund ,success : true }),
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
@@ -99,17 +103,19 @@ exports.handler = async (event, context) => {
 
 
 
-  } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ message: error.message , success: false }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
+  }
+  //  catch (error) {
+  //   return {
+  //     statusCode: 500,
+  //     body: JSON.stringify({ message: error.message , success: false }),
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
         
-      },
-    };
-  } finally { 
+  //     },
+  //   };
+  // } 
+  finally { 
     connection.end();
   }
 };

@@ -97,6 +97,8 @@ const Login = () => {
   useEffect(() => {
     if(authState?.verified){
       navigate('/dashboard')
+    } else if (authState?.emailVerified && !authState?.verified){
+      navigate('/verify')
     }
   }, [authState])
 

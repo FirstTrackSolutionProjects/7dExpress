@@ -91,7 +91,7 @@ const Recharge = ({setShowRecharge}) => {
       <input
         type="number"
         value={amount}
-        min={500}
+        min={1}
         onChange={(e) => setAmount(e.target.value)}
         className='w-full border py-2 px-4 rounded-3xl'
       />

@@ -39,6 +39,17 @@ const Header = () => {
     <button onClick={toggleMenu} className={`fixed block md:hidden z-50 top-3 right-4 px-4 py-2 bg-blue-600 text-white font-bold rounded-md`}>
         {isMenu ? 'X' : '☰'}
       </button>
+      {isMenu && (
+        <div className="fixed md:hidden z-10 top-16 items-center flex flex-col w-full justify-center bg-purple-500 space-y-2">
+          <Link to="/" className="text-sky-950 font-bold">Home</Link>
+          <Link to="/about" className="text-sky-950 font-bold">About</Link>
+          <Link to="/track" className="text-sky-950 font-bold">Tracking</Link>
+          <Link to="/blog" className="text-sky-950 font-bold">Blogs</Link>
+          <Link to="/pricing" className="text-sky-950 font-bold">Pricing</Link>
+          <Link to="/contact" className="text-sky-950 font-bold">Contact</Link>
+          {authState?.authenticated && <p className="text-sky-950 font-bold" onClick={()=>{logout(); setIsOpen(false)}}>Logout</p>}
+        </div>
+      )}
       
         <Link to="/" className="flex md:items-center">
           <img src="images/logo2.png" alt="" className="h-14" />

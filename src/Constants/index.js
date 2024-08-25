@@ -55,6 +55,7 @@ export const menuItems = [
     {
         icon : "images/logo1.png",
         name : "Create Shipment",
+        merchantOnly : true,
         isDropdown : false,
         menuID : [1],
         dropDownOptions : [{}]
@@ -62,6 +63,7 @@ export const menuItems = [
     {
         icon : "images/logo1.png",
         name : "Warehouse",
+        merchantOnly : true,
         isDropdown : false,
         menuID : [2],
         dropDownOptions : [{}]
@@ -69,6 +71,7 @@ export const menuItems = [
     {
         icon : "images/logo1.png",
         name : "Parcels",
+        merchantOnly : true,
         isDropdown : false,
         menuID : [3],
         dropDownOptions : [{}]
@@ -83,6 +86,7 @@ export const menuItems = [
     {
         icon : "images/logo1.png",
         name : "Reports",
+        merchantOnly : true,
         isDropdown : false,
         menuID : [5],
         dropDownOptions : [{}]

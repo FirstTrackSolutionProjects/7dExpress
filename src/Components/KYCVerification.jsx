@@ -1,49 +1,36 @@
-import React, { useState, useEffect} from "react";
-import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 
-const FileUploadForm = () => {
-  const [reqId, setReqId] = useState(null)
-  const {authState} = useAuth()
+import React, { useState, useEffect} from "react";
+
+const FileUploadForm = ({reqId}) => {
   const [fileData, setFileData] = useState({
-    aadhar_doc: null,
-    pan_doc: null,
-    gst_doc: null,
+    aadharDoc: null,
+    panDoc: null,
+    gstDoc: null,
     cancelledCheque: null,
-    selfie_doc: null,
+    selfieDoc: null,
   });
   const [uploadStatus, setUploadStatus] = useState({
-    aadhar_doc: false,
-    pan_doc: false,
-    gst_doc: false,
+    aadharDoc: false,
+    panDoc: false,
+    gstDoc: false,
     cancelledCheque: false,
-    selfie_doc: false,
+    selfieDoc: false,
   });
-  useEffect(()=>{
-    if(authState?.verified){
-      navigate('/dashboard')
-    } else if (authState?.emailVerified && !authState?.verified){
-      
-    } else if (!authState?.emailVerified){
-      navigate('/signup')
-    }
-  },[authState])
   useEffect(() => {
     const getDocumentStatus = async () => {
-      await fetch('/.netlify/functions/getDocumentStatus', {
+      await fetch('/.netlify/functions/getKycDocumentStatus', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': localStorage.getItem('token')
         }
       }).then(response => response.json()).then((result) => {
-        setReqId(result.message.reqId)
         setUploadStatus({
-          aadhar_doc: result.message.aadhar_doc?(true):(false),
-          pan_doc: result.message.pan_doc?(true):(false),
-          gst_doc: result.message.gst_doc?(true):(false),
+          aadharDoc: result.message.aadharDoc?(true):(false),
+          panDoc: result.message.panDoc?(true):(false),
+          gstDoc: result.message.gstDoc?(true):(false),
           cancelledCheque: result.message.cancelledCheque?(true):(false),
-          selfie_doc: result.message.selfie_doc?(true):(false),
+          selfieDoc: result.message.selfieDoc?(true):(false),
         })
       })
     }
@@ -67,7 +54,7 @@ const FileUploadForm = () => {
     })
     const tokenData = await response.json();
     const id = tokenData.id;
-    const key  = `merchant/${id}/verificationDocs/${reqId}/${name}`
+    const key  = `merchant/${id}/kycDocs/${reqId}/${name}`
     await fetch(`/.netlify/functions/getPutSignedUrl`, {
       method: "POST",
       headers: {
@@ -86,31 +73,17 @@ const FileUploadForm = () => {
             'Content-Type': fileData[name].type
           },
           body: fileData[name],
-        }).then(async (response) => {
-          if (response.status === 200) {
-            await fetch(`/.netlify/functions/updateDocumentStatus`, {
-              method: 'POST',
-              headers : {
-                'Content-Type' : 'application/json',
-                'Accept' : 'application/json',
-                'Authorization' : localStorage.getItem('token')
-              },
-              body : JSON.stringify({name : name, key : key})
-            }).then(response => response.json()).then(data => {
-              if(data.success){
-                alert("Document uploaded successfully")
-                setUploadStatus((prevStatus) => ({
-                 ...prevStatus,
-                  [name]: false,
-                }));
-              } else {
-                alert("Failed to upload document")
-              }
-            })
-          } else {
-            alert("Failed to upload document")
-        }
+        });
+        await fetch(`/.netlify/functions/updateKycDocumentStatus`, {
+          method: 'POST',
+          headers : {
+            'Content-Type' : 'application/json',
+            'Accept' : 'application/json',
+            'Authorization' : localStorage.getItem('token')
+          },
+          body : JSON.stringify({name : name, key : key})
         })
+        alert("Success");
       })
       .then(() => {
         setUploadStatus((prevStatus) => ({
@@ -123,11 +96,11 @@ const FileUploadForm = () => {
 
   const handleSubmit= async (e) => {
     e.preventDefault();
-    if (!(uploadStatus.aadhar_doc && uploadStatus.pan_doc && uploadStatus.cancelledCheque && uploadStatus.selfie_doc)){
+    if (!(uploadStatus.aadharDoc && uploadStatus.panDoc && uploadStatus.cancelledCheque && uploadStatus.selfieDoc)){
       alert("Please upload all required documents")
       return;
     }
-    await fetch(`/.netlify/functions/completeVerificationRequest`, {
+    await fetch(`/.netlify/functions/completeKycVerificationRequest`, {
       method: 'GET',
       headers : {
         'Content-Type' : 'application/json',
@@ -137,64 +110,64 @@ const FileUploadForm = () => {
   }).then(response => response.json()).then(result => alert(result.message));
 }
   return (
-    <form className="lg:w-[1024px] flex flex-col bg-white pt-8 px-4" onSubmit={handleSubmit}>
+    <form className="w-[1024px] flex flex-col bg-white pt-8 px-4" onSubmit={handleSubmit}>
       {/* File input required fields */}
       <div className="w-full flex mb-2 flex-wrap ">
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="aadhar_doc">Aadhar Card (Both Sides) *</label>
+          <label htmlFor="aadharDoc">Aadhar Card (Both Sides) *</label>
           <input
             className="w-full border leading-8 rounded-3xl"
             type="file"
             onChange={handleFileChange}
-            id="aadhar_doc"
-            name="aadhar_doc"
+            id="aadharDoc"
+            name="aadharDoc"
           />
           <button
             type="button"
-            onClick={() => handleUpload("aadhar_doc")}
+            onClick={() => handleUpload("aadharDoc")}
             className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
           >
             Upload
           </button>
-          {uploadStatus.aadhar_doc && <span>✔️</span>}
+          {uploadStatus.aadharDoc && <span>✔️</span>}
         </div>
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="pan_doc">PAN Card (Front Side) *</label>
+          <label htmlFor="panDoc">PAN Card (Front Side) *</label>
           <input
             className="w-full border leading-8 rounded-3xl"
             type="file"
             onChange={handleFileChange}
-            id="pan_doc"
-            name="pan_doc"
+            id="panDoc"
+            name="panDoc"
           />
           <button
             type="button"
-            onClick={() => handleUpload("pan_doc")}
+            onClick={() => handleUpload("panDoc")}
             className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
           >
             Upload
           </button>
-          {uploadStatus.pan_doc && <span>✔️</span>}
+          {uploadStatus.panDoc && <span>✔️</span>}
         </div>
       </div>
       <div className="w-full flex mb-2 flex-wrap ">
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="gst_doc">GST Certificate </label>
+          <label htmlFor="gstDoc">GST Certificate </label>
           <input
             className="w-full border leading-8 rounded-3xl"
             type="file"
             onChange={handleFileChange}
-            id="gst_doc"
-            name="gst_doc"
+            id="gstDoc"
+            name="gstDoc"
           />
           <button
             type="button"
-            onClick={() => handleUpload("gst_doc")}
+            onClick={() => handleUpload("gstDoc")}
             className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
           >
             Upload
           </button>
-          {uploadStatus.gst_doc && <span>✔️</span>}
+          {uploadStatus.gstDoc && <span>✔️</span>}
         </div>
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="cancelledCheque">Cancelled Cheque *</label>
@@ -217,29 +190,23 @@ const FileUploadForm = () => {
       </div>
       <div className="w-1/2 flex mb-2 flex-wrap ">
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="selfie_doc">Upload your selfie *</label>
+          <label htmlFor="selfieDoc">Upload your selfie *</label>
           <input
             className="w-full border leading-8 rounded-3xl"
             type="file"
             onChange={handleFileChange}
-            id="selfie_doc"
-            name="selfie_doc"
+            id="selfieDoc"
+            name="selfieDoc"
           />
           <button
             type="button"
-            onClick={() => handleUpload("selfie_doc")}
+            onClick={() => handleUpload("selfieDoc")}
             className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
           >
             Upload
           </button>
-          {uploadStatus.selfie_doc && <span>✔️</span>}
+          {uploadStatus.selfieDoc && <span>✔️</span>}
         </div>
-        {/* <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-                  <label htmlFor="pan_doc">PAN Card (Front Side) *</label>
-                  <input required className="w-full border leading-8 rounded-3xl" type="file" onChange={handleFileChange} id="pan_doc" name="pan_doc" />
-                  <button type='button' onClick={() => handleUpload('aadhar_doc')} className="px-5 py-1 border rounded-3xl bg-blue-500 text-white">Upload</button>
-                  {uploadStatus.pan_doc && <span>✔️</span>}
-              </div> */}
       </div>
       <div className="px-2 space-x-4 mb-4">
         <button
@@ -254,12 +221,11 @@ const FileUploadForm = () => {
   );
 };
 
-const TextForm = ({ onNext }) => {
+const TextForm = ({ onNext, setReqId }) => {
   const [formData, setFormData] = useState({
     address: "",
     state: "",
     city: "",
-    hub: "",
     pin: "",
     aadhar: "",
     pan: "",
@@ -281,7 +247,7 @@ const TextForm = ({ onNext }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("/.netlify/functions/verify", {
+    fetch("/.netlify/functions/kycFormSubmit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -292,6 +258,7 @@ const TextForm = ({ onNext }) => {
     })
       .then((response) => response.json())
       .then((result) => {
+        setReqId(result.reqId);
         alert(result.message);
         onNext(); // Move to the next step
       })
@@ -301,7 +268,7 @@ const TextForm = ({ onNext }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="lg:w-[1024px] flex flex-col bg-white pt-8 px-4"
+      className="w-[1024px] flex flex-col bg-white pt-8 px-4"
     >
       <div className="w-full flex mb-2 flex-wrap "></div>
       <div className="w-full flex mb-2 flex-wrap ">
@@ -398,8 +365,8 @@ const TextForm = ({ onNext }) => {
           />
         </div>
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="msme">MSME/UDYAM Number*</label>
-          <input required
+          <label htmlFor="msme">MSME/UDYAM Number</label>
+          <input
             className="w-full border py-2 px-4 rounded-3xl"
             type="text"
             onChange={handleChange}
@@ -484,30 +451,27 @@ const TextForm = ({ onNext }) => {
   );
 };
 
-const Verify = () => {
-  const navigate = useNavigate();
-  const {  authState, checkAuth } = useAuth();
+const KYCVerification = () => {
+  const [reqId, setReqId] = useState(null)
   const [step, setStep] = useState(1);
-
   useEffect(() => {
-    if (!authState?.emailVerified){
-      navigate('/')
-      return;
-    }
     const getStatus = async () => {
-      await fetch('/.netlify/functions/getVerificationStatus', {
+      await fetch('/.netlify/functions/getKycStatus', {
         method: 'GET',
         headers: {
           'Authorization': localStorage.getItem('token'),
           'Content-Type' : 'application/json',
           'Accept' : 'application/json'
         }
-      }).then((response)=>response.json()).then((data)=>data.success?(setStep(2)):null)
+      }).then((response)=>response.json()).then((data)=>{
+        if (data.success){
+          setReqId(data.message.reqId)
+          setStep(2);
+        }
+      })
     }
     getStatus()
   }, [])
-
-    useEffect(() => {if (authState?.verified) navigate('/dashboard')},[authState]);
 
   const handleNextStep = () => {
     setStep(2);
@@ -515,15 +479,15 @@ const Verify = () => {
 
   return (
     <>
-      <div className="w-full flex flex-col items-center pt-16">
-        <div className="w-full flex flex-col items-center p-8">
+      <div className="w-full flex flex-col items-center">
+        <div className="w-full flex flex-col items-center p-8 bg-white">
           <div className="text-center text-3xl font-medium">
-            Verify your details
+            KYC Verification
           </div>
           {step === 1 ? (
-            <TextForm onNext={handleNextStep} />
+            <TextForm onNext={handleNextStep} setReqId={setReqId} />
           ) : (
-            <FileUploadForm />
+            <FileUploadForm reqId={reqId} />
           )}
         </div>
       </div>
@@ -531,4 +495,4 @@ const Verify = () => {
   );
 };
 
-export default Verify;
+export default KYCVerification;

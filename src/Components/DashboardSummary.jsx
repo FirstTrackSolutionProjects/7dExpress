@@ -35,10 +35,10 @@ const DashboardSummary = () => {
             {authState?.admin ? <DashboardSummaryCard title="Total Merchants" number={summary?summary.merchant:0} /> : null}
             <DashboardSummaryCard title="Total Warehouses" number={summary?summary.warehouse:0} />
             <DashboardSummaryCard title="Total Shipments" number={summary?summary.shipment:0} />
-            <DashboardSummaryCard title="Total Delivered" number="0" />
-            <DashboardSummaryCard title="Total Undelivered" number="0" />
-            <DashboardSummaryCard title={jwtDecode(localStorage.getItem('token')).admin?`Total Revenue`:`Total Wallet Recharge`} number="₹0" />
-            <DashboardSummaryCard title="Parcel on process" number="0" />
+            <DashboardSummaryCard title="Total Delivered" number={summary?summary.delivered:0} />
+            <DashboardSummaryCard title="Pending Pickups" number={summary?summary.unDelivered:0} />
+            <DashboardSummaryCard title={authState.admin?`Total Revenue`:`Total Wallet Recharge`} number={summary? (authState.admin ? summary.revenue : summary.total_recharge) :0}/>
+            <DashboardSummaryCard title="Parcel on process" number={summary?summary.inTransit:0} />
             <DashboardSummaryCard title="Parcel Return" number="0" />
             <DashboardSummaryCard title="NDR Parcel" number="0" />
         </div>

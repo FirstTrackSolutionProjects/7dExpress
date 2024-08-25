@@ -64,7 +64,7 @@ const Dashboard = () => {
               {isOpen? <XIcon className="absolute h-8 z-[1] top-3 left-3" onClick={()=>setIsOpen(false)} /> : <MenuIcon className="absolute h-8 z-[1] top-3 left-3" onClick={()=>setIsOpen(true)}  />}
                 <div className={`relative w-full block md:hidden  h-full  bg-white overflow-y-auto overflow-x-hidden`}>
                 {menuItems.map((item,index) =>{
-                  if (item.admin && !authState?.admin)
+                  if ((item.admin && !authState?.admin) || (item.merchantOnly && authState?.admin))
                     return;
                   return (
                   <MenuItem key={index} setShowRecharge={setShowRecharge} icon={item.icon} menuID={item.menuID} setMenuID={setMenuID} name={item.name} isDropdown={item.isDropdown} dropDownOptions={item.dropDownOptions} />

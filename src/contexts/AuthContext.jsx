@@ -19,7 +19,11 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.get('/.netlify/functions/checkAuth', {headers : {'Authorization': localStorage.getItem('token')}});
       const {emailVerified, verified, admin, name, businessName, id, email} = response.data
       setAuthState({ authenticated: true,  emailVerified : emailVerified, verified : verified, admin : admin, name : name, businessName : businessName, id : id, email : email});
-    } catch {
+    } catch (e) {
+      if (e.response.status == 402){
+        localStorage.removeItem('token');
+        navigate('/')
+      }
         setAuthState(INITIAL_AUTH)
     }
   };

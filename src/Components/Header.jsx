@@ -41,7 +41,7 @@ const Header = () => {
       </button>
       {isMenu && (
         <div className="fixed md:hidden z-10 top-16 items-center flex flex-col w-full justify-center bg-purple-500 space-y-2">
-          
+          {authState?.authenticated &&<p className="text-sky-950 font-bold bg-[rgba(255,255,255,0.6)] px-5 py-2 rounded-xl" onClick={()=>navigate('/dashboard')}>{authState?.businessName}</p>}
           <Link to="/" className="text-sky-950 font-bold">Home</Link>
           <Link to="/about" className="text-sky-950 font-bold">About</Link>
           <Link to="/track" className="text-sky-950 font-bold">Tracking</Link>

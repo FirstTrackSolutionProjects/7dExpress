@@ -34,13 +34,13 @@ const Header = () => {
     <>
     {showRecharge && <Recharge setShowRecharge={setShowRecharge}/>}
     
-    <div className="fixed bg-purple-500 z-10 top-0 flex justify-center items-center w-full h-16 ">
+    <div className="fixed bg-green-400 z-10 top-0 flex justify-center items-center w-full h-16 ">
     <div className="">
     <button onClick={toggleMenu} className={`fixed block md:hidden z-50 top-3 right-4 px-4 py-2 bg-blue-600 text-white font-bold rounded-md`}>
         {isMenu ? 'X' : '☰'}
       </button>
       {isMenu && (
-        <div className="fixed md:hidden z-10 top-16 items-center flex flex-col w-full justify-center bg-purple-500 space-y-2">
+        <div className="fixed md:hidden z-10 py-8 top-16 items-center flex flex-col w-full justify-center bg-yellow-500 space-y-2">
           {authState?.authenticated &&<p className="text-sky-950 font-bold bg-[rgba(255,255,255,0.6)] px-5 py-2 rounded-xl" onClick={()=>navigate('/dashboard')}>{authState?.businessName}</p>}
           <Link to="/" className="text-sky-950 font-bold">Home</Link>
           <Link to="/about" className="text-sky-950 font-bold">About</Link>
@@ -56,7 +56,7 @@ const Header = () => {
           <img src="images/logo2.png" alt="" className="h-14" />
         </Link>
         </div>
-        <nav className="w-full relative z-3 lg:w-4/5 flex justify-evenly text-white items-center h-16">
+        <nav className="w-full relative z-3 lg:w-4/5 flex justify-evenly text-black items-center h-16">
         <div className="hidden md:flex justify-evenly items-center flex-1">
         {navItems.map((item, index) => (
           <NavItem key={index} name={item.name} url={item.url} isDropdown={item.isDropdown} options={item.options} />

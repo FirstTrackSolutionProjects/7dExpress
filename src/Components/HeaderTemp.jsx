@@ -15,7 +15,7 @@ const HeaderTemp = () => {
     <header className="fixed z-50 w-full bg-bg-header bg-cover p-4">
       <div className="container h-10 mx-auto flex items-center justify-between">
       <Link to="/"><img src="images/logo1.png" onClick="" alt="" className='lg:w-[90px] lg:h-[65px]  w-16 h-14'></img></Link>
-        <div className="hidden lg:flex space-x-10 h-10 items-center">
+        <div className="hidden md:flex space-x-10 h-10 items-center">
         <Link to="/" className="text-sky-950 font-bold">Home</Link>
           <Link to="/about" className="text-sky-950 font-bold">About</Link>
           <Link to="/track" className="text-sky-950 font-bold">Tracking</Link>

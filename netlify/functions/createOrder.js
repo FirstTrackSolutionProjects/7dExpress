@@ -54,7 +54,10 @@ exports.handler = async (event) => {
         cod,
         gst,
         Cgst,
-        shippingType
+        shippingType,
+        ewaybill,
+        pickupDate,
+        pickupTime
       } = JSON.parse(event.body);
 
       if (same) {
@@ -73,7 +76,7 @@ exports.handler = async (event) => {
       try {
         await connection.beginTransaction();
         const [orderIds] = await connection.execute("SELECT domestic_order_ids FROM SYSTEM_CODE_GENERATOR");
-        const order = `JUPXD${orderIds[0].domestic_order_ids}`;
+        const order = `7DXD${orderIds[0].domestic_order_ids}`;
         await connection.execute("UPDATE SYSTEM_CODE_GENERATOR SET domestic_order_ids = domestic_order_ids + 1")
         await connection.execute(
           `INSERT INTO SHIPMENTS (
@@ -105,8 +108,11 @@ exports.handler = async (event) => {
   customer_gst,
   wid,
   same,
-  shipping_mode
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?, ?, ?, ?,?, ?)`,
+  shipping_mode,
+  ewaybill,
+  pickup_date,
+  pickup_time
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?, ?, ?, ?,?, ?,?,?,?)`,
           [
             id,
             order,
@@ -136,7 +142,10 @@ exports.handler = async (event) => {
             Cgst,
             wid,
             same,
-            shippingType
+            shippingType,
+            ewaybill,
+            pickupDate,
+            pickupTime
           ]
         );
         for (let i = 0; i < boxes.length; i++) {

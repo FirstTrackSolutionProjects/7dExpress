@@ -49,7 +49,7 @@ exports.handler = async (event, context) => {
       const serviceId = shipment.serviceId
       const categoryId = shipment.categoryId
       if (serviceId == 1){
-        const response = await fetch(`https://track.delhivery.com/api/v1/packages/json/?ref_ids=JUP${ref_id}`, {
+        const response = await fetch(`https://track.delhivery.com/api/v1/packages/json/?ref_ids=7DXD${ref_id}`, {
             headers: {
               'Authorization': `Token ${categoryId==2?process.env.DELHIVERY_500GM_SURFACE_KEY:process.env.DELHIVERY_10KG_SURFACE_KEY}`,
               'Accept': 'application/json',

@@ -106,7 +106,10 @@ const ManageForm = ({isManage, setIsManage,  shipment, isShipped}) => {
         cod : shipment.cod_amount,
         gst : shipment.gst,
         Cgst : shipment.customer_gst,
-        shippingType : shipment.shipping_mode
+        shippingType : shipment.shipping_mode,
+        pickupDate : shipment.pickup_date,
+        pickupTime : shipment.pickup_time,
+        ewaybill : shipment.ewaybill
       })
       useEffect(()=>{
         
@@ -306,7 +309,30 @@ const ManageForm = ({isManage, setIsManage,  shipment, isShipped}) => {
               </select>
             </div>
             
+          </div><div className="w-full flex mb-2 flex-wrap">
+        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+            <label htmlFor="pickupDate">Pickup Date</label>
+            <input required
+              className="w-full border py-2 px-4 rounded-3xl"
+              type="date"
+              id="pickupDate"
+              name="pickupDate"
+              value={formData.pickupDate}
+              onChange={handleChange}
+            />
           </div>
+          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+            <label htmlFor="pickupTime">Pickup Time</label>
+            <input required
+              className="w-full border py-2 px-4 rounded-3xl"
+              type="time"
+              id="pickupTime"
+              name="pickupTime"
+              value={formData.pickupTime}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
           
           <div className="w-full flex mb-2 flex-wrap ">
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
@@ -323,20 +349,9 @@ const ManageForm = ({isManage, setIsManage,  shipment, isShipped}) => {
                 onChange={handleChange}
               />
             </div>
-            {/* <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-              <label htmlFor="date">Order Date</label>
-              <input
-                className="w-full border py-2 px-4 rounded-3xl"
-                type="text"
-                id="date"
-                name="date"
-                placeholder="Ex. 13/05/2024"
-                value={formData.date}
-                onChange={handleChange}
-              />
-            </div> */}
             
           </div>
+
           <div className="w-full flex mb-2 flex-wrap ">
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="payMode">Payment Method</label>
@@ -919,8 +934,19 @@ const ManageForm = ({isManage, setIsManage,  shipment, isShipped}) => {
                 onChange={handleChange}
               />
             </div>
-            
           </div>
+          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+              <label htmlFor="ewaybill">E-Waybill</label>
+              <input
+                className="w-full border py-2 px-4 rounded-3xl"
+                type="text"
+                id="ewaybill"
+                name="ewaybill"
+                placeholder="Enter Customer GST"
+                value={formData.ewaybill}
+                onChange={handleChange}
+              />
+            </div>
           <button disabled={isShipped} className="px-5 py-1 mx-2 bg-blue-500  rounded-3xl text-white cursor-pointer" type="submit">Submit</button>
         </form>
         </div>
@@ -1022,7 +1048,7 @@ const ShipList = ({shipment, setIsShip, setIsShipped}) => {
         headers: { 'Accept': 'application/json',
                    'Content-Type': 'application/json'
         },
-          body : JSON.stringify({method: shipment.shipping_mode=="Surface"?"S":"E", status : "Delivered", origin : shipment.pin, dest : shipment.shipping_postcode, payMode : shipment.pay_method == "topay"?"COD":shipment.pay_method, codAmount : shipment.cod_amount, volume, weight, quantity : boxesData.order.length}),
+          body : JSON.stringify({method: shipment.shipping_mode=="Surface"?"S":"E", status : "Delivered", origin : shipment.pin, dest : shipment.shipping_postcode, payMode : shipment.pay_method == "topay"?"COD":shipment.pay_method, codAmount : shipment.cod_amount, volume, weight, quantity : boxesData.order.length, boxes : boxesData.order}),
         
       })
       const prices = await getPrice.json()

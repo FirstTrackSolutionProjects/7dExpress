@@ -7,33 +7,69 @@ exports.handler = async (event, context) => {
         name,
         phone,
         address,
-        pin
+        pin,
+        city,
+        state,
+        country
   } = JSON.parse(event.body)
   try {
-    const response = await fetch(`https://track.delhivery.com/api/backend/clientwarehouse/edit/`, {
-        method: 'POST',
-        headers: {
-        'Authorization': `Token ${process.env.DELHIVERY_500GM_SURFACE_KEY}`,
+  //   const response = await fetch(`https://track.delhivery.com/api/backend/clientwarehouse/edit/`, {
+  //       method: 'POST',
+  //       headers: {
+  //       'Authorization': `Token ${process.env.DELHIVERY_500GM_SURFACE_KEY}`,
+  //       'Content-Type': 'application/json',
+  //       'Accept': 'application/json'
+  //       },
+  //       body: JSON.stringify({name,  phone, address, pin})
+  //   });
+  //   const response2 = await fetch(`https://track.delhivery.com/api/backend/clientwarehouse/edit/`, {
+  //     method: 'POST',
+  //     headers: {
+  //     'Authorization': `Token ${process.env.DELHIVERY_10KG_SURFACE_KEY}`,
+  //     'Content-Type': 'application/json',
+  //     'Accept': 'application/json'
+  //     },
+  //     body: JSON.stringify({name,  phone, address, pin})
+  // });
+    // const data = await response.json();
+    // const data2 = await response2.json();
+    const shipRocketLogin = await fetch('https://api-cargo.shiprocket.in/api/token/refresh/', {
+      headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
-        },
-        body: JSON.stringify({name,  phone, address, pin})
-    });
-    const response2 = await fetch(`https://track.delhivery.com/api/backend/clientwarehouse/edit/`, {
+      },
+      body: JSON.stringify({ refresh: process.env.SHIPROCKET_REFRESH_TOKEN }),
+    })
+    const shiprocketLoginData = await shipRocketLogin.json()
+    const shiprocketAccess = shiprocketLoginData.access
+    const shipRocketCargo = await fetch(`https://api-cargo.shiprocket.in/api/warehouses/`, {
       method: 'POST',
       headers: {
-      'Authorization': `Token ${process.env.DELHIVERY_10KG_SURFACE_KEY}`,
+      'Authorization': `Bearer ${shiprocketAccess}`,
       'Content-Type': 'application/json',
       'Accept': 'application/json'
       },
-      body: JSON.stringify({name,  phone, address, pin})
+      body: JSON.stringify({
+        name: name,
+        client_id: 6488,
+        address: {
+            address_line_1: address,
+            address_line_2: address,
+            pincode: pin,
+            city: city,
+            state: state,
+            country: country
+        },
+        "warehouse_code": name.replace(/\s+/g, ''),
+        "contact_person_name": verified.name,
+        "contact_person_email": verified.email,
+        "contact_person_contact_no": "1234567890"
+    })
   });
-    const data = await response.json();
-    const data2 = await response2.json();
-    if (!data.success || !data2.success){
+  const data3 = await shipRocketCargo.json();
+    if (data3.non_field_errors){
         return {
             statusCode: 400,
-            body: JSON.stringify({success: false, message: data.error + data2.error}),
+            body: JSON.stringify({success: false, message: data3.non_field_errors}),
             headers: {
               'Content-Type': 'application/json',
               'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)

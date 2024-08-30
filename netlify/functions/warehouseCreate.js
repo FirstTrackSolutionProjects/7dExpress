@@ -27,40 +27,65 @@ exports.handler = async (event, context) => {
     const id = verified.id
     
         await connection.beginTransaction();
-        await connection.execute('INSERT INTO WAREHOUSES (uid, warehouseName, address, phone, pin) VALUES (?,?,?,?,?)', [id, name, address, phone, pin]);
-    const delhivery_500 = await fetch(`https://track.delhivery.com/api/backend/clientwarehouse/create/`, {
+        await connection.execute('INSERT INTO WAREHOUSES (uid, warehouseName, address, phone, pin, city, state, country) VALUES (?,?,?,?,?,?,?,?)', [id, name, address, phone, pin, city, state, country]);
+    // const delhivery_500 = await fetch(`https://track.delhivery.com/api/backend/clientwarehouse/create/`, {
+    //     method: 'POST',
+    //     headers: {
+    //     'Authorization': `Token ${process.env.DELHIVERY_500GM_SURFACE_KEY}`,
+    //     'Content-Type': 'application/json',
+    //     'Accept': 'application/json'
+    //     },
+    //     body: JSON.stringify({name, email, phone, address, city, state, country, pin, return_address:address, return_pin:pin, return_city:city, return_state:state, return_country:country})
+    // });
+    // const delhivery_10 = await fetch(`https://track.delhivery.com/api/backend/clientwarehouse/create/`, {
+    //     method: 'POST',
+    //     headers: {
+    //     'Authorization': `Token ${process.env.DELHIVERY_10KG_SURFACE_KEY}`,
+    //     'Content-Type': 'application/json',
+    //     'Accept': 'application/json'
+    //     },
+    //     body: JSON.stringify({name, email, phone, address, city, state, country, pin, return_address:address, return_pin:pin, return_city:city, return_state:state, return_country:country})
+    // });
+    // const data = await delhivery_500.json();
+    // const data2 = await delhivery_10.json();
+    const shipRocketLogin = await fetch('https://api-cargo.shiprocket.in/api/token/refresh/', {
+      method : 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ refresh: process.env.SHIPROCKET_REFRESH_TOKEN }),
+    })
+    const shiprocketLoginData = await shipRocketLogin.json()
+    const shiprocketAccess = shiprocketLoginData.access
+    const shipRocketCargo = await fetch(`https://api-cargo.shiprocket.in/api/warehouses/`, {
         method: 'POST',
         headers: {
-        'Authorization': `Token ${process.env.DELHIVERY_500GM_SURFACE_KEY}`,
+        'Authorization': `Bearer ${shiprocketAccess}`,
         'Content-Type': 'application/json',
         'Accept': 'application/json'
         },
-        body: JSON.stringify({name, email, phone, address, city, state, country, pin, return_address:address, return_pin:pin, return_city:city, return_state:state, return_country:country})
+        body: JSON.stringify({
+          name: name,
+          client_id: 6488,
+          address: {
+              address_line_1: address,
+              address_line_2: address,
+              pincode: pin,
+              city: city,
+              state: state,
+              country: country
+          },
+          "warehouse_code": name.replace(/\s+/g, ''),
+          "contact_person_name": verified.name,
+          "contact_person_email": verified.email,
+          "contact_person_contact_no": "1234567890"
+      })
     });
-    const delhivery_10 = await fetch(`https://track.delhivery.com/api/backend/clientwarehouse/create/`, {
-        method: 'POST',
-        headers: {
-        'Authorization': `Token ${process.env.DELHIVERY_10KG_SURFACE_KEY}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-        },
-        body: JSON.stringify({name, email, phone, address, city, state, country, pin, return_address:address, return_pin:pin, return_city:city, return_state:state, return_country:country})
-    });
-  //   const response2 = await fetch(`https://track.delhivery.com/api/backend/clientwarehouse/create/`, {
-  //     method: 'POST',
-  //     headers: {
-  //     'Authorization': `Token ${process.env.DELHIVERY_10KG_SURFACE_KEY}`,
-  //     'Content-Type': 'application/json',
-  //     'Accept': 'application/json'
-  //     },
-  //     body: JSON.stringify({name, email, phone, address, city, state, country, pin, return_address:address, return_pin:pin, return_city:city, return_state:state, return_country:country})
-  // });
-    const data = await delhivery_500.json();
-    const data2 = await delhivery_10.json();
-    if (!data.success || !data2.success){
+    const data3 = await shipRocketCargo.json();
+    if (data3.non_field_errors){
         return {
             statusCode: 400,
-            body: JSON.stringify({success: false, message: data.error + data2.error}),
+            body: JSON.stringify({success: false, message: data3.non_field_errors}),
             headers: {
               'Content-Type': 'application/json',
               'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
@@ -80,7 +105,7 @@ exports.handler = async (event, context) => {
       }
     return {
       statusCode: 200,
-      body: JSON.stringify({success: true, message:data.data.message}),
+      body: JSON.stringify({success: true, message:"Warehouse has been created"}),
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)

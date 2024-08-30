@@ -106,7 +106,10 @@ const ManageForm = ({isManage, setIsManage,  shipment, isShipped}) => {
       cod : shipment.cod_amount,
       gst : shipment.gst,
       Cgst : shipment.customer_gst,
-      shippingType : shipment.shipping_mode
+      shippingType : shipment.shipping_mode,
+      pickupDate : shipment.pickup_date,
+      pickupTime : shipment.pickup_time,
+      ewaybill : shipment.ewaybill
     })
     useEffect(()=>{
       
@@ -307,7 +310,30 @@ const ManageForm = ({isManage, setIsManage,  shipment, isShipped}) => {
           </div>
           
         </div>
-        
+        <div className="w-full flex mb-2 flex-wrap">
+        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+            <label htmlFor="pickupDate">Pickup Date</label>
+            <input required
+              className="w-full border py-2 px-4 rounded-3xl"
+              type="date"
+              id="pickupDate"
+              name="pickupDate"
+              value={formData.pickupDate}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+            <label htmlFor="pickupTime">Pickup Time</label>
+            <input required
+              className="w-full border py-2 px-4 rounded-3xl"
+              type="time"
+              id="pickupTime"
+              name="pickupTime"
+              value={formData.pickupTime}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
         <div className="w-full flex mb-2 flex-wrap ">
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="order">Order Id</label>
@@ -921,6 +947,18 @@ const ManageForm = ({isManage, setIsManage,  shipment, isShipped}) => {
           </div>
           
         </div>
+        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+              <label htmlFor="ewaybill">E-Waybill</label>
+              <input
+                className="w-full border py-2 px-4 rounded-3xl"
+                type="text"
+                id="ewaybill"
+                name="ewaybill"
+                placeholder="Enter Csutomer GST"
+                value={formData.ewaybill}
+                onChange={handleChange}
+              />
+            </div>
         <button disabled={isShipped} className="px-5 py-1 mx-2 bg-blue-500  rounded-3xl text-white cursor-pointer" type="submit">Submit</button>
       </form>
       </div>

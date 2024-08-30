@@ -12,19 +12,8 @@ const dbConfig = {
   };
 
 exports.handler = async (event, context) => {
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: 'Method Not Allowed' }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-        
-      },
-    };
-  }
   const connection = await mysql.createConnection(dbConfig);
-//   const token = event.headers.authorization;
+//   const token = event.headers.Authorization;
 //   const verified = jwt.verify(token, SECRET_KEY);
 //   const id = verified.id;
 //   if (!id) {
@@ -38,7 +27,7 @@ exports.handler = async (event, context) => {
 //       },
 //     };
 //   }
-  const {awb} = JSON.parse(event.body)
+  const {awb} = event.body
 
   try {
      
@@ -53,13 +42,7 @@ exports.handler = async (event, context) => {
           await connection.execute('UPDATE INTERNATIONAL_SHIPMENTS set status = ? WHERE awb = ?', [status, awb]);
           const [rows] = await connection.execute('SELECT * FROM INTERNATIONAL_SHIPMENTS WHERE awb = ?', [awb])
           return {
-            statusCode: 200,
-            body: JSON.stringify({ data : rows[0], track : data , success : true }),
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-                
-              },
+            status:200, data : rows[0], track : data , success : true
           
       }
 
@@ -71,13 +54,7 @@ exports.handler = async (event, context) => {
 
   } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ message: error.message , success: false }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-        
-      },
+      status:500, message: error.message , success: false
     };
   } finally { 
     connection.end();

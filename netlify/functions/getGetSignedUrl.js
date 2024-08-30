@@ -7,7 +7,7 @@ const s3 = new AWS.S3({
 });
 
 exports.handler = async (event, context) => {
-  const { key } = JSON.parse(event.body);
+  const { key } = event.body;
   const params = {
     Bucket: process.env.S3_BUCKET_NAME_,
     Key: key,
@@ -17,13 +17,11 @@ exports.handler = async (event, context) => {
   try {
     const downloadURL = await s3.getSignedUrlPromise('getObject', params);
     return {
-      statusCode: 200,
-      body: JSON.stringify({ downloadURL }),
+      status:200, downloadURL
     };
   } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Could not generate signed URL' }),
+      status:500, error: 'Could not generate signed URL' 
     };
   }
 };

@@ -14,11 +14,10 @@ const dbConfig = {
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event) => {
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   if (!token) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: 'Access Denied' }),
+      status:401, message: 'Access Denied' 
     };
   }
 
@@ -31,20 +30,18 @@ exports.handler = async (event) => {
             const [req] = await connection.execute("SELECT * FROM KYC_UPDATE_REQUEST WHERE status='INCOMPLETE' AND uid = ?", [id]);
           if (req.length > 0) {
             return {
-              statusCode: 200,
-              body: JSON.stringify({ success:true, message: req[0]}),
+              status:200, success:true, message: req[0]
             };
           }
           else {
             return {
-              statusCode: 200,
-              body: JSON.stringify({ success:false}),
+              status:200, success:false
             };
           }
         } catch (error) {
           return {
             statusCode: 500,
-            body: JSON.stringify({ message: error.message, error: error.message }),
+            body: JSON.stringify({status:500, message: error.message, error: error.message }),
           };
         } finally {
           await connection.end();
@@ -52,14 +49,12 @@ exports.handler = async (event) => {
 
     } catch(err){
       return {
-        statusCode: 400,
-        body: JSON.stringify({ message: 'Something went wrong' }),
+        status:400, message: 'Something went wrong'
       };
     }
   } catch (err) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Invalid Token' }),
+      status:400, message: 'Invalid Token'
     };
   }
 };

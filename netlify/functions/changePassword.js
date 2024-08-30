@@ -13,18 +13,17 @@ const dbConfig = {
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event) => {
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   if (!token) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: "Access Denied" }),
+      status:401, message: "Access Denied" 
     };
   }
   try {
     const verified = jwt.verify(token, SECRET_KEY);
     const id = verified.id;
     try {
-      const { oldPassword, newPassword } = JSON.parse(event.body);
+      const { oldPassword, newPassword } = event.body;
       const connection = await mysql.createConnection(dbConfig);
 
       try {
@@ -35,8 +34,7 @@ exports.handler = async (event) => {
         
         if (!(await bcrypt.compare(oldPassword, users[0].password))){
             return {
-                statusCode: 400,
-                body: JSON.stringify({ success: false, message: "Wrong Password" }),
+                status:400, success: false, message: "Wrong Password"
               };
         }
           await connection.beginTransaction();
@@ -47,30 +45,25 @@ exports.handler = async (event) => {
           await connection.commit();
         
         return {
-          statusCode: 200,
-          body: JSON.stringify({ success: true, message: "Password Changed" }),
+          status:200, success: true, message: "Password Changed" 
         };
       } catch (error) {
         return {
-          statusCode: 500,
-          body: JSON.stringify({
+            status:500,
             message: error.message,
-            error: error.message,
-          }),
+            error: error.message
         };
       } finally {
         await connection.end();
       }
     } catch (err) {
       return {
-        statusCode: 400,
-        body: JSON.stringify({ message: "Something went wrong" }),
+        status: 400, message: "Something went wrong"
       };
     }
   } catch (e) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: "Invalid Token" }),
+      status:400, message: "Invalid Token"
     };
   }
 };

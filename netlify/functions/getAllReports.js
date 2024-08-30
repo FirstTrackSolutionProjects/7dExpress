@@ -6,29 +6,13 @@ require('dotenv').config();
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event, context) => {
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: 'Method Not Allowed' }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
-    };
-  }
 
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   const verified = jwt.verify(token, SECRET_KEY);
   const admin = verified.admin;
   if (!admin) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Access Denied' }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-        
-      },
+      status:400, message: 'Access Denied'
     };
   }
   const connection = await mysql.createConnection({
@@ -41,28 +25,11 @@ exports.handler = async (event, context) => {
   try {
     const [rows] = await connection.execute('SELECT * FROM SHIPMENT_REPORTS r JOIN SHIPMENTS s ON r.ord_id=s.ord_id JOIN USERS u ON u.uid=s.uid WHERE r.status != "FAILED"');
       return {
-        statusCode: 200,
-        body: JSON.stringify({ rows , success : true }),
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-            
-          },
+        status:200, rows , success : true
       };
-
-
-
-
-
   } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ message: error.message , success: false }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-        
-      },
+      status:500, message: error.message , success: false
     };
   } finally { 
     connection.end();

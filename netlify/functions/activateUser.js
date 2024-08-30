@@ -10,13 +10,12 @@ exports.handler = async (event, context) => {
   const token = event.headers.Authorization;
   if (!token) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: "Access Denied" }),
+      status: 401, message: "Access Denied"
     };
   }
   try{
     const verified = jwt.verify(token, SECRET_KEY);
-    const {uid} = event.body
+    const {uid} = event.body;
   // Connect to MySQL database
   const connection = await mysql.createConnection({
     host: process.env.DB_HOST,
@@ -47,21 +46,18 @@ exports.handler = async (event, context) => {
             };
             await transporter.sendMail(mailOptions);
     return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true, message: 'Account has been activated successfully'}),
+      status:200, success: true, message: 'Account has been activated successfully'
     };
   } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
+      status: 500,  error: error.message 
     };
   } finally {
     await connection.end();
   }
   } catch(e){
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Invalid Token' }),
+      status:400, message: 'Invalid Token'
     };
   }
 };

@@ -14,18 +14,7 @@ const dbConfig = {
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event) => {
-  if (event.httpMethod !== 'GET') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: 'Method Not Allowed' }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-        
-      },
-    };
-  }
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   const connection = await mysql.createConnection(dbConfig);
 
   try {
@@ -37,37 +26,19 @@ exports.handler = async (event) => {
     
       
       return {
-        statusCode: 200,
-        body: JSON.stringify({ success:true, data : rows }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)`
-          
-        },
+        status:200, success:true, data : rows
       };
     }
     const [rows] = await connection.execute('SELECT * FROM REFUND where uid = ?',[id]);
     
       
       return {
-        statusCode: 200,
-        body: JSON.stringify({ success:true, data : rows }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)`
-          
-        },
+        status:200, success:true, data : rows 
       };
     
   } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ message: 'Unexpected Error while fetching transactions', error: error.message }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-        
-      },
+      status:500, message: 'Unexpected Error while fetching transactions', error: error.message
     };
   } finally {
     await connection.end();

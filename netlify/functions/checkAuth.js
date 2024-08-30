@@ -11,12 +11,11 @@ const dbConfig = {
 require('dotenv').config();
 exports.handler = async (event) => {
 try{
-  const accessToken = event.headers.authorization;
+  const accessToken = event.headers.Authorization;
 
   if (!accessToken) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ authenticated: false })
+      status:401, authenticated: false
     };
   }
 
@@ -35,21 +34,18 @@ try{
     const [userData] = await connection.execute("SELECT * FROM USER_DATA Where uid = ?",[id])
     const photo = userData.length?userData[0].selfie_doc:null
     return {
-      statusCode: 200,
-      body: JSON.stringify({ authenticated : true, emailVerified, admin, verified, name, businessName, id, email, photo})
+      status:200, authenticated : true, emailVerified, admin, verified, name, businessName, id, email, photo
     };
   } catch (err) {
     return {
-      statusCode: 402,
-      body: JSON.stringify({ authenticated: false })
+      status:402, authenticated: false 
     };
   } finally {
     await connection.end();
   }
 } catch (err) {
     return {
-        statusCode: 403,
-        body: JSON.stringify({ authenticated: false })
+        status:403, authenticated: false
     };
 }
 };

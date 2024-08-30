@@ -33,13 +33,13 @@ const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 exports.handler = async (event) => {
   const connection = await mysql.createConnection(dbConfig);
   try {
-    const token = event.headers.authorization;
+    const token = event.headers.Authorization;
     const verified = jwt.verify(token, SECRET_KEY);
     const id = verified.id;
     const [users] = await connection.execute('SELECT * FROM USERS u JOIN USER_DATA ud ON u.uid = ud.uid WHERE u.uid =?', [id]);
     const user = users[0]
     const email = user.email;
-    const {iid} = JSON.parse(event.body);
+    const {iid} = event.body;
     const [shipments] = await connection.execute('SELECT * FROM INTERNATIONAL_SHIPMENTS WHERE iid = ? ', [iid]);
     const shipment = shipments[0];
     const [dockets] = await connection.execute('SELECT * FROM DOCKETS WHERE iid = ? ', [iid]);
@@ -156,12 +156,7 @@ exports.handler = async (event) => {
     }
     else{
       return {
-        statusCode: 200,
-        body: JSON.stringify({ success : false, response : response, request : req}),
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        },
+        status:200, success : false, response : response, request : req
       };
     }
     // let mailOptions = {
@@ -172,23 +167,13 @@ exports.handler = async (event) => {
     // };
     // await transporter.sendMail(mailOptions)
     return {
-      statusCode: 200,
-      body: JSON.stringify({req: req, response : response, success : true, user: user}),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
+      status: 200, req: req, response : response, success : true, user: user
     };
     
     
   } catch (error) {
     return {
-      statusCode: 504,
-      body: JSON.stringify({response : error, success : false}),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
+      status:504, response : error, success : false
     };
   }  finally {
     connection.end()

@@ -7,16 +7,15 @@ require('dotenv').config();
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event, context) => {
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   if (!token) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: "Access Denied" }),
+      status:401, message: "Access Denied" 
     };
   }
   try{
     const verified = jwt.verify(token, SECRET_KEY);
-    const {uid} = JSON.parse(event.body);
+    const {uid} = event.body;
   // Connect to MySQL database
   const connection = await mysql.createConnection({
     host: process.env.DB_HOST,
@@ -49,21 +48,18 @@ exports.handler = async (event, context) => {
             await transporter.sendMail(mailOptions);
 
     return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true, message: 'Account has been deactivated successfully'}),
+      status:200, success: true, message: 'Account has been deactivated successfully'
     };
   } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
+      status:500, error: error.message 
     };
   } finally {
     connection.end();
   }
   } catch(e){
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Invalid Token' }),
+      status:400, message: 'Invalid Token' 
     };
   }
 

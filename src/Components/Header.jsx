@@ -34,21 +34,21 @@ const Header = () => {
     <>
     {showRecharge && <Recharge setShowRecharge={setShowRecharge}/>}
     
-    <div className="fixed bg-green-400 z-10 top-0 flex justify-center items-center w-full h-16 ">
+    <div className="fixed bg-bg-header bg-cover z-10 top-0 flex justify-center items-center w-full h-16 ">
     <div className="">
     <button onClick={toggleMenu} className={`fixed block md:hidden z-50 top-3 right-4 px-4 py-2 bg-blue-600 text-white font-bold rounded-md`}>
         {isMenu ? 'X' : '☰'}
       </button>
       {isMenu && (
-        <div className="fixed md:hidden z-10 py-8 top-16 items-center flex flex-col w-full justify-center bg-yellow-500 space-y-2">
-          {authState?.authenticated &&<p className="text-sky-950 font-bold bg-[rgba(255,255,255,0.6)] px-5 py-2 rounded-xl" onClick={()=>navigate('/dashboard')}>{authState?.businessName}</p>}
-          <Link to="/" className="text-sky-950 font-bold">Home</Link>
-          <Link to="/about" className="text-sky-950 font-bold">About</Link>
-          <Link to="/track" className="text-sky-950 font-bold">Tracking</Link>
-          <Link to="/blog" className="text-sky-950 font-bold">Blogs</Link>
-          <Link to="/pricing" className="text-sky-950 font-bold">Pricing</Link>
-          <Link to="/contact" className="text-sky-950 font-bold">Contact</Link>
-          {authState?.authenticated && <p className="text-sky-950 font-bold" onClick={()=>{logout(); setIsOpen(false)}}>Logout</p>}
+        <div className="fixed md:hidden z-10 py-8 top-16 items-center flex flex-col w-full h-full justify-center bg-slate-200 space-y-2">
+          {authState?.authenticated &&<p className="text-sky-950 text-xl font-bold bg-[rgba(255,255,255,0.6)] px-5 py-2 rounded-xl" onClick={()=>navigate('/dashboard')}>{authState?.businessName}</p>}
+          <Link to="/" className="text-sky-950 text-xl pt-4 font-bold">Home</Link>
+          <Link to="/about" className="text-sky-950 text-xl pt-4 font-bold">About</Link>
+          <Link to="/track" className="text-sky-950 text-xl pt-4 font-bold">Tracking</Link>
+          <Link to="/blog" className="text-sky-950 text-xl pt-4 font-bold">Blogs</Link>
+          <Link to="/pricing" className="text-sky-950 text-xl pt-4 font-bold">Pricing</Link>
+          <Link to="/contact" className="text-sky-950 text-xl pt-4 font-bold">Contact</Link>
+          {authState?.authenticated && <p className="text-red-600 text-xl pt-4 font-bold" onClick={()=>{logout(); setIsOpen(false)}}>Logout</p>}
         </div>
       )}
       

@@ -28,7 +28,7 @@ const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 exports.handler = async (event) => {
 
     try{
-      const {name, email, mobile, message, subject} = JSON.parse(event.body);
+      const {name, email, mobile, message, subject} = event.body
 
         const connection = await mysql.createConnection(dbConfig);
 
@@ -42,13 +42,13 @@ exports.handler = async (event) => {
           };
             await transporter.sendMail(mailOptions);
           return {
-            statusCode: 200,
-            body: JSON.stringify({ message: 'Email Sent' }),
+            status: 200,
+            message: 'Email Sent' ,
           };
         } catch (error) {
           return {
-            statusCode: 500,
-            body: JSON.stringify({ message: error.message, error: error.message }),
+            status: 500,
+             message: error.message, error: error.message ,
           };
         } finally {
           await connection.end();
@@ -56,8 +56,8 @@ exports.handler = async (event) => {
 
     } catch(err){
       return {
-        statusCode: 400,
-        body: JSON.stringify({ message: 'Something went wrong' }),
+        status: 400,
+        message: 'Something went wrong' ,
       };
     }
 };

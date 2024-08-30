@@ -26,7 +26,7 @@ let transporter = nodemailer.createTransport({
 exports.handler = async (event) => {
 
     try{
-      const {email} = JSON.parse(event.body);
+      const {email} = event.body
       const generateOTP = () => {
         return Math.floor(100000 + Math.random() * 900000);
     }
@@ -48,13 +48,13 @@ exports.handler = async (event) => {
               };
             await transporter.sendMail(mailOptions);
           return {
-            statusCode: 200,
-            body: JSON.stringify({ success: true,  message: `Otp sent to ${email}` }),
+            status: 200,
+            success: true,  message: `Otp sent to ${email}`,
           };
         } catch (error) {
           return {
-            statusCode: 500,
-            body: JSON.stringify({ message: error.message,error: error.message }),
+            status: 500,
+            message: error.message,error: error.message,
           };
         } finally {
           await connection.end();
@@ -62,8 +62,8 @@ exports.handler = async (event) => {
 
     } catch(err){
       return {
-        statusCode: 400,
-        body: JSON.stringify({ message: 'Something went wrong' }),
+        status: 400,
+        message: 'Something went wrong',
       };
     }
 }

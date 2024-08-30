@@ -7,7 +7,7 @@ require('dotenv').config();
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event, context) => {
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   if (!token) {
     return {
       statusCode: 401,
@@ -16,7 +16,7 @@ exports.handler = async (event, context) => {
   }
   try{
     const verified = jwt.verify(token, SECRET_KEY);
-    const {uid} = JSON.parse(event.body);
+    const {uid} = event.body
   // Connect to MySQL database
   const connection = await mysql.createConnection({
     host: process.env.DB_HOST,

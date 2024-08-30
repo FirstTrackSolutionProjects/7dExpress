@@ -1,7 +1,7 @@
 
 
 exports.handler = async (event, context) => {
-  const {method, status, origin, dest, weight, payMode, codAmount,volume, quantity, boxes} = JSON.parse(event.body)
+  const {method, status, origin, dest, weight, payMode, codAmount,volume, quantity, boxes} = event.body
 try {
 //   const deliveryVolumetric = parseFloat(volume)/5;
 //   const netWeight = (Math.max(deliveryVolumetric , weight)).toString()
@@ -14480,22 +14480,13 @@ try {
 //   }
   
   return {
-    statusCode: 200,
-    body: JSON.stringify({prices : responses, quantity : quantity}),
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-      
-    },
+    status: 200,
+    prices : responses, quantity : quantity,
   };
 } catch (error) {
   return {
-    statusCode: 501,
-    body: JSON.stringify({ error: 'Failed to fetch data' + error }),
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-    },
+    status: 501,
+    error: 'Failed to fetch data' + error ,
   };
 } finally {}
 };

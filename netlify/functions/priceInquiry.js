@@ -22,7 +22,7 @@ exports.handler = async (event) => {
     height,
     name,
     phone,
-    email, } = JSON.parse(event.body);
+    email, } = event.body
 
   try {
     let mailOptions = {
@@ -33,13 +33,13 @@ exports.handler = async (event) => {
     };
     await transporter.sendMail(mailOptions);
     return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true, message: "Request Submitted Succesfully" }),
+      status: 200,
+      success: true, message: "Request Submitted Succesfully" ,
     };
   } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ message: "Something went wrong, please try again", error: error.message }),
+      status: 500,
+       message: "Something went wrong, please try again", error: error.message ,
     };
   }
 };

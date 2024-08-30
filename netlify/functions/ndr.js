@@ -3,14 +3,7 @@ const axios = require('axios');
 require('dotenv').config();
 
 exports.handler = async (event, context) => {
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: 'Method Not Allowed' }),
-    };
-  }
-
-  const { waybill, act, date } = JSON.parse(event.body);
+  const { waybill, act, date } = event.body
 
   try {
     const req = {
@@ -31,23 +24,13 @@ exports.handler = async (event, context) => {
       }).then(response => response.json());
   
       return {
-        statusCode: 200,
-        body: JSON.stringify({data : response}),
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-            
-          },
+        status: 200,
+        data : response,
       };
   } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ message: error.message , success: false }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-        
-      },
+      status: 500,
+       message: error.message , success: false ,
     };
   }
 };

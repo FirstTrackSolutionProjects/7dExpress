@@ -423,10 +423,10 @@ const SECRET_KEY = process.env.JWT_SECRET;
 exports.handler = async (event) => {
   const connection = await mysql.createConnection(dbConfig);
   try {
-    const token = event.headers.authorization;
+    const token = event.headers.Authorization;
     const verified = jwt.verify(token, SECRET_KEY);
     const id = verified.id;
-    let {wid, pickTime, pickDate, packages, serviceId} = JSON.parse(event.body);
+    let {wid, pickTime, pickDate, packages, serviceId} = event.body
     const [warehouses] = await connection.execute('SELECT * FROM WAREHOUSES WHERE uid = ? AND wid = ?', [id, wid]);
     const warehouse = warehouses[0]
     // const [orders] = await connection.execute('SELECT * FROM ORDERS WHERE ord_id = ? ', [order]);
@@ -444,42 +444,26 @@ exports.handler = async (event) => {
       const scheduleData = await schedule.json()
       if (scheduleData.incoming_center_name){
         return {
-          statusCode: 200,
-          body: JSON.stringify({schedule : "Pickup request sent successfully", success : true}),
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-          },
+          status: 200,
+          schedule : "Pickup request sent successfully", success : true,
         };
       }
       else if (scheduleData.prepaid){
         return {
-          statusCode: 200,
-          body: JSON.stringify({schedule : "Pickup request failed due to low balance of owner", success : true}),
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-          },
+          status: 200,
+          schedule : "Pickup request failed due to low balance of owner", success : true,
         };
       }
       else if (scheduleData.pr_exist){
         return {
-          statusCode: 200,
-          body: JSON.stringify({schedule : "This time slot is already booked", success : true}),
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-          },
+          status: 200,
+          schedule : "This time slot is already booked", success : true,
         };
       }
       else {
         return {
-          statusCode: 200,
-          body: JSON.stringify({schedule : "Please enter a valid date and time in future", success : false}),
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-          },
+          status: 200,
+          schedule : "Please enter a valid date and time in future", success : false,
         };
       }
       
@@ -541,74 +525,46 @@ exports.handler = async (event) => {
       }).then((response) => response.json())
       if (schedule.status == 200){
         return {
-          statusCode: 200,
-          body: JSON.stringify({schedule : "Pickup request sent successfully", success : true}),
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-          },
+          status: 200,
+          schedule : "Pickup request sent successfully", success : true,
         };
       }
       else if (schedule.response.errors.pickup_date){
         return {
-          statusCode: 200,
-          body: JSON.stringify({schedule : schedule.response.errors.pickup_date[0].error, success : false}),
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-          },
+          status: 200,
+          schedule : schedule.response.errors.pickup_date[0].error, success : false,
         };
       }
       else if (schedule.response.errors.pickup_time_start_hour){
         return {
-          statusCode: 200,
-          body: JSON.stringify({schedule : schedule.response.errors.pickup_time_start_hour[0].error, success : false}),
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-          },
+          status: 200,
+          schedule : schedule.response.errors.pickup_time_start_hour[0].error, success : false,
         };
       }
       else if (schedule.response.errors.zipcode){
         return {
-          statusCode: 200,
-          body: JSON.stringify({schedule : schedule.response.errors.zipcode[0].error, success : false}),
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-          },
+          status: 200,
+          schedule : schedule.response.errors.zipcode[0].error, success : false,
         };
       }
       else if (schedule.response.errors.service_type){
         return {
-          statusCode: 200,
-          body: JSON.stringify({schedule : schedule.response.errors.service_type[0].error, success : false}),
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-          },
+          status: 200,
+          schedule : schedule.response.errors.service_type[0].error, success : false,
         };
       }
       else {
         return {
-          statusCode: 200,
-          body: JSON.stringify({schedule : schedule, success : false}),
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-          },
+          status: 200,
+          schedule : schedule, success : false,
         };
       }
     }
     
   } catch (error) {
     return {
-        statusCode: 400,
-        body: JSON.stringify({schedule : error, success : false}),
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        },
+        status: 400,
+        schedule : error, success : false,
       };
     
   }  finally {

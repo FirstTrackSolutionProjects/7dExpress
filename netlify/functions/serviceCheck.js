@@ -3,18 +3,11 @@ const axios = require('axios');
 require('dotenv').config();
 
 exports.handler = async (event, context) => {
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: 'Method Not Allowed' }),
-    };
-  }
-
-  const { code } = JSON.parse(event.body);
+  const { code } = event.body
   if (!code) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Pincode required'}),
+      status: 400,
+      message: 'Pincode required',
     };
   }
   try {
@@ -25,13 +18,13 @@ exports.handler = async (event, context) => {
       });
   
       return {
-        statusCode: 200,
-        body: JSON.stringify({data : response.data}),
+        status: 200,
+        data : response.data,
       };
   } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ message: error.message , success: false }),
+      status: 500,
+      message: error.message , success: false,
     };
   }
 };

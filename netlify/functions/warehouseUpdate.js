@@ -11,7 +11,7 @@ exports.handler = async (event, context) => {
         city,
         state,
         country
-  } = JSON.parse(event.body)
+  } = event.body
   try {
   //   const response = await fetch(`https://track.delhivery.com/api/backend/clientwarehouse/edit/`, {
   //       method: 'POST',
@@ -68,13 +68,8 @@ exports.handler = async (event, context) => {
   const data3 = await shipRocketCargo.json();
     if (data3.non_field_errors){
         return {
-            statusCode: 400,
-            body: JSON.stringify({success: false, message: data3.non_field_errors}),
-            headers: {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-              
-            },
+            status: 400,
+            success: false, message: data3.non_field_errors,
           };
     }
     const connection = await mysql.createConnection({
@@ -89,29 +84,20 @@ exports.handler = async (event, context) => {
 
       } catch (error) {
         return {
-          statusCode: 500,
-          body: JSON.stringify({ message: error.message , success: false }),
+          status: 500,
+           message: error.message , success: false ,
         };
       } finally{
         connection.end()
       }
     return {
-      statusCode: 200,
-      body: JSON.stringify({success: true, message:data.data.message}),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-        
-      },
+      status: 200,
+      success: true, message:data.data.message,
     };
   } catch (error) {
     return {
-      statusCode: 501,
-      body: JSON.stringify({success:false,  message: error }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-      },
+      status: 501,
+      success:false,  message: error ,
     };
   }
 };

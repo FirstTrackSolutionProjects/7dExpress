@@ -24,7 +24,7 @@ exports.handler = async (event) => {
 
 
     try{
-      const {email, otp} = JSON.parse(event.body);
+      const {email, otp} = event.body
       const connection = await mysql.createConnection(dbConfig);
         try {
             const [users] = await connection.execute('SELECT * FROM USERS WHERE email = ?',[email]);
@@ -47,13 +47,13 @@ exports.handler = async (event) => {
             };
           await transporter.sendMail(mailOptions);
           return {
-            statusCode: 200,
-            body: JSON.stringify({ success: true,  message: 'Email Verified' }),
+            status: 200,
+             success: true,  message: 'Email Verified' ,
           };
         } catch (error) {
           return {
-            statusCode: 500,
-            body: JSON.stringify({ message: error.message ,error: error.message }),
+            status: 500,
+             message: error.message ,error: error.message ,
           };
         } finally {
           await connection.end();
@@ -61,8 +61,8 @@ exports.handler = async (event) => {
 
     } catch(err){
       return {
-        statusCode: 400,
-        body: JSON.stringify({ message: 'Something went wrong' }),
+        status: 400,
+         message: 'Something went wrong' ,
       };
     }
 }

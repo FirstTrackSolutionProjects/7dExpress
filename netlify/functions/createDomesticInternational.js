@@ -24,12 +24,12 @@ const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 exports.handler = async (event) => {
   const connection = await mysql.createConnection(dbConfig);
   try {
-    const token = event.headers.authorization;
+    const token = event.headers.Authorization;
     const verified = jwt.verify(token, SECRET_KEY);
     const id = verified.id;
     const [users] = await connection.execute('SELECT * FROM USERS WHERE uid =?', [id]);
     const email = users[0].email;
-    const {did,  price,serviceId , categoryId} = JSON.parse(event.body);
+    const {did,  price,serviceId , categoryId} = event.body;
     const [dockets] = await connection.execute('SELECT * FROM DOCKETS WHERE did = ? ', [did]);
     const docket = dockets[0];
     const [shipments] = await connection.execute('SELECT * FROM INTERNATIONAL_SHIPMENTS WHERE iid = ?',[docket.iid]) 
@@ -132,12 +132,7 @@ exports.handler = async (event) => {
     else{
     //   await connection.execute('INSERT INTO SHIPMENT_REPORTS VALUES (?,?,?)',[refId,order,"FAILED"])
       return {
-        statusCode: 200,
-        body: JSON.stringify({ success : false, message : response}),
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        },
+        status: 200, success : false, message : response
       };
     }
     let mailOptions = {
@@ -148,23 +143,13 @@ exports.handler = async (event) => {
     };
     await transporter.sendMail(mailOptions)
     return {
-      statusCode: 200,
-      body: JSON.stringify({response : response, success : true}),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
+      status:200, response : response, success : true
     };
     }
     
   } catch (error) {
     return {
-      statusCode: 504,
-      body: JSON.stringify({response : error, success : false}),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
+      status:504, response : error, success : false
     };
   }  finally {
     connection.end()

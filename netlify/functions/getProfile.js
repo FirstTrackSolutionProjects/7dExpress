@@ -14,18 +14,7 @@ const dbConfig = {
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event) => {
-  if (event.httpMethod !== 'GET') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: 'Method Not Allowed' }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-        
-      },
-    };
-  }
-  const token = event.headers.authorization
+  const token = event.headers.Authorization
   const connection = await mysql.createConnection(dbConfig);
 
   try {
@@ -34,34 +23,16 @@ exports.handler = async (event) => {
     const [rows] = await connection.execute('SELECT * FROM USERS NATURAL JOIN USER_DATA WHERE uid = ?', [id]);
     if (rows.length > 0) {
       return {
-        statusCode: 200,
-        body: JSON.stringify({ success:true, data : rows[0] }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-          
-        },
+        status:200, success:true, data : rows[0]
       };
     } else {
       return {
-        statusCode: 401,
-        body: JSON.stringify({ message: 'Invalid credentials' }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-          
-        },
+        status:401, message: 'Invalid credentials'
       };
     }
   } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ message: 'Error logging in', error: error.message }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-        
-      },
+      status:500, message: 'Error', error: error.message 
     };
   } finally {
     await connection.end();

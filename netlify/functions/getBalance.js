@@ -7,11 +7,10 @@ const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event, context) => {
   try {
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   if (!token) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: "Access Denied" }),
+      status:401, message: "Access Denied"
     };
   }
   try{
@@ -30,34 +29,29 @@ exports.handler = async (event, context) => {
 
     if (rows.length === 0) {
       return {
-        statusCode: 404,
-        body: JSON.stringify({ error: 'User not found' }),
+        status:404, error: 'User not found' 
       };
     }
 
     const balance = rows[0].balance;
 
     return {
-      statusCode: 200,
-      body: JSON.stringify({ balance }),
+      status:200, balance
     };
   } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
+      status:500, error: error.message
     };
   } finally {
     connection.end();
   }
   } catch(e){
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Invalid Token' }),
+      status:400, message: 'Invalid Token' 
     };
   } } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message , message: 'Invalid Token'}),
+      status:500, error: error.message , message: 'Invalid Token'
     };
   }
 

@@ -1,7 +1,7 @@
 const Razorpay = require('razorpay');
 
 exports.handler = async (event, context) => {
-  const { amount } = JSON.parse(event.body);
+  const { amount } = event.body;
 
   const razorpay = new Razorpay({
     key_id: "rzp_live_UrqNQnmjuZfgZs",
@@ -15,14 +15,10 @@ exports.handler = async (event, context) => {
 
   try {
     const order = await razorpay.orders.create(options);
-    return {
-      statusCode: 200,
-      body: JSON.stringify(order),
-    };
+    return order;
   } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
+      status:500, error: error.message
     };
   }
 };

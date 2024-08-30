@@ -14,22 +14,15 @@ const dbConfig = {
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event) => {
-  if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: "Method Not Allowed" }),
-    };
-  }
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   if (!token) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: "Access Denied" }),
+      status:401, message: "Access Denied"
     };
   }
   try {
     const verified = jwt.verify(token, SECRET_KEY);
-    const { order } = JSON.parse(event.body);
+    const { order } = event.body;
 
     const connection = await mysql.createConnection(dbConfig);
 
@@ -40,30 +33,25 @@ exports.handler = async (event) => {
       );
       if (rows.length > 0) {
         return {
-          statusCode: 200,
-          body: JSON.stringify({ success: true, order: rows }),
+          status:200, success: true, order: rows 
         };
       } else {
         return {
-          statusCode: 401,
-          body: JSON.stringify({ message: "Invalid id" }),
+          status:401, message: "Invalid id" 
         };
       }
     } catch (error) {
       return {
-        statusCode: 500,
-        body: JSON.stringify({
+          status: 500,
           message: "Unexpected Error while getting orders",
-          error: error.message,
-        }),
+          error: error.message
       };
     } finally {
       await connection.end();
     }
   } catch (err) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: "Access Denied" }),
+      status:401, message: "Access Denied" 
     };
   }
 };

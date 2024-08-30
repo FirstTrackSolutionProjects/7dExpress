@@ -24,10 +24,10 @@ const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 exports.handler = async (event) => {
   const connection = await mysql.createConnection(dbConfig);
   try {
-    const token = event.headers.authorization;
+    const token = event.headers.Authorization;
     const verified = jwt.verify(token, SECRET_KEY);
     const id = verified.id;
-    const {order} = JSON.parse(event.body);
+    const {order} = event.body;
     const [shipments] = await connection.execute('SELECT * FROM SHIPMENTS WHERE ord_id = ?', [order]);
     const shipment = shipments[0];
     const {serviceId, categoryId, awb, uid} = shipment;
@@ -61,12 +61,7 @@ exports.handler = async (event) => {
     }
     else{
       return {
-        statusCode: 200,
-        body: JSON.stringify({ success : false, message : response}),
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        },
+        status:200, success : false, message : response
       };
     }
     let mailOptions = {
@@ -77,12 +72,7 @@ exports.handler = async (event) => {
     };
     await transporter.sendMail(mailOptions)
     return {
-      statusCode: 200,
-      body: JSON.stringify({message : response, success : true}),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
+      status : 200, message : response, success : true
     };
     }
     

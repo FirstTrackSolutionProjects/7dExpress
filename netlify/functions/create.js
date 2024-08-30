@@ -24,12 +24,12 @@ const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 exports.handler = async (event) => {
   const connection = await mysql.createConnection(dbConfig);
   try {
-    const token = event.headers.authorization;
+    const token = event.headers.Authorization;
     const verified = jwt.verify(token, SECRET_KEY);
     const id = verified.id;
     const [users] = await connection.execute('SELECT * FROM USERS WHERE uid =?', [id]);
     const email = users[0].email;
-    const {order,  price,serviceId , categoryId} = JSON.parse(event.body);
+    const {order,  price,serviceId , categoryId} = event.body;
     const [shipments] = await connection.execute('SELECT * FROM SHIPMENTS WHERE ord_id = ? ', [order]);
     const shipment = shipments[0];
     const [boxes] = await connection.execute('SELECT * FROM SHIPMENT_PACKAGES WHERE ord_id = ? ', [order]);
@@ -381,44 +381,31 @@ exports.handler = async (event) => {
       }
       await connection.commit();
       return {
-        statusCode: 200,
-        body: JSON.stringify({response : shipRocketShipmentCreateData, res2 : data3,success : true}),
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        },
+        status:200, response : shipRocketShipmentCreateData, res2 : data3,success : true
       }
     }
     return {
-      statusCode: 400,
-      body: JSON.stringify({ success : false, response : shipRocketShipmentCreateData,res2 : data3,message : "Error in creating shipment at Shiprocket"})
+      status:400, success : false, response : shipRocketShipmentCreateData,res2 : data3,message : "Error in creating shipment at Shiprocket"
     }
     }
     return {
-      statusCode: 400,
-      body: JSON.stringify({ success : false, data3 ,message : "Error in creating order at Shiprocket"})
+      status:400, success : false, data3 ,message : "Error in creating order at Shiprocket"
     }
     }
     else {
       return {
-        statusCode : 404,
-        body: JSON.stringify({ success : false, message : "Service Id not found"})
+        status:404, success : false, message : "Service Id not found"
       }
     }
    
     
   } 
   
-  // catch (error) {
-  //   return {
-  //     statusCode: 504,
-  //     body: JSON.stringify({response : error, success : true}),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Access-Control-Allow-Origin': '*'
-  //     },
-  //   };
-  // }  
+  catch (error) {
+    return {
+      status: 504, response : error, success : false
+    };
+  }  
   finally {
     connection.end()
   }

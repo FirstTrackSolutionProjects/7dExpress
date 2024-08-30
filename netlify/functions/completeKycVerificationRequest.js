@@ -13,11 +13,10 @@ const dbConfig = {
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event) => {
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   if (!token) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: "Access Denied" }),
+      status:401, message: "Access Denied" 
     };
   }
 
@@ -37,43 +36,35 @@ exports.handler = async (event) => {
             [id]
           );
           return {
-            statusCode: 200,
-            body: JSON.stringify({
+              status : 200,
               success: true,
-              message: "KYC Request Submitted Successfully",
-            }),
+              message: "KYC Request Submitted Successfully"
           };
         }
         else{
           return {
-            statusCode: 400,
-            body: JSON.stringify({
+              status: 400,
               success: true,
-              message: "You already have a pending KYC Request",
-            }),
+              message: "You already have a pending KYC Request"
           };
         }
       } catch (error) {
         return {
-          statusCode: 500,
-          body: JSON.stringify({
+            status : 500,
             message: error.message,
-            error: error.message,
-          }),
+            error: error.message
         };
       } finally {
         await connection.end();
       }
     } catch (err) {
       return {
-        statusCode: 400,
-        body: JSON.stringify({ message: "Something went wrong" }),
+        status:400, message: "Something went wrong"
       };
     }
   } catch (err) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: "Invalid Token" }),
+      status:400, message: "Invalid Token"
     };
   }
 };

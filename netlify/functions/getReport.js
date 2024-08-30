@@ -8,33 +8,16 @@ require('dotenv').config();
 const SECRET_KEY = process.env.JWT_SECRET;
 
 exports.handler = async (event, context) => {
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: 'Method Not Allowed' }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-        
-      },
-    };
-  }
-
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   const verified = jwt.verify(token, SECRET_KEY);
   const id = verified.id;
   if (!id) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Access Denied' }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-        
-      },
+      status: 400,
+       message: 'Access Denied',
     };
   }
-  const {ref_id} = JSON.parse(event.body)
+  const {ref_id} = event.body
   const connection = await mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -61,12 +44,8 @@ exports.handler = async (event, context) => {
           const status = statusData.Status.Status
           await connection.execute('UPDATE SHIPMENT_REPORTS set status = ? WHERE ref_id = ?', [status, ref_id]);
           return {
-            statusCode: 200,
-            body: JSON.stringify({ data : statusData , success : true}),
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-              },
+            status: 200,
+            data : statusData , success : true,
           };
       } else if ( serviceId == 2) {
         const loginPayload = {
@@ -110,8 +89,10 @@ exports.handler = async (event, context) => {
             }
           }
           return {
-            statusCode: 200,
-            body: JSON.stringify({ data: ResultStatus, success: true, id : 3 }),
+            status: 200,
+             data: ResultStatus, 
+             success: true, 
+             id : 3 ,
           };
         }
       }
@@ -141,7 +122,7 @@ exports.handler = async (event, context) => {
         //   await connection.execute('UPDATE SHIPMENT_REPORTS set status = ? WHERE ref_id = ?', [status, ref_id]);
         //   const [rows] = await connection.execute('SELECT * FROM SHIPMENT_REPORTS r JOIN SHIPMENTS s ON r.ord_id=s.ord_id WHERE r.ref_id = ?', [ref_id])
         //   return {
-        //     statusCode: 200,
+        //     status: 200,
         //     body: JSON.stringify({ data : rows[0] , success : true }),
         //     headers: {
         //         'Content-Type': 'application/json',

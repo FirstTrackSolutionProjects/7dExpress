@@ -16,14 +16,7 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET
 
 exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: 'Method Not Allowed' })
-    };
-  }
-
-  const { email, password } = JSON.parse(event.body);
+  const { email, password } = event.body
   
 
   const connection = await mysql.createConnection(dbConfig);
@@ -42,19 +35,19 @@ exports.handler = async (event) => {
       const accessToken = jwt.sign({authenticated: true,  email , verified , name, id, business_name , admin, emailVerified, photo}, ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
       // const refreshToken = jwt.sign({  email , verified , name, id, business_name , admin, emailVerified }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
       return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'Login Successfull', success : true , token : accessToken})
+        status: 200,
+        message: 'Login Successfull', success : true , token : accessToken
       };
     } else {
       return {
-        statusCode: 401,
-        body: JSON.stringify({ message: 'Invalid credentials', success : false }),
+        status: 401,
+        message: 'Invalid credentials', success : false ,
       };
     }
   } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ message: 'Error logging in', error: error.message, success : false }),
+      status: 500,
+      message: 'Error logging in', error: error.message, success : false ,
     };
   } finally {
     await connection.end();

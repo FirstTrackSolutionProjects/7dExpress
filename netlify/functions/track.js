@@ -10,7 +10,7 @@ const dbConfig = {
 exports.handler = async (event) => {
   const connection = await mysql.createConnection(dbConfig);
   try {
-    const { awb } = JSON.parse(event.body);
+    const { awb } = event.body
     // const response1 = await fetch(`https://track.delhivery.com/api/v1/packages/json/?waybill=${awb}`, {
     //   headers: {
     //     'Authorization': `Token ${process.env.DELHIVERY_500GM_SURFACE_KEY}`,
@@ -23,7 +23,7 @@ exports.handler = async (event) => {
 
     // if (data1.ShipmentData) {
     //   return {
-    //     statusCode: 200,
+    //     status: 200,
     //     body: JSON.stringify({ data: data1, success: true, id : 1 }),
     //   };
     // }
@@ -40,7 +40,7 @@ exports.handler = async (event) => {
 
     // if (data2.ShipmentData) {
     //   return {
-    //     statusCode: 200,
+    //     status: 200,
     //     body: JSON.stringify({ data: data2, success: true, id : 1 }),
     //   };
     // }
@@ -54,7 +54,7 @@ exports.handler = async (event) => {
     //   const data3 = await response3.json();
     //   if (!data3[0].errors) {
     //     return {
-    //       statusCode: 200,
+    //       status: 200,
     //       body: JSON.stringify({ data: data3[0], success: true, id : 2 }),
     //     };
     //   }
@@ -80,8 +80,8 @@ exports.handler = async (event) => {
     const shiprocketTrackData = await shipRocketTrack.json()
     if (shiprocketTrackData.id){
       return {
-        statusCode: 200,
-        body: JSON.stringify({ data: shiprocketTrackData.status_history, success: true, id : 4 }),
+        status: 200,
+        data: shiprocketTrackData.status_history, success: true, id : 4 ,
       };
     }
     ////END SHIPROCKET TRACK////
@@ -126,20 +126,20 @@ exports.handler = async (event) => {
     //     }
     //   }
     //   return {
-    //     statusCode: 200,
+    //     status: 200,
     //     body: JSON.stringify({ data: ResultStatus, success: true, id : 3 }),
     //   };
     // }
     return {
-      statusCode: 404,
-      body: JSON.stringify({ message: "Not Found" }),
+      status: 404,
+      message: "Not Found" ,
     };
     
   } 
   catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
+      status: 500,
+      error: error.message ,
     };
   }
   finally { 

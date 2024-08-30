@@ -14,11 +14,11 @@ const dbConfig = {
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event) => {
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   if (!token) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: 'Access Denied' }),
+      status: 401,
+      message: 'Access Denied' ,
     };
   }
 
@@ -61,7 +61,7 @@ exports.handler = async (event) => {
             ewaybill,
             pickupDate,
             pickupTime
-          } = JSON.parse(event.body);
+          } = event.body
           const connection = await mysql.createConnection(dbConfig);
           if (admin){
             const [users] = await connection.execute("SELECT * FROM WAREHOUSES w JOIN USERS u ON u.uid = w.uid WHERE w.wid = ?",[wid])
@@ -150,14 +150,14 @@ exports.handler = async (event) => {
             }
             await connection.commit();
           return {
-            statusCode: 200,
-            body: JSON.stringify({ success:true, message: 'Details Updated', id : id}),
+            status: 200,
+             success:true, message: 'Details Updated', id : id,
           };
         } 
         catch (error) {
           return {
-            statusCode: 500,
-            body: JSON.stringify({ message: error.message, error: error.message }),
+            status: 500,
+             message: error.message, error: error.message ,
           };
         }
          finally {
@@ -167,16 +167,16 @@ exports.handler = async (event) => {
     } 
     catch(err){
       return {
-        statusCode: 400,
-        body: JSON.stringify({ message: 'Something went wrong' }),
+        status: 400,
+         message: 'Something went wrong' ,
       };
     }
     finally{}
   } 
   catch (err) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Invalid Token' }),
+      status: 400,
+       message: 'Invalid Token' ,
     };
   }
   finally{}

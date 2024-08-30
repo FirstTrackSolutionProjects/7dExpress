@@ -24,10 +24,10 @@ const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 exports.handler = async (event) => {
   const connection = await mysql.createConnection(dbConfig);
   try {
-    const token = event.headers.authorization;
+    const token = event.headers.Authorization;
     const verified = jwt.verify(token, SECRET_KEY);
     const id = verified.id;
-    const {order} = JSON.parse(event.body);
+    const {order} = event.body
     const [users] = await connection.execute('SELECT * FROM USERS WHERE uid =?', [id]);
     const email = users[0].email;
     const [shipments] = await connection.execute('SELECT * FROM SHIPMENTS WHERE ord_id = ? ', [order]);
@@ -48,12 +48,9 @@ exports.handler = async (event) => {
         
    
     return {
-      statusCode: 200,
-      body: JSON.stringify({label : label.packages[0].pdf_download_link, success : true}),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
+      status: 200,
+      label : label.packages[0].pdf_download_link,
+      success : true,
     };
     }
     else if (serviceId == 2) {
@@ -96,12 +93,8 @@ exports.handler = async (event) => {
     
 
 return {
-  statusCode: 200,
-  body: JSON.stringify({label : label.response, success : true}),
-  headers: {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*'
-  },
+  status: 200,
+  label : label.response, success : true,
 };
 }
     

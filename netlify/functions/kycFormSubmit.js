@@ -26,11 +26,11 @@ let transporter = nodemailer.createTransport({
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event) => {
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   if (!token) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: 'Access Denied' }),
+      status: 401,
+      message: 'Access Denied',
     };
   }
 
@@ -51,7 +51,7 @@ exports.handler = async (event) => {
         ifsc,
         account,
         cin
-        } = JSON.parse(event.body);
+        } = event.body
 
         const connection = await mysql.createConnection(dbConfig);
 
@@ -59,8 +59,8 @@ exports.handler = async (event) => {
           const [requests] = await connection.execute('SELECT * FROM KYC_UPDATE_REQUEST WHERE uid = ? AND status = "PENDING"',[id]);
           if (requests.length){
             return {
-              statusCode: 400,
-              body: JSON.stringify({ message: 'You already have a pending KYC request' }),
+              status: 400,
+              message: 'You already have a pending KYC request',
             };
           }
           const [insertRequest] = await connection.execute('INSERT INTO KYC_UPDATE_REQUEST (uid, address, city, state, pin ,aadhar_number, pan_number, gst, cin, accountNumber, ifsc, bank, msme) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [id, address, city, state, pin,  aadhar, pan, gst, cin, account, ifsc, bank, msme]);
@@ -77,13 +77,14 @@ exports.handler = async (event) => {
           };
         await transporter.sendMail(mailOptions);
           return {
-            statusCode: 200,
-            body: JSON.stringify({ message: 'Details Submitted',  reqId:reqId}),
+            status: 200,
+            message: 'Details Submitted',
+            reqId:reqId,
           };
         } catch (error) {
           return {
-            statusCode: 500,
-            body: JSON.stringify({ message: error.message, error: error.message }),
+            status: 500,
+            message: error.message, error: error.message,
           };
         } finally {
           await connection.end();
@@ -91,14 +92,14 @@ exports.handler = async (event) => {
 
     } catch(err){
       return {
-        statusCode: 400,
-        body: JSON.stringify({ message: 'Something went wrong' }),
+        status: 400,
+        message: 'Something went wrong',
       };
     }
   } catch (err) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Invalid Token' }),
+      status: 400,
+      message: 'Invalid Token',
     };
   }
 };

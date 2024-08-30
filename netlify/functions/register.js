@@ -24,14 +24,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: 'Method Not Allowed' }),
-    };
-  }
-  
-  const { reg_email, reg_password, name, mobile, business_name } = JSON.parse(event.body);
+  const { reg_email, reg_password, name, mobile, business_name } = event.body
   const hashedPassword = await bcrypt.hash(reg_password, 10);
 
   const connection = await mysql.createConnection(dbConfig);
@@ -40,8 +33,8 @@ exports.handler = async (event) => {
     const [users] = await connection.execute('SELECT * FROM USERS  WHERE email = ?', [reg_email]);
     if (users.length){
       return {
-        statusCode: 400,
-        body: JSON.stringify({ message: "User is already registered. Please login", success: false}),
+        status: 400,
+         message: "User is already registered. Please login", success: false,
       };
     }
     const [user] = await connection.execute('INSERT INTO USERS (businessName, email, password, fullName, phone ) VALUES (?, ?, ?, ?,?)', [business_name, reg_email, hashedPassword, name, mobile]);
@@ -55,13 +48,13 @@ exports.handler = async (event) => {
     };
     await transporter.sendMail(mailOptions)
       return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'Registration Successfull', success : true, token : accessToken })
+        status: 200,
+        message: 'Registration Successfull', success : true, token : accessToken 
       };
   } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ message: error.message, success: false}),
+      status: 500,
+      message: error.message, success: false,
     };
   } finally {
     await connection.end();

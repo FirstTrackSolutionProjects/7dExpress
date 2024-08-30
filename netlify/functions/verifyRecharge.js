@@ -13,7 +13,7 @@ let transporter = nodemailer.createTransport({
   },
 });
 exports.handler = async (event, context) => {
-  const { razorpay_payment_id, razorpay_order_id, razorpay_signature, uid, amount } = JSON.parse(event.body);
+  const { razorpay_payment_id, razorpay_order_id, razorpay_signature, uid, amount } = event.body
 
   // Verify the payment signature
   const generatedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
@@ -22,8 +22,8 @@ exports.handler = async (event, context) => {
 
     if (generatedSignature !== razorpay_signature) {
         return {
-          statusCode: 400,
-          body: JSON.stringify({ error: 'Invalid payment signature' }),
+          status: 400,
+           error: 'Invalid payment signature' ,
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
@@ -68,23 +68,13 @@ exports.handler = async (event, context) => {
     };
   await transporter.sendMail(mailOptions);
     return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true, message : "Recharge Successfull" }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-        
-      },
+      status: 200,
+       success: true, message : "Recharge Successfull" ,
     };
   } catch (error) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-        
-      },
+      status: 500,
+       error: error.message ,
     };
   } finally {
     connection.end();

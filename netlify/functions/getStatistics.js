@@ -7,18 +7,14 @@ const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event, context) => {
 
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   const verified = jwt.verify(token, SECRET_KEY);
   const id = verified.id;
   const admin = verified.admin;
   if (!id) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Access Denied' }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-      },
+      status: 400,
+      message: 'Access Denied',
     };
   }
   const connection = await mysql.createConnection({
@@ -59,12 +55,8 @@ exports.handler = async (event, context) => {
          const net_expense = total_expense - total_refund;
          const revenue = ((net_expense/1.3)*0.3).toFixed(2)
           return {
-            statusCode: 200,
-            body: JSON.stringify({ warehouse, shipment , merchant, delivered, unDelivered ,inTransit, revenue, expense: total_expense, refunds : total_refund ,success : true }),
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-              },
+            status: 200,
+            warehouse, shipment , merchant, delivered, unDelivered ,inTransit, revenue, expense: total_expense, refunds : total_refund ,success : true ,
           };
     } else{
         const [warehouses] = await connection.execute('SELECT COUNT(*) AS warehouses FROM WAREHOUSES WHERE uid = ? ', [id]);
@@ -87,13 +79,8 @@ exports.handler = async (event, context) => {
           total_recharge += parseFloat(manualRecharges[i].amount);
         }
          return {
-            statusCode: 200,
-            body: JSON.stringify({ warehouse, shipment, delivered, unDelivered, inTransit , total_recharge , success : true }),
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*', // Allow all origins (CORS)
-                
-              },
+            status: 200,
+            warehouse, shipment, delivered, unDelivered, inTransit , total_recharge , success : true,
           };
     }
 
@@ -106,7 +93,7 @@ exports.handler = async (event, context) => {
   }
   //  catch (error) {
   //   return {
-  //     statusCode: 500,
+  //     status: 500,
   //     body: JSON.stringify({ message: error.message , success: false }),
   //     headers: {
   //       'Content-Type': 'application/json',

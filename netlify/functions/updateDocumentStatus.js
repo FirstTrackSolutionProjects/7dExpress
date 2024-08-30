@@ -14,30 +14,30 @@ const dbConfig = {
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event) => {
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   if (!token) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: 'Access Denied' }),
+      status: 401,
+       message: 'Access Denied' ,
     };
   }
 
   try {
     const verified = jwt.verify(token, SECRET_KEY);
     const id = verified.id;
-    const { name, key } = JSON.parse(event.body);
+    const { name, key } = event.body
     try{
           const connection = await mysql.createConnection(dbConfig);
           try {
             const [req] = await connection.execute(`UPDATE MERCHANT_VERIFICATION set ${name} = ? WHERE status='incomplete' AND uid = ?`, [ key, id]);
           return {
-            statusCode: 200,
-            body: JSON.stringify({ success:true}),
+            status: 200,
+            success:true,
           };
         } catch (error) {
           return {
-            statusCode: 500,
-            body: JSON.stringify({ message: error.message, error: error.message }),
+            status: 500,
+             message: error.message, error: error.message ,
           };
         } finally {
           await connection.end();
@@ -45,14 +45,14 @@ exports.handler = async (event) => {
 
     } catch(err){
       return {
-        statusCode: 400,
-        body: JSON.stringify({ message: 'Something went wrong' }),
+        status: 400,
+         message: 'Something went wrong' ,
       };
     }
   } catch (err) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Invalid Token' }),
+      status: 400,
+       message: 'Invalid Token',
     };
   }
 };

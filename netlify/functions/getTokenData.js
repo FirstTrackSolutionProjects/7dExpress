@@ -6,22 +6,22 @@ require('dotenv').config();
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event, context) => {
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   if (!token) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: "Access Denied" }),
+      status: 401,
+      message: "Access Denied",
     };
   }
   try{
     const verified = jwt.verify(token, SECRET_KEY);
-    return { statusCode: 200,
+    return { status: 200,
         body: JSON.stringify(verified)
     }
   } catch(e){
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Invalid Token' }),
+      status: 400,
+      message: 'Invalid Token',
     };
   }
 

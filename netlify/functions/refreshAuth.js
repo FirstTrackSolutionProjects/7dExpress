@@ -4,8 +4,8 @@ exports.handler = async (event) => {
   const cookies = event.headers.cookie;
   if (!cookies) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: 'Unauthorized', success: false })
+      status: 401,
+      message: 'Unauthorized', success: false 
     };
   }
   try{
@@ -13,8 +13,8 @@ exports.handler = async (event) => {
 
   if (!refreshToken) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: 'Unauthorized', success: false })
+      status: 401,
+      message: 'Unauthorized', success: false 
     };
   }
 
@@ -24,22 +24,22 @@ exports.handler = async (event) => {
     const newAccessToken = jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 
     return {
-      statusCode: 200,
+      status: 200,
       headers: {
         'Set-Cookie': `accessToken=${newAccessToken}; HttpOnly; Secure; Path=/; Max-Age=900`
       },
-      body: JSON.stringify({ message: 'Access token refreshed', success : true })
+       message: 'Access token refreshed', success : true 
     };
   } catch (err) {
     return {
-      statusCode: 403,
-      body: JSON.stringify({ message: 'Forbidden', success : false })
+      status: 403,
+      message: 'Forbidden', success : false 
     };
   }
 } catch (e){
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Invalid Token', success : false }),
+      status: 400,
+      message: 'Invalid Token', success : false ,
     };
   
 }

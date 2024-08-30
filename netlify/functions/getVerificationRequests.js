@@ -14,11 +14,11 @@ const dbConfig = {
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 exports.handler = async (event) => {
-  const token = event.headers.authorization;
+  const token = event.headers.Authorization;
   if (!token) {
     return {
-      statusCode: 401,
-      body: JSON.stringify({ message: 'Access Denied' }),
+      status: 401,
+      message: 'Access Denied',
     };
   }
 
@@ -27,8 +27,8 @@ exports.handler = async (event) => {
     const admin = verified.admin;
     if (!admin){
       return {
-        statusCode: 400,
-        body: JSON.stringify({ message: 'Not an admin' }),
+        status: 400,
+        message: 'Not an admin' ,
       };
     }
     try{
@@ -36,13 +36,15 @@ exports.handler = async (event) => {
           try {
             const [users] = await connection.execute("SELECT * FROM USERS u INNER JOIN MERCHANT_VERIFICATION mv ON u.uid = mv.uid WHERE u.isVerified = 0 AND u.isAdmin = 0 AND mv.status='pending'");
           return {
-            statusCode: 200,
-            body: JSON.stringify({ success:true, message: users}),
+            status: 200,
+            success:true,
+            message: users,
           };
         } catch (error) {
           return {
-            statusCode: 500,
-            body: JSON.stringify({ message: error.message, error: error.message }),
+            status: 500,
+            message: error.message,
+            error: error.message,
           };
         } finally {
           await connection.end();
@@ -50,14 +52,14 @@ exports.handler = async (event) => {
 
     } catch(err){
       return {
-        statusCode: 400,
-        body: JSON.stringify({ message: 'Something went wrong' }),
+        status: 400,
+        message: 'Something went wrong',
       };
     }
   } catch (err) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Invalid Token' }),
+      status: 400,
+      message: 'Invalid Token',
     };
   }
 };

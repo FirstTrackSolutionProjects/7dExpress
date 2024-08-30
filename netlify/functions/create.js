@@ -295,8 +295,8 @@ exports.handler = async (event) => {
     };
     }
     else if (serviceId == 3){
-
       const shipRocketLogin = await fetch('https://api-cargo.shiprocket.in/api/token/refresh/', {
+        method : "POST",
         headers: {
           'Content-Type': 'application/json',
         },
@@ -304,6 +304,7 @@ exports.handler = async (event) => {
       })
       const shiprocketLoginData = await shipRocketLogin.json()
       const shiprocketAccess = shiprocketLoginData.access
+      
       const shipRocketCreateOrder = await fetch(`https://api-cargo.shiprocket.in/api/external/order_creation/`, {
         method: 'POST',
         headers: {
@@ -317,7 +318,7 @@ exports.handler = async (event) => {
           "is_insured": false ,
           "is_to_pay": false,
           "to_pay_amount": null,
-          "source_warehouse_name": warehouse.name,
+          "source_warehouse_name": warehouse.warehouseName,
           "source_address_line1": warehouse.address,
           "source_address_line2": warehouse.address,
           "source_pincode": warehouse.pin,
@@ -370,7 +371,7 @@ exports.handler = async (event) => {
       })
       })
       const shipRocketShipmentCreateData = await shipRocketShipmentCreate.json();
-      if (shipRocketShipmentCreateData == 200){
+      if (shipRocketShipmentCreateData.id){
       await connection.beginTransaction();
       await connection.execute('UPDATE SHIPMENTS set serviceId = ?, categoryId = ?, awb = ? WHERE ord_id = ?', [serviceId, categoryId,  ,order])
       await connection.execute('INSERT INTO SHIPMENT_REPORTS VALUES (?,?,?)',[refId,order,"SHIPPED"])
@@ -379,12 +380,35 @@ exports.handler = async (event) => {
         await connection.execute('INSERT INTO EXPENSES (uid, expense_order, expense_cost) VALUES  (?,?,?)',[id, order, price])
       }
       await connection.commit();
+      return {
+        statusCode: 200,
+        body: JSON.stringify({response : shipRocketShipmentCreateData, res2 : data3,success : true}),
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
+      }
+    }
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ success : false, response : shipRocketShipmentCreateData,res2 : data3,message : "Error in creating shipment at Shiprocket"})
     }
     }
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ success : false, data3 ,message : "Error in creating order at Shiprocket"})
+    }
+    }
+    else {
+      return {
+        statusCode : 404,
+        body: JSON.stringify({ success : false, message : "Service Id not found"})
+      }
     }
    
     
   } 
+  
   // catch (error) {
   //   return {
   //     statusCode: 504,

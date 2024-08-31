@@ -30,6 +30,13 @@ const Header = () => {
     }
     getBalance();
   },[authState])
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
   return (
     <>
     {showRecharge && <Recharge setShowRecharge={setShowRecharge}/>}
@@ -46,7 +53,7 @@ const Header = () => {
           <Link to="/about" className="text-sky-950 text-xl pt-4 font-bold">About</Link>
           <Link to="/track" className="text-sky-950 text-xl pt-4 font-bold">Tracking</Link>
           <Link to="/blog" className="text-sky-950 text-xl pt-4 font-bold">Blogs</Link>
-          <Link to="/pricing" className="text-sky-950 text-xl pt-4 font-bold">Pricing</Link>
+          <Link to="/pricing" onClick={{scrollToTop}}className="text-sky-950 text-xl pt-4 font-bold">Pricing</Link>
           <Link to="/contact" className="text-sky-950 text-xl pt-4 font-bold">Contact</Link>
           {authState?.authenticated && <p className="text-red-600 text-xl pt-4 font-bold" onClick={()=>{logout(); setIsOpen(false)}}>Logout</p>}
         </div>

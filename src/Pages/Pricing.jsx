@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Calculator from '../Components/Calculator';
+import PriceCalc from '../Components/PriceCalc';
 
 const Pricing = () => {
   return (
@@ -9,7 +10,7 @@ const Pricing = () => {
     
       <div className="text-sky-950 text-2xl md:text-4xl text-center py-5">Calculate Your Shipping Price</div>
       <div className="mx-6 mb-5">
-      <Calculator/>
+      <PriceCalc/>
     </div>
     </div>
   );

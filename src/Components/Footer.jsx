@@ -37,7 +37,7 @@ const Footer = () =>{
           {/* Contact Info */}
           <div className="w-full md:w-1/4">
             <h2 className="text-xl font-bold mb-4 hover:underline">Contact Us</h2>
-            <p className="mb-2">Room No 356, Floor -G, Shahid<br/>Bhagat Singh Nagar, Sant Gora,<br/>Kumbhar Road, 5th Kumbharwada,<br/>Sec 2, Dharavi, Mumbai, Maharashtra, India-400017</p>
+            <p className="mb-2 pr-4">Room No 356, Floor -G, Shahid<br/>Bhagat Singh Nagar, Sant Gora,<br/>Kumbhar Road, 5th Kumbharwada,<br/>Sec 2, Dharavi, Mumbai, Maharashtra, India-400017</p>
             <p className="mt-3 mb-8 md:-mb-4">Email:  info@7dexpress.com </p>
           </div>
         

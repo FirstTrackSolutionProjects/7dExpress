@@ -66,15 +66,15 @@ const Calculator = ()=>{
         {/* Third Row */}
         
         <div className="mb-4 flex flex-wrap">
-          <div className="w-full md:w-1/2 px-3 mb-4 md:mb-0">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstName">
-              Weight (In Kg)
+        <div className="w-full md:w-1/2 px-3 mb-4 md:mb-0">
+          <label className="block text-gray-700 text-sm font-bold mb-3" htmlFor="firstName">
+              COD Amount
             </label>
             <input
               className="shadow  border rounded w-full py-2 px-3 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="weight"
+              id="codAmount"
               type="text"
-              placeholder="1kg"
+              placeholder="0"
             />
           </div>
           <div className="w-full md:w-1/2 px-3">
@@ -94,17 +94,18 @@ const Calculator = ()=>{
 
         {/* Fourth Row */}
         <div className="mb-4 flex flex-wrap">
-          <div className="w-full md:w-1/2 px-3 mb-4 md:mb-0">
-          <label className="block text-gray-700 text-sm font-bold mb-3" htmlFor="firstName">
-              COD Amount
+        <div className="w-full md:w-1/2 px-3 mb-4 md:mb-0">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstName">
+              Weight (In Kg)
             </label>
             <input
               className="shadow  border rounded w-full py-2 px-3 border-gray-400 hover:border-gray-500  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="codAmount"
+              id="weight"
               type="text"
-              placeholder="0"
+              placeholder="1kg"
             />
           </div>
+          
           <div className="md:w-1/2 w-full  flex space-x-4 sm:space-x-0 justify-between sm:justify-evenly px-3 lg:px-1">
           
             <div className="flex-1  mb-2 md:w-2/3 flex">

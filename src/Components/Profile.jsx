@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {useAuth} from '../contexts/AuthContext'
 import { jwtDecode } from 'jwt-decode'
+const API_URL = import.meta.env.VITE_APP_API_URL
 const Profile = () => {
   const decoded = jwtDecode(localStorage.getItem('token'))
   const { authState} = useAuth()
@@ -47,7 +48,7 @@ const Profile = () => {
   
   useEffect(()=>{
     const decoded = jwtDecode(localStorage.getItem('token'))
-    fetch('/.netlify/functions/getProfile', {
+    fetch(`${API_URL}/getProfile`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -73,7 +74,7 @@ const Profile = () => {
         ifsc : data.ifsc
       })
     })
-    fetch('/.netlify/functions/getGetSignedUrl', {
+    fetch(`${API_URL}/getGetSignedUrl`, {
       method : 'POST',
       headers : {
           'Content-Type' : 'application/json',

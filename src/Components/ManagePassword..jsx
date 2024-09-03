@@ -1,5 +1,4 @@
 import React from 'react'
-
 const ManagePassword = () => {
   return (
     <div className=" py-16 w-full h-full flex flex-col items-center overflow-x-hidden overflow-y-auto">

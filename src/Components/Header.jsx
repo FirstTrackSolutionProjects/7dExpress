@@ -6,7 +6,7 @@ import Recharge from "./Wallet/Recharge";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
+const API_URL = import.meta.env.VITE_APP_API_URL
 const Header = () => {
   const navigate = useNavigate();
   const [showRecharge, setShowRecharge] = useState(false)
@@ -21,7 +21,7 @@ const Header = () => {
     const getBalance = async () => {
       if (authState?.verified){
         try{
-          const response = await axios.get('/.netlify/functions/getBalance',{headers : {'Authorization' : localStorage.getItem('token')}})
+          const response = await axios.get(`${API_URL}/getBalance`,{headers : {'Authorization' : localStorage.getItem('token')}})
           setBalance(response.data.balance);
         } catch(e){
           

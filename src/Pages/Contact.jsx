@@ -1,5 +1,5 @@
 import React from 'react';
-
+const API_URL = import.meta.env.VITE_APP_API_URL
 const Contact = () => {
   return (
     <div className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-bg-about bg-cover p-4">

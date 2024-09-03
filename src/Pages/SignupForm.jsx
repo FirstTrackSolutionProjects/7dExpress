@@ -5,7 +5,7 @@ import { faUser, faUserTag, faPhone, faEnvelope, faLock } from '@fortawesome/fre
 import { useAuth } from '../contexts/AuthContext';
 import EmailVerification from '../Components/EmailVerification';
 
-
+const API_URL = import.meta.env.VITE_APP_API_URL
 const Form = ({register, message}) => {
   const [businessName, setBusinessName] = useState('');
     const [fullName, setFullName] = useState('');

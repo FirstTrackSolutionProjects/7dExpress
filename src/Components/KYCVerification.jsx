@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect} from "react";
-
+const API_URL = import.meta.env.VITE_APP_API_URL
 const FileUploadForm = ({reqId}) => {
   const [fileData, setFileData] = useState({
     aadharDoc: null,
@@ -18,7 +18,7 @@ const FileUploadForm = ({reqId}) => {
   });
   useEffect(() => {
     const getDocumentStatus = async () => {
-      await fetch('/.netlify/functions/getKycDocumentStatus', {
+      await fetch(`${API_URL}/getKycDocumentStatus`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -46,7 +46,7 @@ const FileUploadForm = ({reqId}) => {
 
   const handleUpload = async (name) => {
     // Fetch signed URL from backend
-    const response  = await fetch ('/.netlify/functions/getTokenData', {
+    const response  = await fetch (`${API_URL}/getTokenData`, {
       method: 'GET',
       headers: {
         'Authorization' : localStorage.getItem('token'),
@@ -55,7 +55,7 @@ const FileUploadForm = ({reqId}) => {
     const tokenData = await response.json();
     const id = tokenData.id;
     const key  = `merchant/${id}/kycDocs/${reqId}/${name}`
-    await fetch(`/.netlify/functions/getPutSignedUrl`, {
+    await fetch(`${API_URL}/getPutSignedUrl`, {
       method: "POST",
       headers: {
         'Authorization': localStorage.getItem("token"),
@@ -74,7 +74,7 @@ const FileUploadForm = ({reqId}) => {
           },
           body: fileData[name],
         });
-        await fetch(`/.netlify/functions/updateKycDocumentStatus`, {
+        await fetch(`${API_URL}/updateKycDocumentStatus`, {
           method: 'POST',
           headers : {
             'Content-Type' : 'application/json',
@@ -100,7 +100,7 @@ const FileUploadForm = ({reqId}) => {
       alert("Please upload all required documents")
       return;
     }
-    await fetch(`/.netlify/functions/completeKycVerificationRequest`, {
+    await fetch(`${API_URL}/completeKycVerificationRequest`, {
       method: 'GET',
       headers : {
         'Content-Type' : 'application/json',
@@ -247,7 +247,7 @@ const TextForm = ({ onNext, setReqId }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("/.netlify/functions/kycFormSubmit", {
+    fetch(`${API_URL}/kycFormSubmit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -456,7 +456,7 @@ const KYCVerification = () => {
   const [step, setStep] = useState(1);
   useEffect(() => {
     const getStatus = async () => {
-      await fetch('/.netlify/functions/getKycStatus', {
+      await fetch(`${API_URL}/getKycStatus`, {
         method: 'GET',
         headers: {
           'Authorization': localStorage.getItem('token'),

@@ -1,5 +1,5 @@
 import React from 'react';
-
+const API_URL = import.meta.env.VITE_APP_API_URL
 const PrivacyPolicy = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-4">

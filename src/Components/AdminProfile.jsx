@@ -14,7 +14,7 @@ const Profile = () => {
   })
   useEffect(()=>{
     const fetchProfile = async () => {
-      await fetch(`${API_URL}/getAdminProfile`, {
+      await fetch(  `${API_URL}/getAdminProfile`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json',
           'Accept': 'application/json',

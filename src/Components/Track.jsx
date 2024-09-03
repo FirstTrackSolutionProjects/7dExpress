@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 
-
+const API_URL = import.meta.env.VITE_APP_API_URL
 const Card = ({scan}) => {
   return (
       <>
@@ -97,7 +97,7 @@ const handleSubmit = async (e) => {
     try{
         e.preventDefault();
     } catch (e) {}
-    const data = await fetch('/.netlify/functions/track', {
+    const data = await fetch(`${API_URL}/track`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

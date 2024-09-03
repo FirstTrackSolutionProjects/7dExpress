@@ -1,6 +1,7 @@
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+const API_URL = import.meta.env.VITE_APP_API_URL
 const EmailVerification = () => {
   const {authState} = useAuth()
   const navigate = useNavigate()
@@ -19,7 +20,7 @@ const EmailVerification = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch('/.netlify/functions/verifyEmail', {
+    await fetch(`${API_URL}/verifyEmail`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -37,7 +38,7 @@ const EmailVerification = () => {
   }
   const handleOtp = async (e) => {
     setIsSending(true)
-    await fetch('/.netlify/functions/sendVerifyEmail', {
+    await fetch(`${API_URL}/sendVerifyEmail`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json',
             'Accept': 'application/json',

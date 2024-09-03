@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { jwtDecode } from "jwt-decode"
 import { useAuth } from "../contexts/AuthContext"
-
+const API_URL = import.meta.env.VITE_APP_API_URL
 const DashboardSummaryCard = ({title, number}) => {
   return (
     <div className="rounded-xl border-purple-500 border-2 flex-1 m-2  min-w-64 max-w-64 h-32 transition-all flex space-x-5 p-8 items-center duration-300 text-purple-500 font-medium bg-white hover:text-white hover:bg-purple-500">
@@ -20,7 +20,7 @@ const DashboardSummary = () => {
   const {authState} = useAuth()
   useEffect(() => {
       const getStatistics = async () => {
-        await fetch(`/.netlify/functions/getStatistics`, {
+        await fetch(`${API_URL}/getStatistics`, {
           method: 'GET',
           headers: { 'Accept': 'application/json',
             'Content-Type': 'application/json',

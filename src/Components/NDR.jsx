@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-
+const API_URL = import.meta.env.VITE_APP_API_URL
 const View  = ({report, setIsView}) => {
   const [status, setStatus] = useState(null)
   useEffect(() => {
     
     const getReport = async () => {
-      const response = await fetch('/.netlify/functions/getReport', {
+      const response = await fetch(`${API_URL}/getReport`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ const Listing = () => {
   const [reports, setReports] = useState([])
   useEffect(() => {
 
-      fetch('/.netlify/functions/getReports', {
+      fetch(`${API_URL}/getReports`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

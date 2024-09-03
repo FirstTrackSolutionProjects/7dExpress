@@ -1,6 +1,6 @@
 import React from 'react';
 import Track from '../Components/Track';
-
+const API_URL = import.meta.env.VITE_APP_API_URL
 const Tracking =()=>{
     return(
 

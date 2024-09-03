@@ -3,7 +3,7 @@
 import React from 'react';
 import Calculator from '../Components/Calculator';
 import PriceCalc from '../Components/PriceCalc';
-
+const API_URL = import.meta.env.VITE_APP_API_URL
 const Pricing = () => {
   return (
     <div className='flex justify-center items-center w-full flex-col'>

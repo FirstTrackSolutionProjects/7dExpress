@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-
+const API_URL = import.meta.env.VITE_APP_API_URL
 const ServiceCheck = () => {
   const [formData, setFormData] = useState({
     source: '',
@@ -14,7 +14,7 @@ const ServiceCheck = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-     await fetch('/.netlify/functions/serviceCheck', {
+     await fetch(`${API_URL}/serviceCheck`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

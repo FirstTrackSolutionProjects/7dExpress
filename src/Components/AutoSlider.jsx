@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+const API_URL = import.meta.env.VITE_APP_API_URL
 const AutoSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slides = [

@@ -1,7 +1,7 @@
 // Blogs.js
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-
+const API_URL = import.meta.env.VITE_APP_API_URL
 const blogs = [
   {
     id: 1,

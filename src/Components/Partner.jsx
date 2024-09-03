@@ -2,7 +2,7 @@ import React from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-
+const API_URL = import.meta.env.VITE_APP_API_URL
 const Partner = () => {
   const settings = {
     dots: true,

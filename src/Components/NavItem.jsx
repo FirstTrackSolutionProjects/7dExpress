@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom"
 import { useState } from "react"
+const API_URL = import.meta.env.VITE_APP_API_URL
 const NavItem2 = ({name,url}) => {
   return (
     <Link to={url} className="group relative cursor-pointer font-medium transition-all duration-300 hover:font-bold">

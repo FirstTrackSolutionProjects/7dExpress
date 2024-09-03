@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 const faqs = [
   {
     question: 'What is your return policy?',

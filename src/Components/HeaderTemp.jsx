@@ -3,6 +3,7 @@ import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
+const API_URL = import.meta.env.VITE_APP_API_URL
 const HeaderTemp = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();

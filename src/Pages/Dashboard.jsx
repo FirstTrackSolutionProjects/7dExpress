@@ -22,6 +22,7 @@ import AllTransactions from "../Components/AllTransactions"
 import AllParcels from "../Components/AllParcels"
 import AllShipmentReports from "../Components/AllShipmentReports"
 import { XIcon, MenuIcon } from "@heroicons/react/outline"
+const API_URL = import.meta.env.VITE_APP_API_URL
 const Dashboard = () => {
   const {logout, authState, checkAuth } = useAuth()
   const [menuID, setMenuID] = useState([0])

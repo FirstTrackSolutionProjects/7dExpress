@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import EmailVerification from '../Components/EmailVerification';
 import ResetPassword from '../Components/ResetPassword';
 import { set } from 'react-hook-form';
+const API_URL = import.meta.env.VITE_APP_API_URL
 
 const LoginForm = ({authState, message, login, setReset}) => {
   const [email, setEmail] = useState('');

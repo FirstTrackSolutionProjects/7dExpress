@@ -9,6 +9,7 @@ import GridComponent from '../Components/GridComponent'
 import ReachCount from '../Components/ReachCount'
 import Newsletter from '../Components/NewsLetter'
 import { useAuth } from '../contexts/AuthContext'
+const API_URL = import.meta.env.VITE_APP_API_URL
 const Landing = () => {
   const { authState } = useAuth()
   return (

@@ -21,7 +21,7 @@ const DashboardSummary = () => {
   useEffect(() => {
       const getStatistics = async () => {
         await fetch(`${API_URL}/getStatistics`, {
-          method: 'GET',
+          method: 'POST',
           headers: { 'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': localStorage.getItem('token'),

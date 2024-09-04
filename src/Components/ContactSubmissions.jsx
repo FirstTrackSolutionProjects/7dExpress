@@ -88,7 +88,7 @@ const ContactSubmissions =  () => {
     useEffect(() => {
         const getVerificationRequests = async () => {
             const response = await fetch(`${API_URL}/getContactRequest`, {
-                method: 'GET',
+                method: 'POST',
                 headers: { 'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': localStorage.getItem('token'),

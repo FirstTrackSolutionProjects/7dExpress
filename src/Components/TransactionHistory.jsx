@@ -42,7 +42,7 @@ const TransactionHistory =  () => {
     useEffect(() => {
         const getVerifiedtransaction = async () => {
             const recharge = await fetch(`${API_URL}/getTransactions`, {
-                method: 'GET',
+                method: 'POST',
                 headers: { 'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': localStorage.getItem('token'),
@@ -51,7 +51,7 @@ const TransactionHistory =  () => {
             const recharges = await recharge.json();
             const data = recharges.data
             const manual = await fetch(`${API_URL}/getManualTransactions`, {
-                method: 'GET',
+                method: 'POST',
                 headers: { 'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': localStorage.getItem('token'),
@@ -60,7 +60,7 @@ const TransactionHistory =  () => {
             const manuals = await manual.json();
             data.push(...manuals.data)
             const expense = await fetch(`${API_URL}/getExpense`, {
-                method: 'GET',
+                method: 'POST',
                 headers: { 'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': localStorage.getItem('token'),
@@ -69,7 +69,7 @@ const TransactionHistory =  () => {
             const expenses = await expense.json();
             data.push(...expenses.data)
             const refund = await fetch(`${API_URL}/getRefund`, {
-                method: 'GET',
+                method: 'POST',
                 headers: { 'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': localStorage.getItem('token'),

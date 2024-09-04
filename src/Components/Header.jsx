@@ -4,7 +4,6 @@ import {  useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import Recharge from "./Wallet/Recharge";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const API_URL = import.meta.env.VITE_APP_API_URL
 const Header = () => {
@@ -21,8 +20,15 @@ const Header = () => {
     const getBalance = async () => {
       if (authState?.verified){
         try{
-          const response = await axios.get(`${API_URL}/getBalance`,{headers : {'Authorization' : localStorage.getItem('token')}})
-          setBalance(response.data.balance);
+          const response = await fetch(`${API_URL}/getBalance`, {
+            method : 'POST',
+            headers : {
+              'Content-Type' : 'application/json',
+              'Authorization' : localStorage.getItem('token')
+            }
+          })
+          const responseData = await response.json();
+          setBalance(responseData.balance);
         } catch(e){
           
         }

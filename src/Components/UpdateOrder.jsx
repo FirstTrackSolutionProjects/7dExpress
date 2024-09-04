@@ -959,7 +959,7 @@ const ShipCard = ({price, shipment, setIsShipped, setIsShip}) => {
   const ship = async () => {
     setIsLoading(true)
     const getBalance = await fetch(`${API_URL}/getBalance`, {
-      method: 'GET',
+      method: 'POST',
       headers : {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

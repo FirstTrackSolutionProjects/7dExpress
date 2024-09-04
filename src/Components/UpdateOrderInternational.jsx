@@ -735,7 +735,7 @@ const [items, setItems] = useState([
 //         docketPrice.filter((a => a.categoryId == categoryId && a.serviceId == serviceId))
 //     ))
 //     const getBalance = await fetch('/.netlify/functions/getBalance', {
-//       method: 'GET',
+//       method: 'POST',
 //       headers : {
 //         'Content-Type': 'application/json',
 //         'Accept': 'application/json',

@@ -49,7 +49,7 @@ const Profile = () => {
   useEffect(()=>{
     const decoded = jwtDecode(localStorage.getItem('token'))
     fetch(`${API_URL}/getProfile`, {
-      method: 'GET',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization': localStorage.getItem('token'),

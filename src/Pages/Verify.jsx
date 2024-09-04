@@ -31,7 +31,7 @@ const FileUploadForm = () => {
   useEffect(() => {
     const getDocumentStatus = async () => {
       await fetch(`${API_URL}/getDocumentStatus`, {
-        method: 'GET',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': localStorage.getItem('token')
@@ -60,7 +60,7 @@ const FileUploadForm = () => {
   const handleUpload = async (name) => {
     // Fetch signed URL from backend
     const response  = await fetch (`${API_URL}/getTokenData`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Authorization' : localStorage.getItem('token'),
       }
@@ -128,7 +128,7 @@ const FileUploadForm = () => {
       return;
     }
     await fetch(`${API_URL}/completeVerificationRequest`, {
-      method: 'GET',
+      method: 'POST',
       headers : {
         'Content-Type' : 'application/json',
         'Accept' : 'application/json',
@@ -496,7 +496,7 @@ const Verify = () => {
     }
     const getStatus = async () => {
       await fetch(`${API_URL}/getVerificationStatus`, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Authorization': localStorage.getItem('token'),
           'Content-Type' : 'application/json',

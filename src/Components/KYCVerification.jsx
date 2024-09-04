@@ -19,7 +19,7 @@ const FileUploadForm = ({reqId}) => {
   useEffect(() => {
     const getDocumentStatus = async () => {
       await fetch(`${API_URL}/getKycDocumentStatus`, {
-        method: 'GET',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': localStorage.getItem('token')
@@ -47,8 +47,10 @@ const FileUploadForm = ({reqId}) => {
   const handleUpload = async (name) => {
     // Fetch signed URL from backend
     const response  = await fetch (`${API_URL}/getTokenData`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'Authorization' : localStorage.getItem('token'),
       }
     })
@@ -101,7 +103,7 @@ const FileUploadForm = ({reqId}) => {
       return;
     }
     await fetch(`${API_URL}/completeKycVerificationRequest`, {
-      method: 'GET',
+      method: 'POST',
       headers : {
         'Content-Type' : 'application/json',
         'Accept' : 'application/json',
@@ -457,7 +459,7 @@ const KYCVerification = () => {
   useEffect(() => {
     const getStatus = async () => {
       await fetch(`${API_URL}/getKycStatus`, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Authorization': localStorage.getItem('token'),
           'Content-Type' : 'application/json',

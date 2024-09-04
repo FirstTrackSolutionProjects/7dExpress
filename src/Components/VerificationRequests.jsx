@@ -124,7 +124,7 @@ const VerificationRequests =  () => {
     useEffect(() => {
         const getVerificationRequests = async () => {
             const response = await fetch(`${API_URL}/getVerificationRequests`, {
-                method: 'GET',
+                method: 'POST',
                 headers: { 'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': localStorage.getItem('token'),

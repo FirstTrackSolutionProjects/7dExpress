@@ -8,7 +8,7 @@ const ComparePrices = ({method, status, origin, dest, weight, payMode, codAmount
     const data = async () => {
       await fetch(`${API_URL}/price`, {
         method: 'POST',
-        headers: { 'Accept': '*/*',
+        headers: { 'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
           body : JSON.stringify({method: method, status : status, origin : origin, dest : dest, weight : weight, payMode : payMode, codAmount : codAmount,volume, quantity}),

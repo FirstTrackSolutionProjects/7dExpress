@@ -24,6 +24,10 @@ const Recharge = ({setShowRecharge}) => {
       // }
       const response = await fetch(`${API_URL}/deliveryOrder`, {
         method: 'POST',
+        headers : {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify({ amount }),
       });
       const data = await response.json();
@@ -48,6 +52,10 @@ const Recharge = ({setShowRecharge}) => {
         handler: async function (response) {
           const verifyResponse = await fetch(`${API_URL}/verifyRecharge`, {
             method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
             body: JSON.stringify({
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,

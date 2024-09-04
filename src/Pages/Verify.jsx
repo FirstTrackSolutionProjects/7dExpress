@@ -62,6 +62,8 @@ const FileUploadForm = () => {
     const response  = await fetch (`${API_URL}/getTokenData`, {
       method: 'POST',
       headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'Authorization' : localStorage.getItem('token'),
       }
     })

@@ -312,6 +312,7 @@ useEffect(()=>{
               className="w-full border py-2 px-4 rounded-3xl"
               type="text"
               id="address"
+              maxLength={50}
               {...register("address")}
               placeholder="Ex. 123 Street"
             />
@@ -323,6 +324,7 @@ useEffect(()=>{
               className="w-full border py-2 px-4 rounded-3xl"
               type="text"
               id="address2"
+              maxLength={50}
               {...register("address2")}
               placeholder="Ex. Apt 456"
             />
@@ -423,6 +425,7 @@ useEffect(()=>{
                 <input
                   className="w-full border py-2 px-4 rounded-3xl"
                   type="text"
+                  maxLength={50}
                   id="Baddress"
                   {...register("Baddress")}
                   placeholder="Ex. 123 Street"
@@ -434,6 +437,7 @@ useEffect(()=>{
                 <input
                   className="w-full border py-2 px-4 rounded-3xl"
                   type="text"
+                  maxLength={50}
                   id="Baddress2"
                   {...register("Baddress2")}
                   placeholder="Ex. Apt 456"

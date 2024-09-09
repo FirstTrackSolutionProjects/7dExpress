@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { v4 as uuidv4} from "uuid"
 const API_URL = import.meta.env.VITE_APP_API_URL
 const ManageForm = ({isManage, setIsManage,  shipment, isShipped}) => {
     const [boxes, setBoxes] = useState([
@@ -109,7 +110,11 @@ const ManageForm = ({isManage, setIsManage,  shipment, isShipped}) => {
         shippingType : shipment.shipping_mode,
         pickupDate : shipment.pickup_date,
         pickupTime : shipment.pickup_time,
-        ewaybill : shipment.ewaybill
+        ewaybill : shipment.ewaybill,
+        invoiceNumber : shipment.invoice_number,
+        invoiceDate : shipment.invoice_date,
+        invoiceAmount : shipment.invoice_amount,
+        invoiceUrl : shipment.invoice_url
       })
       useEffect(()=>{
         
@@ -214,6 +219,55 @@ const ManageForm = ({isManage, setIsManage,  shipment, isShipped}) => {
           [name]:type === 'checkbox' ? checked : value
         }));
       };
+      const [invoice, setInvoice] = useState(null)
+      const handleInvoice = (e) => {
+        const { files } = e.target;
+        setInvoice(files[0])
+      }
+      const uploadInvoice = async () => {
+        if(!invoice){
+          return;
+        }
+        const invoiceUuid = uuidv4();
+        const key=`invoice/${invoiceUuid}`;
+        const filetype = invoice.type;
+        
+    
+        const putUrlReq = await fetch(`${API_URL}/getPutSignedUrl`, {
+          method: "POST",
+          headers: {
+            'Authorization': localStorage.getItem("token"),
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({filename : key, filetype : filetype, isPublic : true}),
+        }).catch(err=>{console.error(err); alert("err"); return});
+        const putUrlRes = await putUrlReq.json();
+    
+        const uploadURL = putUrlRes.uploadURL;
+        await fetch(uploadURL, {
+          method: "PUT",
+          headers: {
+            'Content-Type': filetype
+          },
+          body: invoice,
+        }).then(response => {
+          if (response.status == 200){
+            setFormData((prev)=>({
+              ...prev,
+              invoiceUrl: key
+            }))
+            alert("Invoice uploaded successfully!");
+          } else {
+            setFormData((prev)=>({
+              ...prev,
+              invoiceUrl: null
+            }))
+            alert("Failed to upload invoice!");
+          }
+        })
+        
+      }
       const handleSubmit = (e) => {
         e.preventDefault();
         console.log(formData)
@@ -815,6 +869,58 @@ const ManageForm = ({isManage, setIsManage,  shipment, isShipped}) => {
         </div>
       ))}
       <button type="button" className="m-2 px-5 py-1 border rounded-3xl bg-blue-500 text-white" onClick={addProduct}>Add More Product</button>
+      <div className="w-full flex mb-2 flex-wrap ">
+            <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+              <label htmlFor="invoiceNumber">Invoice Number</label>
+              <input required
+                className="w-full border py-2 px-4 rounded-3xl"
+                type="text"
+                id="invoiceNumber"
+                name="invoiceNumber"
+                placeholder="Enter invoice Number"
+                value={formData.invoiceNumber}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+              <label htmlFor="invoiceDate">Invoice Date</label>
+              <input required
+                className="w-full border py-2 px-4 rounded-3xl"
+                type="date"
+                id="invoiceDate"
+                name="invoiceDate"
+                value={formData.invoiceDate}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="w-full flex mb-2 flex-wrap ">
+            <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+              <label htmlFor="invoiceAmount">Invoice Amount</label>
+              <input required
+                className="w-full border py-2 px-4 rounded-3xl"
+                type="number"
+                min={1}
+                id="invoiceAmount"
+                name="invoiceAmount"
+                placeholder="Enter Invoice Amount"
+                value={formData.invoiceAmount}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+              <label htmlFor="invoice">Invoice</label>
+              <input
+                className="w-full border py-2 px-4 rounded-3xl"
+                type="file"
+                id="invoice"
+                name="invoice"
+                onChange={handleInvoice}
+              />
+              <a type="button" className="m-2 px-5 py-1 border rounded-3xl bg-blue-500 text-white" target="_blank" href={import.meta.env.VITE_APP_BUCKET_URL+formData.invoiceUrl}>View</a>
+              <button type="button" className="m-2 px-5 py-1 border rounded-3xl bg-blue-500 text-white" onClick={uploadInvoice}>Update</button>
+            </div>
+          </div>
           <div className="w-full flex mb-2 flex-wrap ">
             
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
@@ -1323,12 +1429,12 @@ const Listing = ({ step, setStep }) => {
           {pickup ? <PickupRequest setPickup={setPickup}/> : null}
           <div className="w-full h-16 px-4  relative flex">
             <div className="text-2xl font-medium">SHIPMENTS </div>
-            <div
+            {/* <div
               onClick={()=>setPickup(true)}
               className="px-5 py-1 bg-blue-500 absolute rounded-3xl text-white  right-4"
             >
               Pickup Request
-            </div>
+            </div> */}
           </div>
           <div className="w-full">
             {shipments.map((shipment, index) => (

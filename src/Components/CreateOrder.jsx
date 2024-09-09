@@ -81,8 +81,8 @@ const schema = z.object({
   invoiceDate : z.string(),
   invoiceAmount : z.preprocess(
     (a) => parseInt(a, 10),
-    z.number().min(0, "Invoice Amount must be a positive number")),
-  invoiceUrl : z.string(),
+    z.number().min(1, "Invoice Amount must be a positive number")),
+  invoiceUrl : z.string().min(1),
 });
 const FullDetails = () => {
   const [warehouses, setWarehouses] = useState([]);
@@ -101,7 +101,8 @@ const FullDetails = () => {
       BaddressType2 : "office",
       shippingType : "Surface",
       orders: [{ box_no: '1', product_name: '', product_quantity: 0, selling_price: 0, tax_in_percentage: 0 }],
-      boxes: [{ box_no: 1, length : 0, breadth : 0, height : 0, weight : 0}]
+      boxes: [{ box_no: 1, length : 0, breadth : 0, height : 0, weight : 0}],
+      invoiceAmount : 0
     }
   });
   useEffect(() => {
@@ -240,8 +241,8 @@ useEffect(()=>{
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      body: JSON.stringify({filename : key, filetype : filetype})
-    })
+      body: JSON.stringify({filename : key, filetype : filetype, isPublic : true}),
+    }).catch(err=>{console.error(err); alert("err"); return});
     const putUrlRes = await putUrlReq.json();
 
     const uploadURL = putUrlRes.uploadURL;
@@ -251,9 +252,17 @@ useEffect(()=>{
         'Content-Type': filetype
       },
       body: invoice,
-    });
+    }).then(response => {
+      if (response.status == 200){
+        setValue("invoiceUrl",key);
+        alert("Invoice uploaded successfully!");
+      } else {
+        setValue("invoiceUrl", null)
+        alert("Failed to upload invoice!");
+      }
+    })
 
-    setValue("invoiceUrl",key);
+    
     
   }
 
@@ -717,7 +726,7 @@ useEffect(()=>{
               id="invoiceNumber"
               {...register("invoiceNumber")}
             />
-            {errors.discount && <span className='text-red-500'>{errors.discount.message}</span>}
+            {errors.invoiceNumber && <span className='text-red-500'>{errors.invoiceNumber.message}</span>}
           </div>
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="invoiceDate">Invoice Date</label>
@@ -727,7 +736,7 @@ useEffect(()=>{
               id="invoiceDate"
               {...register("invoiceDate")}
             />
-            {errors.cod && <span className='text-red-500'>{errors.cod.message}</span>}
+            {errors.invoiceDate && <span className='text-red-500'>{errors.invoiceDate.message}</span>}
           </div>
         </div>
         <div className="w-full flex mb-2 flex-wrap">
@@ -739,7 +748,7 @@ useEffect(()=>{
               id="invoiceAmount"
               {...register("invoiceAmount")}
             />
-            {errors.discount && <span className='text-red-500'>{errors.discount.message}</span>}
+            {errors.invoiceAmount && <span className='text-red-500'>{errors.invoiceAmount.message}</span>}
           </div>
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="invoice">Invoice</label>
@@ -750,11 +759,12 @@ useEffect(()=>{
               id="invoice"
               onChange={handleInvoice}
             />
+            {errors.invoiceUrl && <span className='text-red-500'>{errors.invoiceUrl.message}</span>}
             <button
-            className="bg-green-500 text-white px-6 py-2 rounded-3xl"
+            className="bg-blue-500 text-white px-6 py-2 rounded-3xl"
             onClick={handleInvoiceUpload}
           >
-            Submit
+            Upload
           </button>
             {errors.cod && <span className='text-red-500'>{errors.cod.message}</span>}
           </div>

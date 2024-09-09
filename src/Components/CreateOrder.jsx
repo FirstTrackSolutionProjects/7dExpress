@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
+import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 const API_URL = import.meta.env.VITE_APP_API_URL
@@ -76,6 +77,12 @@ const schema = z.object({
   pickupDate : z.string(),
   pickupTime :z.preprocess((a) => a+':00', z.string()),
   ewaybill : z.string().optional(),
+  invoiceNumber : z.string().min(1),
+  invoiceDate : z.string(),
+  invoiceAmount : z.preprocess(
+    (a) => parseInt(a, 10),
+    z.number().min(0, "Invoice Amount must be a positive number")),
+  invoiceUrl : z.string(),
 });
 const FullDetails = () => {
   const [warehouses, setWarehouses] = useState([]);
@@ -211,6 +218,44 @@ useEffect(()=>{
       alert('An error occurred during Order');
     }
   };
+  const[invoice,setInvoice]=useState(null);
+  const handleInvoice=(e)=>{
+    const{files}=e.target;
+    setInvoice(files[0]);
+  };
+
+  const handleInvoiceUpload =async()=>{
+    if(!invoice){
+      return;
+    }
+    const invoiceUuid = uuidv4();
+    const key=`invoice/${invoiceUuid}`;
+    const filetype = invoice.type;
+    
+
+    const putUrlReq = await fetch(`${API_URL}/getPutSignedUrl`, {
+      method: "POST",
+      headers: {
+        'Authorization': localStorage.getItem("token"),
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({filename : key, filetype : filetype})
+    })
+    const putUrlRes = await putUrlReq.json();
+
+    const uploadURL = putUrlRes.uploadURL;
+    await fetch(uploadURL, {
+      method: "PUT",
+      headers: {
+        'Content-Type': filetype
+      },
+      body: invoice,
+    });
+
+    setValue("invoiceUrl",key);
+    
+  }
 
   return (
     <div className="w-full p-4 flex flex-col items-center">
@@ -661,6 +706,57 @@ useEffect(()=>{
             >
               Add Product
             </button>
+          </div>
+        </div>
+        <div className="w-full flex mb-2 flex-wrap">
+          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+            <label htmlFor="invoiceNumber">Invoice Number</label>
+            <input
+              className="w-full border py-2 px-4 rounded-3xl"
+              type="text"
+              id="invoiceNumber"
+              {...register("invoiceNumber")}
+            />
+            {errors.discount && <span className='text-red-500'>{errors.discount.message}</span>}
+          </div>
+          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+            <label htmlFor="invoiceDate">Invoice Date</label>
+            <input
+              className="w-full border py-2 px-4 rounded-3xl"
+              type="date"
+              id="invoiceDate"
+              {...register("invoiceDate")}
+            />
+            {errors.cod && <span className='text-red-500'>{errors.cod.message}</span>}
+          </div>
+        </div>
+        <div className="w-full flex mb-2 flex-wrap">
+          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+            <label htmlFor="invoiceAmount">Invoice Amount</label>
+            <input
+              className="w-full border py-2 px-4 rounded-3xl"
+              type="number"
+              id="invoiceAmount"
+              {...register("invoiceAmount")}
+            />
+            {errors.discount && <span className='text-red-500'>{errors.discount.message}</span>}
+          </div>
+          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+            <label htmlFor="invoice">Invoice</label>
+            
+            <input
+              className="w-full border py-2 px-4 rounded-3xl"
+              type="file"
+              id="invoice"
+              onChange={handleInvoice}
+            />
+            <button
+            className="bg-green-500 text-white px-6 py-2 rounded-3xl"
+            onClick={handleInvoiceUpload}
+          >
+            Submit
+          </button>
+            {errors.cod && <span className='text-red-500'>{errors.cod.message}</span>}
           </div>
         </div>
         <div className="w-full flex mb-2 flex-wrap">

@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
         clear()
         await checkAuth();
       } else {
-        setMessage(e.response.data.message);
+        setMessage(response.data.message);
         setAuthState(INITIAL_AUTH);
       }
       } catch (e) {

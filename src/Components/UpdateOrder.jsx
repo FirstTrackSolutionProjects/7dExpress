@@ -1193,8 +1193,11 @@ const ShipList = ({shipment, setIsShip, setIsShipped}) => {
 const Card = ({ shipment }) => {
     const [isManage, setIsManage] = useState(false);
     const [isShip, setIsShip] = useState(false);
-    const [isShipped, setIsShipped] = useState(shipment.awb?true:false);
+    const [isShipped, setIsShipped] = useState(shipment.is_manifested?true:false);
     const [isCancelled, setIsCancelled] = useState(shipment.cancelled?true:false);
+    const [isProcessing, setIsProcessing] = useState(shipment.in_process?true:false);
+    const [awb, setAwb] = useState(shipment.awb?shipment.awb:'Shipment is processing...')
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const getLabel = async () => {
       await fetch(`${API_URL}/label`, {
         method : 'POST',
@@ -1236,6 +1239,29 @@ const Card = ({ shipment }) => {
         }
       })
     }
+
+    const refreshShipment = async () => {
+      setIsRefreshing(true)
+      await fetch(`${API_URL}/updateProcessingShipments`, {
+        method : 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': localStorage.getItem('token')
+        },
+        body : JSON.stringify({ord_id : shipment.ord_id})
+      }).then(response => response.json()).then(async result => {
+        if (result.success){
+          setAwb(result.awb)
+          setIsProcessing(false)
+        }
+        else{
+          alert("Your shipment is still under processing, please wait...")
+        }
+        setIsRefreshing(false)
+      })
+      setIsRefreshing(false);
+    }
     return (
       <>
         {isShip && <ShipList setIsShip={setIsShip} setIsShipped={setIsShipped} shipment={shipment}/>}
@@ -1244,14 +1270,15 @@ const Card = ({ shipment }) => {
           <div className="text-sm">
             <div className="font-bold">{shipment.ord_id}</div>
             <div >{shipment.customer_name}</div>
-            <div> {shipment.awb?`AWB : ${shipment.awb}`:null}</div>
+            {isShipped && <div> {`AWB : ${awb}`}</div>}
             <div>{shipment.date?shipment.date.toString().split('T')[0]+' '+shipment.date.toString().split('T')[1].split('.')[0]:null}</div>
           </div>
           <div className="absolute right-4 sm:right-8 flex space-x-2">
           <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={()=>setIsManage(true)}>{isShipped?"View":"Manage"}</div>
-          {isShipped ? <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={()=>getLabel()}>Label</div> : null}
+          {isProcessing && <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={isRefreshing?()=>{}:()=>refreshShipment()}>{isRefreshing?'Refreshing...':'Refresh'}</div>}
+          {isShipped && !isProcessing? <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={()=>getLabel()}>Label</div> : null}
           {!isShipped ? <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={()=>setIsShip(true)}>Ship</div> : null}
-          {isShipped && !isCancelled && shipment.serviceId == 1 ? <div className="px-3 py-1 bg-red-500  rounded-3xl text-white cursor-pointer" onClick={()=>cancelShipment()}>Cancel</div> : null}
+          {isShipped && !isProcessing && !isCancelled && shipment.serviceId == 1 ? <div className="px-3 py-1 bg-red-500  rounded-3xl text-white cursor-pointer" onClick={()=>cancelShipment()}>Cancel</div> : null}
           {isCancelled ? <div className="px-3 py-1 bg-red-500  rounded-3xl text-white cursor-pointer" >Cancelled</div> : null}
           </div>
         </div>

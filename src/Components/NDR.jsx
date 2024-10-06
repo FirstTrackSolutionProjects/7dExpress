@@ -1,33 +1,12 @@
 import { useEffect, useState } from "react";
 const API_URL = import.meta.env.VITE_APP_API_URL
-const View  = ({report, setIsView}) => {
-  const [status, setStatus] = useState(null)
-  useEffect(() => {
-    
-    const getReport = async () => {
-      const response = await fetch(`${API_URL}/getReport`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': localStorage.getItem('token'),
-        },
-        body: JSON.stringify({ ref_id: report.ref_id, serviceId: report.serviceId, categoryId : report.categoryId })
-      })
-      const data = await response.json();
-      setStatus(data.data);
-    }
-    getReport();
-  },[])
+
+
+const DelhiveryStatusCard = ({report, status}) => {
   return (
-    <>
-      <div className="absolute inset-0 bg-[rgba(0,0,0,0.5)] flex z-50 justify-center items-center">
-          <div className="bg-white p-4  border">
-            <div onClick={()=>setIsView(false)}>X</div>
-            {
-              status ? <div>
+    <div>
               <p>AWB : {report.awb}</p>
-              <p>Ref Id: 7DXP{report.ref_id}</p>
+              <p>Ref Id: JUP{report.ref_id}</p>
               <p>Status : {status.Status.Status}</p>
               {
                 (status.Scans).map((scan,index)=> {
@@ -43,7 +22,91 @@ const View  = ({report, setIsView}) => {
                   )
               })
               }
-            </div> : "Loading..."
+            </div>
+  )
+}
+
+const MovinStatusCard = ({ report, status }) => {
+  return (
+    <div className="flex flex-col">
+      <p className="mt-5">AWB : {report.awb}</p>
+      {status.scans?.length ? <p className="mb-5">Currently At : {status?.latestLocation}</p> : null}
+      {status.scans?.length ?
+        (status.scans).reverse().map((scan, index) => {
+          const date = scan.timestamp
+          const formattedTimestamp = timestampToDate(date);
+          return (
+            <div className="flex space-x-5">
+              <div>{formattedTimestamp}</div>
+              <div>{scan.package_status}</div>
+            </div>
+          )
+        }) : "Shipment is not yet picked up"
+      }
+    </div>
+  )
+}
+
+const ShipRocketStatusCard = ({report, status}) => {
+  return (
+    <div className="flex flex-col">
+      <p className="mt-5">AWB : {report.awb}</p>
+      
+      {status.length ?
+        (status).reverse().map((scan, index) => {
+          const date = scan.timestamp
+          const formattedTimestamp = timestampToDate(date);
+          return (
+            <div>{formattedTimestamp} | {scan.location} | {scan.remarks} </div>
+          )
+        }) : "Shipment is not yet picked up"
+      }
+    </div>
+)
+}
+
+
+const View  = ({report, setIsView}) => {
+  const [status, setStatus] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  useEffect(() => {
+    setIsLoading(true)
+    const getReport = async () => {
+      const response = await fetch(`${API_URL}/getReport`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': localStorage.getItem('token'),
+        },
+        body: JSON.stringify({ ref_id: report.ref_id, serviceId: report.serviceId, categoryId : report.categoryId })
+      }).then(response => response.json()).then(result => {
+        console.log(result)
+        if (result.success){
+          setStatus(result.data?result.data:[])
+          setIsLoading(false)
+        }
+      })
+      setIsLoading(false)
+    }
+    getReport();
+  },[])
+  return (
+    <>
+      <div className="absolute inset-0 bg-[rgba(0,0,0,0.5)] flex z-50 justify-center items-center">
+          <div className="bg-white p-4  border">
+            <div onClick={()=>setIsView(false)}>X</div>
+            {
+              isLoading? <div>Loading...</div> : null
+            }
+            {
+              status && report.serviceId == 1 ? <DelhiveryStatusCard report={report} status={status}/> : null
+            }
+            {
+              status && report.serviceId == 2? <MovinStatusCard report={report} status={status}/> : null
+            }
+            {
+              status && report.serviceId == 3? <ShipRocketStatusCard report={report} status={status}/> : null
             }
           </div>
       </div>
@@ -51,6 +114,7 @@ const View  = ({report, setIsView}) => {
     </>
   )
 }
+
 
 const Card = ({ report }) => {
   
@@ -63,7 +127,7 @@ const Card = ({ report }) => {
         <div><div>{report.ord_id}</div><div>7DXP{report.ref_id}</div></div>
         <div className="absolute right-4 sm:right-8 flex space-x-2">
         {report.status}
-        <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={()=>setIsView(true)}>View</div>
+        <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={report.in_process?()=>{}:()=>setIsView(true)}>{report.in_process?'Under Process':'View'}</div>
         </div>
       </div>
     </>

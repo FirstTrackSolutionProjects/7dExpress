@@ -1096,14 +1096,6 @@ const ShipCard = ({price, shipment, setIsShipped, setIsShip}) => {
     }).then(response => response.json()).then(async result => {
       if (result.success){
         setIsShipped(true)
-        await fetch(`${API_URL}/domesticOrderMail`,{
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': localStorage.getItem('token'),
-          }
-        })
         console.log(result)
         alert("Your shipment has been created successfully")
         setIsLoading(false)

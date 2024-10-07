@@ -946,14 +946,6 @@ const Card = ({ shipment }) => {
         })
     }).then(response => response.json()).then(async result => {
       if (result.success){
-        await fetch(`${API_URL}/internationalOrderMail`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'Authorization': localStorage.getItem('token')
-          }
-        })
         alert('Shipment created successfully')
         setIsLoading(false)
         setIsShipped(true)

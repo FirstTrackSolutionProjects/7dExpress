@@ -2,20 +2,91 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faUserTag, faPhone, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
-import { useAuth } from '../contexts/AuthContext';
-import EmailVerification from '../Components/EmailVerification';
+import { useAuth } from '../context/AuthContext';
+import EmailOTPVerificationModal from '../Components/Modals/EmailOTPVerificationModal';
+import registerService from '../services/register';
+import { toast } from 'react-toastify';
 
-const API_URL = import.meta.env.VITE_APP_API_URL
-const Form = ({register, message}) => {
-  const [businessName, setBusinessName] = useState('');
-    const [fullName, setFullName] = useState('');
-    const [mobile, setMobile] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const Form = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    reg_email: "",
+    reg_password: "",
+    confirm_password: "",
+    business_name: "",
+    mobile: "",
+  });
+  const { isAuthenticated, login, verified, emailVerified } = useAuth();
+  const [emailModalOpen, setEmailModalOpen] = useState(false)
+  const navigate = useNavigate();
+
+  const closeEmailModal = () => {
+    setEmailModalOpen(false);
+  }
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const validate = () => {
+    let validationErrors = {};
+
+    if (!/^[A-Za-z\s]+$/.test(formData.name)) {
+      validationErrors.name = "Full name should contain alphabets only";
+    }
+
+    if (!/\S+@\S+\.\S+/.test(formData.reg_email)) {
+      validationErrors.email = "Invalid email format";
+    }
+
+    if (formData.reg_password.length < 4) {
+      validationErrors.reg_password = "Password should be at least 4 characters";
+    }
+
+    if (formData.reg_password !== formData.confirm_password) {
+      validationErrors.confirm_password = "Passwords do not match";
+    }
+
+    if (!/^\d{10}$/.test(formData.mobile)) {
+      validationErrors.mobile = "Mobile number should be exactly 10 digits";
+    }
+
+    return validationErrors;
+  };
+
+  useEffect(()=>{
+    console.log("validation", isAuthenticated)
+    if (isAuthenticated && verified){
+      navigate("/dashboard")
+    } else if (isAuthenticated && emailVerified){
+      navigate("/verify")
+    } else if (isAuthenticated){
+      setEmailModalOpen(true);
+    }
+  },[isAuthenticated])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await register(email, password, fullName, businessName, mobile)
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length === 0) {
+      try {
+        const registerResponse = await registerService(formData)
+        if (registerResponse?.success) {
+          toast.success("User registered successfully!");
+          await login(registerResponse?.token)
+        } else {
+          toast.error(registerResponse?.message || "Registration failed, please try again.");
+        }
+      } catch (err) {
+        toast.error("Unexpected Error Occured");
+      }
+    } else {
+      setErrors(validationErrors);
+      toast.error("Please check form format!");
+    }
   };
 
   const navigateToLogin = () => {
@@ -23,33 +94,36 @@ const Form = ({register, message}) => {
   };
   return (
     <>
+      {emailModalOpen && <EmailOTPVerificationModal open={emailModalOpen} onClose={closeEmailModal}  />}
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg my-3">
         <div className="text-3xl font-bold mb-5 text-sky-950">Sign Up</div>
         <div className="text-[14px] font-bold mb-5 text-sky-900">Signing up is easy. It only takes a few steps</div>
         <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-            <label htmlFor="businessName" className="block text-sm font-medium text-gray-700">Business Name</label>
+            <label htmlFor="business_name" className="block text-sm font-medium text-gray-700">Business Name</label>
             <div className='flex justify-center'>
             <FontAwesomeIcon icon={faUserTag} className=" justify-center mt-4 mr-2 text-sky-950" />
             <input
               type="text"
-              id="businessName"
-              value={businessName}
-              onChange={(e) => setBusinessName(e.target.value)}
+              id="business_name"
+              name='business_name'
+              value={formData.business_name}
+              onChange={handleChange}
               placeholder=""
               required
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
             />
           </div></div>
           <div>
-            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700"> Full Name</label>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700"> Full Name</label>
             <div className='flex justify-center'>
             <FontAwesomeIcon icon={faUser} className=" justify-center mt-4 mr-2 text-sky-950" />
             <input
               type="text"
-              id="fullName"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              id="name"
+              name='name'
+              value={formData.name}
+              onChange={handleChange}
               required
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
             />
@@ -61,34 +135,37 @@ const Form = ({register, message}) => {
             <input
               type="text"
               id="mobile"
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
+              name='mobile'
+              value={formData.mobile}
+              onChange={handleChange}
               required
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
             />
           </div></div>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <label htmlFor="reg_email" className="block text-sm font-medium text-gray-700">Email</label>
             <div className='flex justify-center'>
             <FontAwesomeIcon icon={faEnvelope} className=" justify-center mt-4 mr-2 text-sky-950" />
             <input
               type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="reg_email"
+              name='reg_email'
+              value={formData.reg_email}
+              onChange={handleChange}
               required
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
             />
           </div></div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+            <label htmlFor="reg_password" className="block text-sm font-medium text-gray-700">Password</label>
             <div className='flex justify-center'>
             <FontAwesomeIcon icon={faLock} className=" justify-center mt-4 mr-2 text-sky-950" />
             <input
               type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              id="reg_password"
+              name='reg_password'
+              value={formData.reg_password}
+              onChange={handleChange}
               required
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
             />
@@ -101,7 +178,6 @@ const Form = ({register, message}) => {
               Sign Up
             </button>
           </div>
-          {message}
           <div className="mt-4 text-center">
               <p className="text-gray-700">
                 Already have an account?{' '}
@@ -120,25 +196,9 @@ const Form = ({register, message}) => {
 }
 
 const SignupForm = () => {
-  const [verify, setVerify] = useState(false)
-  const {authState, register, message} = useAuth();
-  const navigate = useNavigate();
-
- 
-
-  useEffect(() => {
-    if (authState?.authenticated && !authState.emailVerified) {
-      setVerify(true)
-    } else if (authState?.authenticated) {
-      navigate('/dashboard')
-    }
-  },[authState])
-
-  
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-bg-login bg-cover">
-      {verify?<EmailVerification /> :<Form register={register} message={message}/>}
+       <Form />
     </div>
   );
 };

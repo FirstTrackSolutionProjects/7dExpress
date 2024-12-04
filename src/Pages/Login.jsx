@@ -1,28 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import EmailVerification from '../Components/EmailVerification';
-import ResetPassword from '../Components/ResetPassword';
-import { set } from 'react-hook-form';
+import { useAuth } from '../context/AuthContext';
+import EmailOTPVerificationModal from '../Components/Modals/EmailOTPVerificationModal'
+import { toast } from 'react-toastify';
+import loginService from '../services/login'
 const API_URL = import.meta.env.VITE_APP_API_URL
 
-const LoginForm = ({authState, message, login, setReset}) => {
+const LoginForm = () => {
+  const { isAuthenticated, emailVerified ,login, verified } = useAuth();
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  useEffect(() => {
-    if(authState?.verified){
+
+  const closeEmailModal = () => {
+    setEmailModalOpen(false);
+  }
+
+  useEffect(()=>{
+    if (isAuthenticated && verified){
       navigate('/dashboard')
+    } else if(isAuthenticated && emailVerified){
+      navigate('/verify')
+    } else if (isAuthenticated){
+      setEmailModalOpen(true)
     }
-  }, [authState])
+  },[isAuthenticated])
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(email, password)
+    try {
+      const formData = {
+        email,
+        password
+      }
+      const loginResponse = await loginService(formData)
+      if (loginResponse.success) {
+        login(loginResponse.token)
+        toast.success("Login Successfull")
+      } else {
+        toast.error(loginResponse.message)
+      }
+    } catch (err) {
+      alert(err.response.data.message);
+    }
   };
+
   const navigateToSignup = () => {
     navigate('/signup');
   };
   return (
+    <>
+    {emailModalOpen && <EmailOTPVerificationModal open={emailModalOpen} onClose={closeEmailModal} />}
     <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold mb-5 text-center text-sky-950">Hello! Sign in to continue</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -65,8 +94,6 @@ const LoginForm = ({authState, message, login, setReset}) => {
               Login
             </button>
           </div>
-
-            {message}
           {/* <div className="mt-4 text-center">
               <button
                 className="w-full flex justify-center text-gray-700 font-bold py-2 rounded-md border-gray-500 border-2"
@@ -88,26 +115,14 @@ const LoginForm = ({authState, message, login, setReset}) => {
             
         </form>
       </div>
+      </>
   )
 }
 
 const Login = () => {
-  const navigate = useNavigate()
-  const {authState, message ,login } = useAuth();
-  const [reset, setReset] = useState(false)
-  useEffect(() => {
-    if(authState?.verified){
-      navigate('/dashboard')
-    } else if (authState?.emailVerified && !authState?.verified){
-      navigate('/verify')
-    }
-  }, [authState])
-
-  
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-bg-login bg-cover">
-      {(authState?.authenticated && !authState?.emailVerified) ? <EmailVerification />  : reset? <ResetPassword setReset={setReset}/> : <LoginForm setReset={setReset} authState={authState} message={message} login={login}/> }
+      <LoginForm />
     </div>
   );
 };

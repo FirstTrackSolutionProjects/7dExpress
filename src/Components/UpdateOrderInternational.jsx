@@ -20,7 +20,7 @@ const [items, setItems] = useState([
 ]);
   useEffect(() => {
     const getDockets = async () => {
-      await fetch(`${API_URL}/getDockets`,{
+      await fetch(`${API_URL}/order/international/dockets`,{
         method : 'POST',
         headers : {
           'Accept': 'application/json',
@@ -32,7 +32,7 @@ const [items, setItems] = useState([
      .then(response => response.json()).then(result => {setDockets(result.dockets); console.log(result.dockets)})
     }
     const getItems = async () => {
-      await fetch(`${API_URL}/getDocketItems`,{
+      await fetch(`${API_URL}/order/international/items`,{
         method : 'POST',
         headers : {
           'Accept': 'application/json',
@@ -73,7 +73,7 @@ const [items, setItems] = useState([
   const [warehouses, setWarehouses] = useState([])
   useEffect(() => {
     const getWarehouses = async () => {
-      await fetch(`${API_URL}/getWarehouse`,{
+      await fetch(`${API_URL}/warehouse/warehouses`,{
         method : 'POST',
         headers : {
           'Accept': 'application/json',
@@ -169,7 +169,7 @@ const [items, setItems] = useState([
       itemFlag = 0
     }
 
-    fetch(`${API_URL}/updateOrderInternational`, {
+    fetch(`${API_URL}/order/international/update`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -463,12 +463,12 @@ const [items, setItems] = useState([
           </div>
           <div className="w-full flex mb-2 flex-wrap ">
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-              <label htmlFor="shipmentType">Shipment Type</label>
+              <label htmlFor="shippingType">Shipment Type</label>
               <select required
                 className="w-full border py-2 px-4 rounded-3xl"
                 type="text"
-                id="shipmentType"
-                name="shipmentType"
+                id="shippingType"
+                name="shippingType"
                 value={formData.shippingType}
                 onChange={handleChange}
               >
@@ -934,7 +934,7 @@ const Card = ({ shipment }) => {
     const [isShipped, setIsShipped] = useState(shipment.awb?true:false);
     const handleShip = async () => {
       setIsLoading(true)
-      await fetch(`${API_URL}/createInternational`,{
+      await fetch(`${API_URL}/shipment/international/create`,{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -946,12 +946,22 @@ const Card = ({ shipment }) => {
         })
     }).then(response => response.json()).then(async result => {
       if (result.success){
+        // await fetch(`${API_URL}/internationalOrderMail`, {
+        //   method: 'POST',
+        //   headers: {
+        //       'Content-Type': 'application/json',
+        //       'Accept': 'application/json',
+        //       'Authorization': localStorage.getItem('token')
+        //   }
+        // })
         alert('Shipment created successfully')
         setIsLoading(false)
         setIsShipped(true)
+        console.log(result.response)
+        console.log(result.request)
       }
       else {
-        alert('Failed to created shipment, try again')
+        alert(`Failed to created shipment, try again\nReason : ${result.response.errors[0]}`)
         console.log(result.response)
         console.log(result.request)
         setIsLoading(false)
@@ -962,11 +972,12 @@ const Card = ({ shipment }) => {
       <>
         {/* {isShip && <ShipList setIsShip={setIsShip} shipment={shipment} setIsShipped={setIsShipped}/>} */}
         
-        <div className="w-full h-16 bg-white relative items-center px-4 sm:px-8 flex border-b">
+        <div className="w-full py-2 bg-white relative items-center px-4 sm:px-8 flex border-b">
           <div className="text-sm">
-          <div className="font-bold">JUPINT{shipment.iid}</div>
+          <div className="font-bold">{shipment.iid}</div>
           <div >{shipment.consignee_name}</div>
             <div> {shipment.awb?`AWB : ${shipment.awb}`:null}</div>
+            <div>{shipment.created_at ? shipment.created_at.toString().split('T')[0] + ' ' + shipment.created_at.toString().split('T')[1].split('.')[0] : null}</div>
           </div>
           <div className="absolute right-4 sm:right-8 flex space-x-2">
           <div className="px-3 py-1 bg-blue-500 rounded-3xl text-white cursor-pointer" onClick={()=>setIsManage(!isManage)}>{!isManage?isShipped?"View":"Manage":"X"}</div>
@@ -982,7 +993,7 @@ const Card = ({ shipment }) => {
     const [warehouses, setWarehouses] = useState([]);
     useEffect(() => {
       const getWarehouses = async () => {
-        const response = await fetch(`${API_URL}/getWarehouse`, {
+        const response = await fetch(`${API_URL}/warehouse/warehouses`, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -1003,7 +1014,7 @@ const Card = ({ shipment }) => {
     })
     const handleSubmit = async (e) => {
       e.preventDefault();
-      await fetch(`${API_URL}/schedule`, {
+      await fetch(`${API_URL}/shipment/domestic/pickup/request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1105,7 +1116,7 @@ const Listing = ({ step, setStep }) => {
     const [pickup, setPickup] = useState(false);
     useEffect(() => {
 
-        fetch(`${API_URL}/getInternationalShipments`, {
+        fetch(`${API_URL}/order/international/all`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -1140,12 +1151,12 @@ const Listing = ({ step, setStep }) => {
           {pickup ? <PickupRequest setPickup={setPickup}/> : null}
           <div className="w-full h-16 px-4  relative flex">
             <div className="text-2xl font-medium">SHIPMENTS </div>
-            <div
+            {/* <div
               onClick={()=>setPickup(true)}
               className="px-5 py-1 bg-blue-500 absolute rounded-3xl text-white  right-4"
             >
               Pickup Request
-            </div>
+            </div> */}
           </div>
           <div className="w-full">
             {shipments.map((shipment, index) => (

@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
-const API_URL = import.meta.env.VITE_APP_API_URL
+import { useAuth } from '../context/AuthContext';
 const HeaderTemp = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const {authState, logout} = useAuth()
+  const {isAuthenticated, business_name, logout} = useAuth()
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -15,7 +13,7 @@ const HeaderTemp = () => {
   return (
     <header className="fixed z-50 w-full bg-bg-header bg-cover p-4">
       <div className="container h-10 mx-auto flex items-center justify-between">
-      <Link to="/"><img src="images/logo1.png" onClick="" alt="" className='lg:w-[90px] lg:h-[65px]  w-16 h-14'></img></Link>
+      <Link to="/"><img src="/images/logo1.png" onClick="" alt="" className='lg:w-[90px] lg:h-[65px]  w-16 h-14'></img></Link>
         <div className="hidden md:flex space-x-10 h-10 items-center">
         <Link to="/" className="text-sky-950 font-bold">Home</Link>
           <Link to="/about" className="text-sky-950 font-bold">About</Link>
@@ -23,9 +21,9 @@ const HeaderTemp = () => {
           <Link to="/blog" className="text-sky-950 font-bold">Blogs</Link>
           <Link to="/pricing" className="text-sky-950 font-bold">Pricing</Link>
           <Link to="/contact" className="text-sky-950 font-bold">Contact</Link>
-          {authState?.authenticated &&<p className="text-sky-950 font-bold bg-[rgba(255,255,255,0.6)] px-5 py-2 rounded-xl" onClick={()=>navigate('/dashboard')}>{authState?.businessName}</p>}
+          {isAuthenticated &&<p className="text-sky-950 font-bold bg-[rgba(255,255,255,0.6)] px-5 py-2 rounded-xl" onClick={()=>navigate('/dashboard')}>{business_name}</p>}
           
-          {authState?.authenticated && <p className="text-red-600 font-bold" onClick={()=>{logout();}}>Logout</p>}
+          {isAuthenticated && <p className="text-red-600 font-bold" onClick={()=>{logout();}}>Logout</p>}
         </div>
         <div className="md:hidden flex">
           <button onClick={toggleMenu} className="text-sky-950 focus:outline-none">
@@ -35,14 +33,14 @@ const HeaderTemp = () => {
       </div>
       {isOpen && (
         <div className="md:hidden items-center flex flex-col space-y-2 mt-2">
-          {authState?.authenticated &&<p className="text-sky-950 font-bold bg-[rgba(255,255,255,0.6)] px-5 py-2 rounded-xl" onClick={()=>navigate('/dashboard')}>{authState?.businessName}</p>}
+          {isAuthenticated &&<p className="text-sky-950 font-bold bg-[rgba(255,255,255,0.6)] px-5 py-2 rounded-xl" onClick={()=>navigate('/dashboard')}>{business_name}</p>}
           <Link to="/" className="text-sky-950 font-bold">Home</Link>
           <Link to="/about" className="text-sky-950 font-bold">About</Link>
           <Link to="/track" className="text-sky-950 font-bold">Tracking</Link>
           <Link to="/blog" className="text-sky-950 font-bold">Blogs</Link>
           <Link to="/pricing" className="text-sky-950 font-bold">Pricing</Link>
           <Link to="/contact" className="text-sky-950 font-bold">Contact</Link>
-          {authState?.authenticated && <p className="text-red-600 font-bold" onClick={()=>{logout(); setIsOpen(false)}}>Logout</p>}
+          {isAuthenticated && <p className="text-red-600 font-bold" onClick={()=>{logout(); setIsOpen(false)}}>Logout</p>}
         </div>
       )}
     </header>

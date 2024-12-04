@@ -1,4 +1,27 @@
 
+import { FaTachometerAlt, FaWallet, FaHistory, FaUsers,FaFileAlt,FaMoneyBillAlt, FaChevronDown, FaChevronUp, FaBars, FaTimes, FaBox, FaDollyFlatbed, FaClipboardList, FaHouseUser, FaDoorOpen } from 'react-icons/fa';
+import { MdSettings } from 'react-icons/md';
+import VerificationRequests from "../Components/VerificationRequests"
+import MerchantManage from '../Components/MerchantManage';
+import AllInternationalParcels from '../Components/AllInternationalParcels';
+import AllParcels from '../Components/AllParcels';
+import AllShipmentReports from '../Components/AllShipmentReports';
+import AllTransactions from '../Components/AllTransactions';
+import ContactSubmissions from '../Components/ContactSubmissions';
+import CreateOrder from '../Components/CreateOrder';
+import ChangePassword from '../Components/ChangePassword';
+import CreateOrderInternational from '../Components/CreateOrderInternational';
+import InternationalReports from '../Components/InternationalReports';
+import ManualRecharge from '../Components/ManualRecharge';
+import NDR from '../Components/NDR';
+import NonVerifiedMerchantManage from '../Components/NonVerifiedMerchantManage';
+import Profile from '../Components/Profile';
+import TransactionHistory from '../Components/TransactionHistory';
+import UpdateOrder from '../Components/UpdateOrder';
+import UpdateOrderInternational from '../Components/UpdateOrderInternational';
+import Warehouse from '../Components/Warehouse';
+import DashboardMain from '../Components/DashboardMain';
+
 export const navItems = [
     {
         name : 'Home',
@@ -39,114 +62,205 @@ export const navItems = [
 
 export const menuItems = [
     {
-        icon : "images/logo1.png",
+        icon : FaTachometerAlt,
         name : "Dashboard",
         isDropdown : false,
-        menuID : [0],
+        url : '',
+        component : DashboardMain,
         dropDownOptions : [{}]
     },
     {
-        icon : "images/logo1.png",
+        icon : FaWallet,
         name : "Wallet Recharge",
         isDropdown : false,
-        menuID : [8],
+        url : 'wallet-recharge',
         dropDownOptions : [{}]
     },
+    // {
+    //     icon : FaWallet,
+    //     name : "KYC Update",
+    //     isDropdown : false,
+    //     merchantOnly : true,
+    //     url : 'kyc-update',
+    //     component : "",
+    //     dropDownOptions : [{}]
+    // },
     {
-        icon : "images/logo1.png",
+        icon : FaBox,
         name : "Create Shipment",
-        merchantOnly : true,
         isDropdown : false,
-        menuID : [1],
-        dropDownOptions : [{}]
+        merchantOnly : true,
+        url : 'order/create',
+        component : CreateOrder,
+        dropDownOptions : [{
+            icon : "/logo.webp",
+            name : "Domestic",
+            isDropdown : false,
+            url : 'order/domestic/create',
+            component : CreateOrder,
+            dropDownOptions : [{}]
+        },{
+            icon : "/logo.webp",
+            name : "International",
+            isDropdown : false,
+            url : 'order/international/create',
+            component : CreateOrderInternational,
+            dropDownOptions : [{}]
+        },]
     },
     {
-        icon : "images/logo1.png",
+        icon : FaHouseUser,
         name : "Warehouse",
-        merchantOnly : true,
         isDropdown : false,
-        menuID : [2],
+        merchantOnly : true,
+        url : 'warehouse',
+        component : Warehouse,
         dropDownOptions : [{}]
     },
     {
-        icon : "images/logo1.png",
+        icon : FaDollyFlatbed,
         name : "Parcels",
-        merchantOnly : true,
         isDropdown : false,
-        menuID : [3],
-        dropDownOptions : [{}]
+        merchantOnly : true,
+        url : 'parcels',
+        component : UpdateOrder,
+        dropDownOptions : [{
+            icon : "/logo.webp",
+            name : "Domestic",
+            isDropdown : false,
+            url : 'parcels/domestic',
+            component : UpdateOrder,
+            dropDownOptions : [{}]
+        },
+        {
+            icon : "/logo.webp",
+            name : "International",
+            isDropdown : false,
+            url : 'parcels/international',
+            component : UpdateOrderInternational,
+            dropDownOptions : [{}]
+        },]
     },
     {
-        icon : "images/logo1.png",
+        icon : FaHistory,
         name : "Transaction History",
         isDropdown : false,
-        menuID : [4],
+        url : 'transaction-history',
+        component : TransactionHistory,
         dropDownOptions : [{}]
     },
     {
-        icon : "images/logo1.png",
+        icon : FaClipboardList,
         name : "Reports",
-        merchantOnly : true,
         isDropdown : false,
-        menuID : [5],
-        dropDownOptions : [{}]
+        merchantOnly : true,
+        url : 'shipment/reports',
+        component : NDR,
+        dropDownOptions : [{
+            icon : "/logo.webp",
+            name : "Domestic Reports",
+            isDropdown : false,
+            url : 'shipment/domestic/reports',
+            component : NDR,
+            dropDownOptions : [{}]
+        },{
+            icon : "/logo.webp",
+            name : "International Reports",
+            isDropdown : false,
+            url : 'shipment/international/reports',
+            component : InternationalReports,
+            dropDownOptions : [{}]
+        },]
     },
     {
-        icon : "images/logo1.png",
+        icon : FaUsers,
         name : "Merchant Manage",
         isDropdown : true,
         admin : true,
-        menuID : [9],
+        url : 'manage/merchant',
         dropDownOptions : [{
-            icon : "images/logo1.png",
+            icon : "/logo.webp",
             name : "Verified Merchants",
             isDropdown : false,
-            menuID : [9,0],
+            url : 'manage/merchant/verified',
+            component : MerchantManage,
             dropDownOptions : [{}]
         },
         {
-            icon : "images/logo1.png",
+            icon : "/logo.webp",
             name : "Non-Verified Merchants",
             isDropdown : false,
-            menuID : [9,1],
+            url : 'manage/merchant/non-verified',
+            component : NonVerifiedMerchantManage,
             dropDownOptions : [{}]
         },
         {
-            icon : "images/logo1.png",
+            icon : "/logo.webp",
             name : "Merchant Transactions",
             isDropdown : false,
-            menuID : [9,2],
+            url : 'manage/merchant/transactions',
+            component : AllTransactions,
             dropDownOptions : [{}]
         },
         {
-            icon : "images/logo1.png",
-            name : "Unshipped Shipments",
+            icon : "/logo.webp",
+            name : "Shipments",
             isDropdown : false,
-            menuID : [9,3],
-            dropDownOptions : [{}]
+            url : 'manage/merchant/shipments',
+            component : AllParcels,
+            dropDownOptions : [{
+                icon : "/logo.webp",
+                name : "Domestic",
+                isDropdown : false,
+                url : 'manage/merchant/shipments/domestic',
+                component : AllParcels,
+                dropDownOptions : [{}]
+            },{
+                icon : "/logo.webp",
+                name : "International",
+                isDropdown : false,
+                url : 'manage/merchant/shipments/international',
+                component : AllInternationalParcels,
+                dropDownOptions : [{}]
+            },]
         },
         {
-            icon : "images/logo1.png",
+            icon : FaClipboardList,
             name : "Shipment Reports",
             isDropdown : false,
-            menuID : [9,4],
-            dropDownOptions : [{}]
+            url : 'manage/merchant/shipments/reports',
+            component : AllShipmentReports,
+            dropDownOptions : [{
+                icon : "/logo.webp",
+                name : "Domestic Reports",
+                isDropdown : false,
+                url : 'manage/merchant/shipments/domestic/reports',
+                component : AllShipmentReports,
+                dropDownOptions : [{}]
+            },{
+                icon : "/logo.webp",
+                name : "International Reports",
+                isDropdown : false,
+                url : 'manage/merchant/shipments/international/reports',
+                component : InternationalReports,
+                dropDownOptions : [{}]
+            },]
         }]
     },
     // {
-    //     icon : "images/logo1.png",
+    //     icon : "/logo.webp",
     //     name : "Users",
     //     admin : true,
     //     isDropdown : true,
     //     menuID : [10],
     //     dropDownOptions : [{
-    //         icon : "images/logo1.png",
+    //         icon : "/logo.webp",
     //         name : "Accounts",
     //         isDropdown : false,
     //         menuID : [10,0],
     //         dropDownOptions : [{}]
     //     },{
-    //         icon : "images/logo1.png",
+    //         icon : "/logo.webp",
     //         name : "Admin",
     //         isDropdown : false,
     //         menuID : [10,1],
@@ -154,74 +268,78 @@ export const menuItems = [
     //     },]
     // },
     {
-        icon : "images/logo1.png",
+        icon : FaFileAlt,
         name : "Submission",
         isDropdown : true,
         admin : true,
-        // menuID : [11],
+        url : 'submissions',
         dropDownOptions : [{
-            icon : "images/logo1.png",
+            icon : "/logo.webp",
             name : "Merchant Verification",
             isDropdown : false,
             admin : true,
-            menuID : [11,0],
+            url : 'submissions/merchant-verification',
+            component : VerificationRequests,
             dropDownOptions : [{}]
         },
         {
-            icon : "images/logo1.png",
+            icon : "/logo.webp",
             name : "Contact Submission",
             isDropdown : false,
             admin : true,
-            menuID : [11,1],
+            url : 'submissions/contact-submission',
+            component : ContactSubmissions,
             dropDownOptions : [{}]
         },
-        {
-            icon : "images/logo1.png",
-            name : "KYC Requests",
-            isDropdown : false,
-            admin : true,
-            menuID : [11,2],
-            dropDownOptions : [{}]
-        }
+        // {
+        //     icon : "/logo.webp",
+        //     name : "KYC Requests",
+        //     isDropdown : false,
+        //     admin : true,
+        //     url : 'submissions/kyc-requests',
+        //     component : "",
+        //     dropDownOptions : [{}]
+        // }
     ]
     },
     {
-        icon : "images/logo1.png",
+        icon : FaWallet,
         name : "Manual Recharge",
         isDropdown : false,
         admin : true,
-        menuID : [12],
+        url : 'manual-recharge',
+        component : ManualRecharge,
         dropDownOptions : [{}]
     },
     {
-        icon : "images/logo1.png",
+        icon : MdSettings,
         name : "Settings",
         isDropdown : true,
+        url : 'settings',
         dropDownOptions : [
             {
-                icon : "images/logo1.png",
+                icon : "/logo.webp",
                 name : "Profile",
                 isDropdown : false,
-                menuID : [6,0],
+                url : 'settings/profile',
+                component : Profile,
                 dropDownOptions : [{}]
             },
             {
-                icon : "images/logo1.png",
+                icon : "/logo.webp",
                 name : "Change Password",
                 isDropdown : false,
-                menuID : [6,1],
+                url : 'settings/change-password',
+                component : ChangePassword,
                 dropDownOptions : [{}]
             },
         ]
     },
     {
-        icon : "images/logo1.png",
+        icon : FaDoorOpen,
         name : "Logout",
         isDropdown : false,
-        menuID : [7],
+        url : 'logout',
         dropDownOptions : [{}]
     },
-
-
-
-]
+  ]

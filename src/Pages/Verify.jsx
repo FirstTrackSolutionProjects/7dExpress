@@ -1,10 +1,34 @@
-import React, { useState, useEffect} from "react";
-import { useAuth } from "../contexts/AuthContext";
+import React, { useState, useEffect } from "react";
+import { Box, Typography, TextField, Button, Grid } from "@mui/material";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FileUpload, CheckCircle } from "@mui/icons-material";
+import { z } from "zod";
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-const API_URL = import.meta.env.VITE_APP_API_URL
-const FileUploadForm = () => {
-  const [reqId, setReqId] = useState(null)
-  const {authState} = useAuth()
+import checkIncompleteRequest from "../services/checkIncompleteRequest";
+import checkPendingRequest from "../services/checkPendingRequest";
+
+const API_URL = import.meta.env.VITE_APP_API_URL;
+
+// Define the Zod validation schema
+const formSchema = z.object({
+  address: z.string().min(1, "Address is required"),
+  state: z.string().min(1, "State is required"),
+  city: z.string().min(1, "City is required"),
+  pin: z.string().min(1, "PIN Code is required").regex(/^\d{6}$/, "Invalid PIN Code"),
+  aadhar: z.string().min(1, "Aadhar Number is required").length(12, "Aadhar must be 12 digits"),
+  pan: z.string().min(1, "PAN Number is required").length(10, "PAN must be 10 characters"),
+  gst: z.string().min(1, "GST Number is required"),
+  msme: z.string().optional(),
+  bank: z.string().min(1, "Bank Name is required"),
+  ifsc: z.string().min(1, "IFSC Code is required"),
+  account: z.string().min(1, "Account Number is required"),
+  cin: z.string().optional(),
+});
+
+const FileUploadForm = ({ reqId, onNext }) => {
+  const { id } = useAuth();
   const [fileData, setFileData] = useState({
     aadhar_doc: null,
     pan_doc: null,
@@ -19,36 +43,22 @@ const FileUploadForm = () => {
     cancelledCheque: false,
     selfie_doc: false,
   });
+
+  const getDocumentStatus = async () => {
+    const response = await fetch(`${API_URL}/verification/documentStatus`, {
+      method: "POST",
+      headers: {
+        Authorization: localStorage.getItem("token"),
+      },
+    });
+    const data = await response.json();
+    setUploadStatus(data.message);
+  }
+
   useEffect(()=>{
-    if(authState?.verified){
-      navigate('/dashboard')
-    } else if (authState?.emailVerified && !authState?.verified){
-      
-    } else if (!authState?.emailVerified){
-      navigate('/signup')
-    }
-  },[authState])
-  useEffect(() => {
-    const getDocumentStatus = async () => {
-      await fetch(`${API_URL}/getDocumentStatus`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': localStorage.getItem('token')
-        }
-      }).then(response => response.json()).then((result) => {
-        setReqId(result.message.reqId)
-        setUploadStatus({
-          aadhar_doc: result.message.aadhar_doc?(true):(false),
-          pan_doc: result.message.pan_doc?(true):(false),
-          gst_doc: result.message.gst_doc?(true):(false),
-          cancelledCheque: result.message.cancelledCheque?(true):(false),
-          selfie_doc: result.message.selfie_doc?(true):(false),
-        })
-      })
-    }
     getDocumentStatus()
-  }, [])
+  },[])
+
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     setFileData((prevData) => ({
@@ -58,201 +68,110 @@ const FileUploadForm = () => {
   };
 
   const handleUpload = async (name) => {
-    // Fetch signed URL from backend
-    const response  = await fetch (`${API_URL}/getTokenData`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization' : localStorage.getItem('token'),
-      }
-    })
-    const tokenData = await response.json();
-    const id = tokenData.id;
-    const key  = `merchant/${id}/verificationDocs/${reqId}/${name}`
-    await fetch(`${API_URL}/getPutSignedUrl`, {
-      method: "POST",
-      headers: {
-        'Authorization': localStorage.getItem("token"),
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({filename : key, filetype : fileData[name].type})
-    })
-      .then((response) => response.json())
-      .then(async (data) => {
-        const { uploadURL } = data;
-        await fetch(uploadURL, {
-          method: "PUT",
-          headers: {
-            'Content-Type': fileData[name].type
-          },
-          body: fileData[name],
-        }).then(async (response) => {
-          if (response.status === 200) {
-            await fetch(`${API_URL}/updateDocumentStatus`, {
-              method: 'POST',
-              headers : {
-                'Content-Type' : 'application/json',
-                'Accept' : 'application/json',
-                'Authorization' : localStorage.getItem('token')
-              },
-              body : JSON.stringify({name : name, key : key})
-            }).then(response => response.json()).then(data => {
-              if(data.success){
-                alert("Document uploaded successfully")
-                setUploadStatus((prevStatus) => ({
-                 ...prevStatus,
-                  [name]: false,
-                }));
-              } else {
-                alert("Failed to upload document")
-              }
-            })
-          } else {
-            alert("Failed to upload document")
-        }
-        })
-      })
-      .then(() => {
-        setUploadStatus((prevStatus) => ({
-          ...prevStatus,
-          [name]: true,
-        }));
-      })
-      .catch((error) => alert(error.message));
+    try {
+      const key = `merchant/${id}/verificationDocs/${reqId}/${name}`;
+      const urlResponse = await fetch(`${API_URL}/s3/putUrl`, {
+        method: "POST",
+        headers: {
+          Authorization: localStorage.getItem("token"),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ filename: key, filetype: fileData[name].type }),
+      });
+      const { uploadURL } = await urlResponse.json();
+
+      await fetch(uploadURL, {
+        method: "PUT",
+        headers: { "Content-Type": fileData[name].type },
+        body: fileData[name],
+      });
+
+      await fetch(`${API_URL}/verification/documentStatus/update`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+        body: JSON.stringify({ name, key }),
+      });
+
+      setUploadStatus((prevStatus) => ({
+        ...prevStatus,
+        [name]: true,
+      }));
+      toast.success("Upload successful");
+    } catch (error) {
+      toast.error(`Error uploading ${name}: ${error.message}`);
+    }
   };
 
-  const handleSubmit= async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!(uploadStatus.aadhar_doc && uploadStatus.pan_doc && uploadStatus.cancelledCheque && uploadStatus.selfie_doc)){
-      alert("Please upload all required documents")
-      return;
+    try{
+        const request = await fetch(`${API_URL}/verification/submit`,{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: localStorage.getItem("token")
+            }
+        })
+        const response = await request.json()
+        if (response.success){
+            toast.success(response.message)
+            onNext()
+        } else {
+            toast.error(response.message)
+        }
+    } catch (error) {
+        toast.error(`Error submitting verification form`)
     }
-    await fetch(`${API_URL}/completeVerificationRequest`, {
-      method: 'POST',
-      headers : {
-        'Content-Type' : 'application/json',
-        'Accept' : 'application/json',
-        'Authorization' : localStorage.getItem('token')
-      }
-  }).then(response => response.json()).then(result => alert(result.message));
-}
+  }
+
   return (
-    <form className="lg:w-[1024px] flex flex-col bg-white pt-8 px-4" onSubmit={handleSubmit}>
-      {/* File input required fields */}
-      <div className="w-full flex mb-2 flex-wrap ">
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="aadhar_doc">Aadhar Card (Both Sides) *</label>
-          <input
-            className="w-full border leading-8 rounded-3xl"
-            type="file"
-            onChange={handleFileChange}
-            id="aadhar_doc"
-            name="aadhar_doc"
-          />
-          <button
-            type="button"
-            onClick={() => handleUpload("aadhar_doc")}
-            className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
-          >
-            Upload
-          </button>
-          {uploadStatus.aadhar_doc && <span>✔️</span>}
-        </div>
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="pan_doc">PAN Card (Front Side) *</label>
-          <input
-            className="w-full border leading-8 rounded-3xl"
-            type="file"
-            onChange={handleFileChange}
-            id="pan_doc"
-            name="pan_doc"
-          />
-          <button
-            type="button"
-            onClick={() => handleUpload("pan_doc")}
-            className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
-          >
-            Upload
-          </button>
-          {uploadStatus.pan_doc && <span>✔️</span>}
-        </div>
-      </div>
-      <div className="w-full flex mb-2 flex-wrap ">
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="gst_doc">GST Certificate </label>
-          <input
-            className="w-full border leading-8 rounded-3xl"
-            type="file"
-            onChange={handleFileChange}
-            id="gst_doc"
-            name="gst_doc"
-          />
-          <button
-            type="button"
-            onClick={() => handleUpload("gst_doc")}
-            className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
-          >
-            Upload
-          </button>
-          {uploadStatus.gst_doc && <span>✔️</span>}
-        </div>
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="cancelledCheque">Cancelled Cheque *</label>
-          <input
-            className="w-full border leading-8 rounded-3xl"
-            type="file"
-            onChange={handleFileChange}
-            id="cancelledCheque"
-            name="cancelledCheque"
-          />
-          <button
-            type="button"
-            onClick={() => handleUpload("cancelledCheque")}
-            className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
-          >
-            Upload
-          </button>
-          {uploadStatus.cancelledCheque && <span>✔️</span>}
-        </div>
-      </div>
-      <div className="w-1/2 flex mb-2 flex-wrap ">
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="selfie_doc">Upload your selfie *</label>
-          <input
-            className="w-full border leading-8 rounded-3xl"
-            type="file"
-            onChange={handleFileChange}
-            id="selfie_doc"
-            name="selfie_doc"
-          />
-          <button
-            type="button"
-            onClick={() => handleUpload("selfie_doc")}
-            className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
-          >
-            Upload
-          </button>
-          {uploadStatus.selfie_doc && <span>✔️</span>}
-        </div>
-        {/* <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-                  <label htmlFor="pan_doc">PAN Card (Front Side) *</label>
-                  <input required className="w-full border leading-8 rounded-3xl" type="file" onChange={handleFileChange} id="pan_doc" name="pan_doc" />
-                  <button type='button' onClick={() => handleUpload('aadhar_doc')} className="px-5 py-1 border rounded-3xl bg-blue-500 text-white">Upload</button>
-                  {uploadStatus.pan_doc && <span>✔️</span>}
-              </div> */}
-      </div>
-      <div className="px-2 space-x-4 mb-4">
-        <button
-          type="submit"
-          className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
-        >
-          Submit
-        </button>
-      </div>
-      {/* Add similar file inputs for other documents */}
-    </form>
+    <Box sx={{ maxWidth: 800, mx: "auto", p: 3 }} onSubmit={handleSubmit} component={"form"}>
+      <Typography variant="h5" align="center" gutterBottom>
+        Upload Verification Documents
+      </Typography>
+      <Grid container spacing={2}>
+        {["aadhar_doc", "pan_doc", "gst_doc", "cancelledCheque", "selfie_doc"].map((doc, idx) => (
+          <Grid item xs={12} md={6} key={idx}>
+            <TextField
+              type="file"
+              id={doc}
+              name={doc}
+              variant="outlined"
+              fullWidth
+              onChange={handleFileChange}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mt: 2 }}
+              onClick={() => handleUpload(doc)}
+              startIcon={<FileUpload />}
+            >
+              Upload
+            </Button>
+            {uploadStatus[doc] && (
+              <Typography color="success.main" sx={{ mt: 1 }}>
+                <CheckCircle sx={{ fontSize: 16, mr: 1 }} />
+                Uploaded
+              </Typography>
+            )}
+          </Grid>
+        ))}
+      </Grid>
+      <Button
+        variant="contained"
+        color="primary"
+        type="submit"
+        fullWidth
+        sx={{ mt: 3  }}
+        >Submit</Button>
+    </Box>
   );
 };
 
@@ -261,7 +180,6 @@ const TextForm = ({ onNext }) => {
     address: "",
     state: "",
     city: "",
-    hub: "",
     pin: "",
     aadhar: "",
     pan: "",
@@ -272,264 +190,157 @@ const TextForm = ({ onNext }) => {
     account: "",
     cin: "",
   });
+  const [errors, setErrors] = useState({});
+
+  const fields = [
+    { fieldId: "address", fieldTitle: "Address", required: true, helperText: "Enter your full address" },
+    { fieldId: "state", fieldTitle: "State", required: true, helperText: "Enter your state" },
+    { fieldId: "city", fieldTitle: "City", required: true, helperText: "Enter your city" },
+    { fieldId: "pin", fieldTitle: "PIN Code", required: true, helperText: "Enter your PIN code" },
+    { fieldId: "aadhar", fieldTitle: "Aadhar Number", required: true, helperText: "Enter your Aadhar number" },
+    { fieldId: "pan", fieldTitle: "PAN Number", required: true, helperText: "Enter your PAN number" },
+    { fieldId: "gst", fieldTitle: "GST Number", required: true, helperText: "Enter your GST number" },
+    { fieldId: "msme", fieldTitle: "MSME Number", required: false, helperText: "Enter your MSME number (if applicable)" },
+    { fieldId: "bank", fieldTitle: "Bank Name", required: true, helperText: "Enter your bank name" },
+    { fieldId: "ifsc", fieldTitle: "IFSC Code", required: true, helperText: "Enter your bank IFSC code" },
+    { fieldId: "account", fieldTitle: "Account Number", required: true, helperText: "Enter your bank account number" },
+    { fieldId: "cin", fieldTitle: "CIN Number", required: false, helperText: "Enter your CIN number (if applicable)" },
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    fetch(`${API_URL}/verify`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: localStorage.getItem("token"),
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        alert(result.message);
-        onNext(); // Move to the next step
-      })
-      .catch((error) => alert(error.message));
+
+    // Validate form data using Zod schema
+    const result = formSchema.safeParse(formData);
+
+    if (result.success) {
+      setErrors({}); // Clear previous errors
+
+      // Proceed with the form submission
+      const response = await fetch(
+        `${API_URL}/verification/createIncompleteVerifyRequest`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+      const data = await response.json();
+      toast.success(data.message);
+      onNext();
+    } else {
+      // Set validation errors
+      const validationErrors = result.error.formErrors.fieldErrors;
+      setErrors(validationErrors);
+    }
   };
 
   return (
-    <form
+    <Box
+      component="form"
       onSubmit={handleSubmit}
-      className="lg:w-[1024px] flex flex-col bg-white pt-8 px-4"
+      sx={{
+        maxWidth: 800,
+        mx: "auto",
+        p: 3,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center"
+      }}
+      className="border-gray-300 shadow-xl border-2 rounded-xl "
     >
-      <div className="w-full flex mb-2 flex-wrap "></div>
-      <div className="w-full flex mb-2 flex-wrap ">
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="address">Address*</label>
-          <input required
-            className="w-full border py-2 px-4 rounded-3xl"
-            type="text"
-            onChange={handleChange}
-            value={formData.address}
-            id="address"
-            name="address"
-            placeholder="Enter Address"
-          />
-        </div>
-      </div>
-      <div className="w-full flex mb-2 flex-wrap ">
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
-          <label htmlFor="state">State*</label>
-          <input required
-            className="w-full border py-2 px-4 rounded-3xl"
-            type="text"
-            onChange={handleChange}
-            value={formData.state}
-            id="state"
-            name="state"
-            placeholder="Enter State"
-          />
-        </div>
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
-          <label htmlFor="city">City*</label>
-          <input required
-            className="w-full border py-2 px-4 rounded-3xl"
-            type="text"
-            onChange={handleChange}
-            value={formData.city}
-            id="city"
-            name="city"
-            placeholder="Enter City"
-          />
-        </div>
-      </div>
-      <div className="w-full flex mb-2 flex-wrap ">
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="pin">PIN*</label>
-          <input required
-            className="w-full border py-2 px-4 rounded-3xl"
-            type="text"
-            onChange={handleChange}
-            value={formData.pin}
-            id="pin"
-            name="pin"
-            placeholder="XXXXXX"
-          />
-        </div>
-      </div>
-      <div className="w-full flex mb-2 flex-wrap ">
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="aadhar">Aadhar Number*</label>
-          <input required
-            className="w-full border py-2 px-4 rounded-3xl"
-            type="text"
-            onChange={handleChange}
-            value={formData.aadhar}
-            id="aadhar"
-            name="aadhar"
-            placeholder="XXXXXXXXXXXX"
-          />
-        </div>
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="pan">PAN Number*</label>
-          <input required
-            className="w-full border py-2 px-4 rounded-3xl"
-            type="text"
-            onChange={handleChange}
-            value={formData.pan}
-            id="pan"
-            name="pan"
-            placeholder="ABCDE1234F"
-          />
-        </div>
-      </div>
-      <div className="w-full flex mb-2 flex-wrap ">
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="gst">GST Number</label>
-          <input
-            className="w-full border py-2 px-4 rounded-3xl"
-            type="text"
-            onChange={handleChange}
-            value={formData.gst}
-            id="gst"
-            name="gst"
-            placeholder="22AAAAA0000A1Z5"
-          />
-        </div>
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="msme">MSME/UDYAM Number*</label>
-          <input required
-            className="w-full border py-2 px-4 rounded-3xl"
-            type="text"
-            onChange={handleChange}
-            value={formData.msme}
-            id="msme"
-            name="msme"
-            placeholder="UDYAMXX000000000"
-          />
-        </div>
-      </div>
-      <div className="w-full flex mb-2 flex-wrap ">
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="bank">Bank Name*</label>
-          <input required
-            className="w-full border py-2 px-4 rounded-3xl"
-            type="text"
-            onChange={handleChange}
-            value={formData.bank}
-            id="bank"
-            name="bank"
-            placeholder="Ex. State Bank of India"
-          />
-        </div>
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="ifsc">IFSC*</label>
-          <input required
-            className="w-full border py-2 px-4 rounded-3xl"
-            type="text"
-            onChange={handleChange}
-            value={formData.ifsc}
-            id="ifsc"
-            name="ifsc"
-            placeholder="Ex. ABCD0001234"
-          />
-        </div>
-      </div>
-      <div className="w-full flex mb-2 flex-wrap ">
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="account">Account Number*</label>
-          <input required
-            className="w-full border py-2 px-4 rounded-3xl"
-            type="text"
-            onChange={handleChange}
-            value={formData.account}
-            id="account"
-            name="account"
-            placeholder="Ex. 1234567890"
-          />
-        </div>
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="cin">CIN</label>
-          <input
-            className="w-full border py-2 px-4 rounded-3xl"
-            type="text"
-            onChange={handleChange}
-            value={formData.cin}
-            id="cin"
-            name="cin"
-            placeholder="U12345MH2024PTC012345"
-          />
-        </div>
-      </div>
+      <Typography variant="h4" className="text-2xl sm:text-4xl lg:text-5xl">Verification Form</Typography>
 
-      <div className="px-2 space-x-4 mb-4">
-        <button
-          type="submit"
-          className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
-        >
-          Next
-        </button>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            setFormData(InitialState);
-          }}
-          className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
-        >
-          Clear
-        </button>
-      </div>
-    </form>
+      <Grid container spacing={2} sx={{ mt: 2 }}>
+        {fields.map((field, idx) => (
+          <Grid item xs={12} md={6} key={idx}>
+            <TextField
+              label={field.fieldTitle}
+              variant="outlined"
+              name={field.fieldId}
+              value={formData[field.fieldId]}
+              onChange={handleChange}
+              fullWidth
+              error={Boolean(errors[field.fieldId])}
+              helperText={errors[field.fieldId] ? errors[field.fieldId][0] : field.helperText}
+            />
+          </Grid>
+        ))}
+      </Grid>
+
+      <Button
+        variant="contained"
+        color="primary"
+        type="submit"
+        fullWidth
+        sx={{ mt: 3, maxWidth: 300, bgcolor: 'black' }}
+      >
+        Submit
+      </Button>
+    </Box>
   );
 };
 
-const Verify = () => {
-  const navigate = useNavigate();
-  const {  authState, checkAuth } = useAuth();
+const Verify = () => {  
+  const navigate = useNavigate();  
+  const {isAuthenticated ,verified, emailVerified} = useAuth()
   const [step, setStep] = useState(1);
+  const [reqId, setReqId] = useState(null);
+  const nextStep = () => setStep((prevStep) => prevStep + 1);
 
-  useEffect(() => {
-    if (!authState?.emailVerified){
-      navigate('/')
-      return;
+  const incompleteRequest = async () => {
+    const response = await checkIncompleteRequest();
+    if (response.success){
+        setReqId(response.message.reqId)
+        setStep(2)
     }
-    const getStatus = async () => {
-      await fetch(`${API_URL}/getVerificationStatus`, {
-        method: 'POST',
-        headers: {
-          'Authorization': localStorage.getItem('token'),
-          'Content-Type' : 'application/json',
-          'Accept' : 'application/json'
-        }
-      }).then((response)=>response.json()).then((data)=>data.success?(setStep(2)):null)
+  }
+
+  const pendingRequest = async () => {
+    const response = await checkPendingRequest();
+    if (response.success){
+        setStep(3)
     }
-    getStatus()
-  }, [])
+  }
 
-    useEffect(() => {if (authState?.verified) navigate('/dashboard')},[authState]);
-
-  const handleNextStep = () => {
-    setStep(2);
-  };
+  useEffect(()=>{
+    if (isAuthenticated && verified){
+        navigate('/dashboard')
+    } else if (isAuthenticated && !emailVerified){
+        navigate('/login')
+    } else if (!isAuthenticated){
+        navigate('/login')
+    } else {
+        incompleteRequest()
+        pendingRequest()
+    }
+    
+  },[isAuthenticated])
 
   return (
-    <>
-      <div className="w-full flex flex-col items-center pt-16">
-        <div className="w-full flex flex-col items-center p-8">
-          <div className="text-center text-3xl font-medium">
-            Verify your details
-          </div>
-          {step === 1 ? (
-            <TextForm onNext={handleNextStep} />
-          ) : (
-            <FileUploadForm />
-          )}
-        </div>
-      </div>
-    </>
+    <Box
+      sx={{
+        // minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        p: 2,
+      }}
+    >
+      {step === 1 && <TextForm onNext={nextStep} />}
+      {step === 2 && <FileUploadForm reqId={reqId} onNext={nextStep} />}
+      {step === 3 && <div>Verification Request Submitted</div>}
+    </Box>
   );
 };
 

@@ -67,7 +67,7 @@ const View = ({merchant, balance ,fullName, email, phone,isActive, uid  , gst, s
                     <div className='w-full space-y-6'>
                         <div className='w-full flex items-center justify-center space-x-8'>
                             <div className='flex justify-center items-center w-32 h-32'>
-                                <img src={`${profilePhoto?profilePhoto:"user.webp"}`}/>
+                                <img src={`${profilePhoto?profilePhoto:"/user.webp"}`}/>
                             </div>
                             <div className=''>
                                 <p className='font-medium text-xl'>{businessName}</p>

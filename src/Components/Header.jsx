@@ -66,7 +66,7 @@ const Header = () => {
       )}
       
         <Link to="/" className="flex md:items-center">
-          <img src="images/logo2.png" alt="" className="h-14" />
+          <img src="/images/logo2.png" alt="" className="h-14" />
         </Link>
         </div>
         <nav className="w-full relative z-3 lg:w-4/5 flex justify-evenly text-black items-center h-16">

@@ -1349,10 +1349,8 @@ const PickupRequest = ({ setPickup }) => {
                 onChange={handleChange}
               >
                 <option value="">Select Service</option>
-                <option value={"11"} >Delhivery (10Kg)</option>
-                <option value={"12"} >Delhivery (500gm)</option>
-                <option value={"21"} >Movin Surface</option>
-                <option value={"22"} >Movin Express</option>
+                <option value={"3"} >Delhivery (10Kg)</option>
+                <option value={"2"} >Delhivery (500gm)</option>
               </select>
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">

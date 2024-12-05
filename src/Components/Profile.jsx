@@ -79,7 +79,7 @@ const Profile = () => {
         {/* <div className='sm:px-8 sm:border text-black text-xl flex flex-col space-y-2 items-center'>
         <div className='h-48 flex items-center space-x-4'>
           <div className='h-16 w-16'>
-            <img src="user.webp" alt="" className='object-contain' />
+            <img src="/user.webp" alt="" className='object-contain' />
           </div>
           <div className='flex-1 sm:text-xl font-medium'>
             <div>{profileData.business_name}</div>
@@ -102,7 +102,7 @@ const Profile = () => {
           <div className='w-full space-y-6'>
             <div className='w-full flex items-center justify-center space-x-8'>
               <div className='flex justify-center items-center w-32 h-32'>
-                <img src='user.webp' />
+                <img src='/user.webp' />
               </div>
               <div className=''>
                 <p className='font-medium text-xl'>{profileData.business_name}</p>

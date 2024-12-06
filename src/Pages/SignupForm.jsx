@@ -32,26 +32,31 @@ const Form = () => {
   };
 
   const validate = () => {
-    let validationErrors = {};
+    let validationErrors = false;
 
     if (!/^[A-Za-z\s]+$/.test(formData.name)) {
-      validationErrors.name = "Full name should contain alphabets only";
+      toast.error("Full name should contain alphabets only")
+      validationErrors = true;
     }
 
     if (!/\S+@\S+\.\S+/.test(formData.reg_email)) {
-      validationErrors.email = "Invalid email format";
+      toast.error("Invalid email format")
+      validationErrors = true;
     }
 
     if (formData.reg_password.length < 4) {
-      validationErrors.reg_password = "Password should be at least 4 characters";
+      toast.error("Password should be at least 4 characters")
+      validationErrors = true;
     }
 
     if (formData.reg_password !== formData.confirm_password) {
-      validationErrors.confirm_password = "Passwords do not match";
+      toast.error("Passwords do not match")
+      validationErrors = true;
     }
 
     if (!/^\d{10}$/.test(formData.mobile)) {
-      validationErrors.mobile = "Mobile number should be exactly 10 digits";
+      toast.error("Mobile number should be exactly 10 digits")
+      validationErrors = true;
     }
 
     return validationErrors;
@@ -71,7 +76,7 @@ const Form = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
-    if (Object.keys(validationErrors).length === 0) {
+    if (!validationErrors) {
       try {
         const registerResponse = await registerService(formData)
         if (registerResponse?.success) {
@@ -84,7 +89,6 @@ const Form = () => {
         toast.error("Unexpected Error Occured");
       }
     } else {
-      setErrors(validationErrors);
       toast.error("Please check form format!");
     }
   };
@@ -165,6 +169,20 @@ const Form = () => {
               id="reg_password"
               name='reg_password'
               value={formData.reg_password}
+              onChange={handleChange}
+              required
+              className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
+            />
+          </div></div>
+          <div>
+            <label htmlFor="confirm_password" className="block text-sm font-medium text-gray-700">Confirm Password</label>
+            <div className='flex justify-center'>
+            <FontAwesomeIcon icon={faLock} className=" justify-center mt-4 mr-2 text-sky-950" />
+            <input
+              type="password"
+              id="confirm_password"
+              name='confirm_password'
+              value={formData.confirm_password}
               onChange={handleChange}
               required
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"

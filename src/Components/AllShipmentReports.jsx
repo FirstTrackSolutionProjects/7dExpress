@@ -70,6 +70,20 @@ const PickrrStatusCard = ({ report, status }) => {
   )
 }
 
+const DelhiveryB2BStatusCard = ({report , status}) => {
+  const timestamp = status?.scan_timestamp;
+  const formattedTimestamp = timestampToDate(timestamp);
+  return (
+    <div>
+      <p>AWB : {report.awb}</p>
+      <p>Ref Id: FTL{report.ref_id}</p>
+      <p>LRN : {report.lrn}</p>
+      <p>Status : {status.status}</p>
+      <div>{formattedTimestamp} | {status?.location} | {status?.scan_remark} </div>
+    </div>
+  )
+}
+
 const ShiprocketStatusCard = ({ report, status }) => {
   return (
     <div className="flex flex-col">
@@ -128,20 +142,23 @@ const View = ({ report, setIsView }) => {
             isLoading ? <div>Loading...</div> : null
           }
           {
-            status && report.serviceId == 1 ? <DelhiveryStatusCard report={report} status={status} /> : null
+            status && report.serviceId == 1? <DelhiveryB2BStatusCard report={report} status={status} /> : null
           }
           {
-            status && report.serviceId == 2 ? <DelhiveryStatusCard report={report} status={status} /> : null
+            status && (report.serviceId == 2 || report.serviceId == 3) ? <DelhiveryStatusCard report={report} status={status} /> : null
+          }
+          {/* {
+            status && report.serviceId == 4 ? <DelhiveryStatusCard report={report} status={status} /> : null
           }
           {
-            status && report.serviceId == 3 ? <MovinStatusCard report={report} status={status} /> : null
+            status && report.serviceId == 5 ? <MovinStatusCard report={report} status={status} /> : null
           }
           {
-            status && report.serviceId == 5? <PickrrStatusCard report={report} status={status} /> : null
+            status && report.serviceId == 6? <PickrrStatusCard report={report} status={status} /> : null
           }
           {
             status && report.serviceId == 6? <ShiprocketStatusCard report={report} status={status} /> : null
-          }
+          } */}
         </div>
       </div>
 

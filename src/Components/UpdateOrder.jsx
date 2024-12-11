@@ -1164,13 +1164,21 @@ const Card = ({ shipment }) => {
       },
       body: JSON.stringify({ order: shipment.ord_id })
     }).then(response => response.json()).then(async result => {
-      const link = document.createElement('a');
-      link.href = result.label;
-      link.target = '_blank'
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      result?.label.map(async label => {
+        if (!label.includes('box_index')) return
+        const fetchLabel = await fetch(label)
+        const labelRes = await fetchLabel.json()
+        console.log(labelRes.data)
+        const url = labelRes.data
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'label.jpg';
+        link.target = '_blank'
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      })
     })
   }
   const cancelShipment = async () => {
@@ -1237,7 +1245,7 @@ const Card = ({ shipment }) => {
         setIsProcessing(false)
       }
       else {
-        alert("Your shipment is still under processing, please wait...")
+        alert(result.message || "Your shipment is still under processing, please wait...")
       }
       setIsRefreshing(false)
     })
@@ -1256,9 +1264,9 @@ const Card = ({ shipment }) => {
         <div className="absolute right-4 sm:right-8 flex space-x-2">
           {!isDeleted && <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={() => setIsManage(true)}>{isShipped ? "View" : "Manage"}</div>}
           {isProcessing && <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={isRefreshing ? () => { } : () => refreshShipment()}>{isRefreshing ? 'Refreshing...' : 'Refresh'}</div>}
-          {isShipped && !isProcessing && !isCancelled ? <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={() => getLabel()}>Label</div> : null}
+          {isShipped && !isProcessing && !isCancelled && awb ? <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={() => getLabel()}>Label</div> : null}
           {!isShipped && !isDeleted ? <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={() => setIsShip(true)}>Ship</div> : null}
-          {isShipped && !isProcessing && !isCancelled && [1,2,6].includes(shipment.serviceId) ? <div className="px-3 py-1 bg-red-500  rounded-3xl text-white cursor-pointer" onClick={isCancelling ? () => { } : () => cancelShipment()}>{isCancelling ? "Cancelling..." : "Cancel"}</div> : null}
+          {isShipped && !isProcessing && !isCancelled ? <div className="px-3 py-1 bg-red-500  rounded-3xl text-white cursor-pointer" onClick={isCancelling ? () => { } : () => cancelShipment()}>{isCancelling ? "Cancelling..." : "Cancel"}</div> : null}
           {!isShipped && !isDeleted && <div className="px-3 py-1 bg-red-500  rounded-3xl text-white cursor-pointer" onClick={isDeleting ? () => {} : () => deleteOrder()}>{isDeleting ? "Deleting..." : "Delete"}</div> }
           {isDeleted ? <div className="px-3 py-1 bg-red-500  rounded-3xl text-white cursor-pointer" >Deleted</div> : null}
           {isCancelled ? <div className="px-3 py-1 bg-red-500  rounded-3xl text-white cursor-pointer" >Cancelled</div> : null}
@@ -1349,8 +1357,9 @@ const PickupRequest = ({ setPickup }) => {
                 onChange={handleChange}
               >
                 <option value="">Select Service</option>
-                <option value={"3"} >Delhivery (10Kg)</option>
-                <option value={"2"} >Delhivery (500gm)</option>
+                <option value={"1"} >Delhivery (15Kg) B2B</option>
+                {/* <option value={"2"} >Delhivery (500gm) B2C</option> */}
+                {/* <option value={"3"} >Delhivery (10Kg) B2C</option> */}
               </select>
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">

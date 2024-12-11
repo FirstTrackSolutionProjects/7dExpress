@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 
 const API_URL = import.meta.env.VITE_APP_API_URL
-const ComparePrices = ({method, boxes, status, origin, dest, weight, payMode, codAmount, volume, quantity}) => {
+const ComparePrices = ({method, boxes, status, origin, dest, weight, payMode, codAmount, volume, quantity, isB2B, invoiceAmount}) => {
   const [prices,setPrices] = useState([])
   useEffect(()=>{
     console.log({method, status, origin, dest, weight, payMode, codAmount, volume, quantity})
     const data = async () => {
-      await fetch(`${API_URL}/price`, {
+      await fetch(`${API_URL}/shipment/domestic/price`, {
         method: 'POST',
         headers: { 'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-          body : JSON.stringify({method: method, boxes : boxes, status : status, origin : origin, dest : dest, weight : weight, payMode : payMode, codAmount : codAmount,volume, quantity}),
+          body : JSON.stringify({method: method, boxes : boxes, status : status, origin : origin, dest : dest, weight : weight, payMode : payMode, codAmount : codAmount,volume, quantity, isB2B : isB2B, invoiceAmount : invoiceAmount}),
         
       }).then(response => response.json()).then(result => {console.log(result); setPrices(result.prices)}).catch(error => console.log(error + " " + error.message))
     }  
@@ -53,7 +53,9 @@ const Domestic = () => {
     codAmount : '0',
     weight : 0,
     volume : 0,
-    quantity : 0
+    quantity : 0,
+    invoiceAmount : 0,
+    isB2B : false
   })
   useEffect(()=>{
     let totalVolume = 0;
@@ -184,6 +186,36 @@ const Domestic = () => {
             </div>
             
           </div>
+          <div className="w-full flex mb-2 flex-wrap ">
+          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
+              <label htmlFor="shipmentType">Shipment Type</label>
+              <select
+                name="isB2B"
+                id="shipmentType"
+                className="border py-2 px-4 rounded-3xl"
+                value={formData.isB2B}
+                onChange={handleChange}
+
+              >
+                <option value={false}>B2C</option>
+                <option value={true}>B2B</option>
+              </select>
+            </div>
+            
+            <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
+              <label htmlFor="invoiceAmount">Invoice Amount</label>
+              <input
+                className="w-full border py-2 px-4 rounded-3xl"
+                type="text"
+                id="invoiceAmount"
+                name="invoiceAmount"
+                placeholder="Ex. 157"
+                value={formData.invoiceAmount}
+                onChange={handleChange}
+              />
+            </div>
+            
+          </div>
           {boxes.map((box,index)=>(
             <>
               <div className="w-full relative z-0 flex mb-2 flex-wrap ">
@@ -194,6 +226,7 @@ const Domestic = () => {
                 type="text"
                 id="weight"
                 name="weight"
+                min={50}
                 placeholder="Ex. 1500"
                 value = {box.weight}
                 onChange={(e)=>handleBoxes(index,e)}
@@ -207,6 +240,7 @@ const Domestic = () => {
                 type="text"
                 id="length"
                 name="length"
+                min={1}
                 placeholder="Ex. 2.5"
                 value={box.length}
                 onChange={(e)=>handleBoxes(index,e)}
@@ -219,6 +253,7 @@ const Domestic = () => {
                 type="text"
                 id="breadth"
                 name="breadth"
+                min={1}
                 placeholder="Ex. 2.5"
                 value={box.breadth}
                 onChange={(e)=>handleBoxes(index,e)}
@@ -231,6 +266,7 @@ const Domestic = () => {
                 type="text"
                 id="height"
                 name="height"
+                min={1}
                 placeholder="Ex. 2.5"
                 value={box.height}
                 onChange={(e)=>handleBoxes(index,e)}

@@ -14,6 +14,17 @@ const Card = ({ scan }) => {
     </>
   )
 }
+const DelhiveryB2BCard = ({ scan }) => {
+  return (
+    <>
+      <div className="w-full bg-white items-center px-8 border-b space-x-4">
+        <div>{scan.scan_timestamp}</div>
+        <div>{scan.location}</div>
+        <div>{scan.scan_remark}</div>
+      </div>
+    </>
+  )
+}
 const FlightGoCard = ({ scan }) => {
   return (
     <>
@@ -56,10 +67,13 @@ const Result = ({ data }) => {
   return (
     <>
       <div className={`w-full p-8 overflow-hidden  `}>
-        {data?.id == 1 ? data?.data.ShipmentData[0].Shipment.Scans.slice().reverse().map((scan, index) => (
+        {data?.id == 1? 
+          <DelhiveryB2BCard scan={data?.data} />
+        : null}
+        {(data?.id == 2 || data?.id == 3) ? data?.data.ShipmentData[0].Shipment.Scans.slice().reverse().map((scan, index) => (
           <Card key={index} scan={scan.ScanDetail} />
         )) : null}
-        {data?.id == 2 ? data?.data.docket_events.map((scan, index) => (
+        {/* {data?.id == 2 ? data?.data.docket_events.map((scan, index) => (
           <FlightGoCard key={index} scan={scan} />
         )) : null}
         {data?.id == 3 ? data?.data.map((scan, index) => (
@@ -67,7 +81,7 @@ const Result = ({ data }) => {
         )) : null}
         {data?.id == 4 ? data?.data.map((scan, index) => (
           <ShipRocketCard key={index} scan={scan} />
-        )) : null}
+        )) : null} */}
       </div>
 
     </>
@@ -99,7 +113,7 @@ const Track = () => {
     try {
       e.preventDefault();
     } catch (e) { }
-    const data = await fetch(`${API_URL}/track`, {
+    const data = await fetch(`${API_URL}/shipment/track`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

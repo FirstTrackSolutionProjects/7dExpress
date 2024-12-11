@@ -2,7 +2,7 @@ import NavItem from "./NavItem";
 import { navItems } from "../Constants";
 import {  useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import Recharge from "./WalletRechargeModal";
+import WalletRechargeModal from "./WalletRechargeModal";
 import { useNavigate, Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const API_URL = import.meta.env.VITE_APP_API_URL
@@ -12,7 +12,9 @@ const Header = () => {
   const {verified, isAuthenticated, logout, business_name} = useAuth()
   const [balance, setBalance] = useState(0)
   const [isMenu,setIsMenu] = useState(false)
-
+  const closeRechargeModal = () => {
+    setShowRecharge(false);
+  }
   const toggleMenu = () => {
     setIsMenu(!isMenu);
     }
@@ -45,7 +47,7 @@ const Header = () => {
   };
   return (
     <>
-    {showRecharge && <Recharge setShowRecharge={setShowRecharge}/>}
+    {showRecharge && <WalletRechargeModal onClose={closeRechargeModal}/>}
     
     <div className="fixed bg-bg-header bg-cover z-10 top-0 flex justify-center items-center w-full h-16 ">
     <div className="">

@@ -19,7 +19,7 @@ const formSchema = z.object({
   pin: z.string().min(1, "PIN Code is required").regex(/^\d{6}$/, "Invalid PIN Code"),
   aadhar: z.string().min(1, "Aadhar Number is required").length(12, "Aadhar must be 12 digits"),
   pan: z.string().min(1, "PAN Number is required").length(10, "PAN must be 10 characters"),
-  gst: z.string().min(1, "GST Number is required"),
+  gst: z.string().optional(),
   msme: z.string().optional(),
   bank: z.string().min(1, "Bank Name is required"),
   ifsc: z.string().min(1, "IFSC Code is required"),
@@ -121,6 +121,10 @@ const FileUploadForm = ({ reqId, onNext }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!uploadStatus.aadhar_doc || !uploadStatus.pan_doc || !uploadStatus.selfie_doc){
+      toast.error("Please upload all required documents")
+      return;
+    }
     try{
         const request = await fetch(`${API_URL}/verification/submit`,{
             method: "POST",
@@ -141,6 +145,27 @@ const FileUploadForm = ({ reqId, onNext }) => {
         toast.error(`Error submitting verification form`)
     }
   }
+  const files = [{
+    name: "aadhar_doc",
+    label: "Aadhar Card*"
+  }, 
+  {
+    name: "pan_doc",
+    label: "PAN Card*"
+  },
+  {
+    name: "gst_doc",
+    label: "GST Certificate"
+  },
+  {
+    name: "cancelledCheque",
+    label: "Cancelled Cheque"
+  },
+  {
+    name: "selfie_doc",
+    label: "Selfie Photo*"
+  }
+  ]
 
   return (
     <Box sx={{ maxWidth: 800, mx: "auto", p: 3 }} onSubmit={handleSubmit} component={"form"}>
@@ -148,12 +173,15 @@ const FileUploadForm = ({ reqId, onNext }) => {
         Upload Verification Documents
       </Typography>
       <Grid container spacing={2}>
-        {["aadhar_doc", "pan_doc", "gst_doc", "cancelledCheque", "selfie_doc"].map((doc, idx) => (
+        {files.map((doc, idx) => (
           <Grid item xs={12} md={6} key={idx}>
+            <Typography variant="subtitle1" gutterBottom>
+              {doc.label}
+            </Typography>
             <TextField
               type="file"
-              id={doc}
-              name={doc}
+              id={doc.name}
+              name={doc.name}
               variant="outlined"
               fullWidth
               onChange={handleFileChange}
@@ -163,12 +191,12 @@ const FileUploadForm = ({ reqId, onNext }) => {
               color="primary"
               fullWidth
               sx={{ mt: 2 }}
-              onClick={() => handleUpload(doc)}
+              onClick={() => handleUpload(doc.name)}
               startIcon={<FileUpload />}
             >
               Upload
             </Button>
-            {uploadStatus[doc] && (
+            {uploadStatus[doc.name] && (
               <Typography color="success.main" sx={{ mt: 1 }}>
                 <CheckCircle sx={{ fontSize: 16, mr: 1 }} />
                 Uploaded
@@ -212,7 +240,7 @@ const TextForm = ({ onNext }) => {
     { fieldId: "pin", fieldTitle: "PIN Code", required: true, helperText: "Enter your PIN code" },
     { fieldId: "aadhar", fieldTitle: "Aadhar Number", required: true, helperText: "Enter your Aadhar number" },
     { fieldId: "pan", fieldTitle: "PAN Number", required: true, helperText: "Enter your PAN number" },
-    { fieldId: "gst", fieldTitle: "GST Number", required: true, helperText: "Enter your GST number" },
+    { fieldId: "gst", fieldTitle: "GST Number", required: false, helperText: "Enter your GST number" },
     { fieldId: "msme", fieldTitle: "MSME Number", required: false, helperText: "Enter your MSME number (if applicable)" },
     { fieldId: "bank", fieldTitle: "Bank Name", required: true, helperText: "Enter your bank name" },
     { fieldId: "ifsc", fieldTitle: "IFSC Code", required: true, helperText: "Enter your bank IFSC code" },

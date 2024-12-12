@@ -58,7 +58,11 @@ const schema = z.object({
         z.number().min(1, "Height must be at greater than 0")),
       weight: z.preprocess(
         (a) => parseInt(a, 10),
-        z.number().min(1, "Weight must be at greater than 0"))
+        z.number().min(1, "Weight must be at greater than 0")),
+      quantity: z.preprocess(
+        (a) => parseInt(a, 10),
+        z.number().min(1, "Quantity must be at least 1")
+      )
     })
   ),
   discount: z.preprocess(
@@ -102,7 +106,7 @@ const FullDetails = () => {
       BaddressType: "home",
       shippingType: "Surface",
       orders: [{ box_no: '1', product_name: '', product_quantity: 0, selling_price: 0, tax_in_percentage: 0 }],
-      boxes: [{ box_no: 1, length: 0, breadth: 0, height: 0, weight: 0 }],
+      boxes: [{ box_no: 1, length: 0, breadth: 0, height: 0, weight: 0, quantity: 1}],
       invoiceAmount: 1,
       isB2B: false,
       invoiceUrl: ''
@@ -588,6 +592,16 @@ const FullDetails = () => {
                   {...register(`boxes[${index}].weight`)}
                 />
                 {errors.boxes?.[index]?.weight && <span className='text-red-500'>{errors.boxes?.[index]?.weight.message}</span>}
+              </div>
+              <div className="flex-1 mx-2 mb-2  space-y-2">
+                <label htmlFor={`boxes[${index}].quantity`}>Quantity</label>
+                <input
+                  className="w-full border py-2 px-4 rounded-3xl"
+                  type="text"
+                  id={`boxes[${index}].quantity`}
+                  {...register(`boxes[${index}].quantity`)}
+                />
+                {errors.boxes?.[index]?.quantity && <span className='text-red-500'>{errors.boxes?.[index]?.quantity.message}</span>}
               </div>
               {watch('boxes').length > 1 ? <div className="w-full text-right">
                 <button type="button" className="text-red-500" onClick={() => boxes.remove(index)}>Remove</button>

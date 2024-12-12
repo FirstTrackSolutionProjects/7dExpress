@@ -43,7 +43,7 @@ const ComparePrices = ({method, boxes, status, origin, dest, weight, payMode, co
 
 
 const Domestic = () => {
-  const [boxes, setBoxes] = useState([{weight : 0, length : 0, breadth : 0, height : 0}])
+  const [boxes, setBoxes] = useState([{weight : 0, length : 0, breadth : 0, height : 0, quantity : 1}])
   const [formData, setFormData] = useState({
     method : 'S',
     status: 'Delivered',
@@ -62,7 +62,7 @@ const Domestic = () => {
     let totalWeight = 0;
     boxes.map((box,index)=>{
         totalVolume += parseInt(box.length) * parseInt(box.breadth) * parseInt(box.height)
-        totalWeight += parseInt(box.weight)
+        totalWeight += parseInt(box.weight)*parseInt(box.quantity)
     })
     setFormData((prevData) => ({
      ...prevData,
@@ -90,7 +90,7 @@ const Domestic = () => {
     setBoxes(updatedBoxes);
   };
   const addBox = () => {
-    setBoxes([...boxes, {  length: 0 , breadth : 0 , height : 0  , weight: 0 }]);
+    setBoxes([...boxes, {  length: 0 , breadth : 0 , height : 0  , weight: 0, quantity: 1 }]);
   };
   const removeBox = (index) => {
     const updatedBoxes = boxes.filter((_, i) => i !== index);
@@ -232,8 +232,8 @@ const Domestic = () => {
                 onChange={(e)=>handleBoxes(index,e)}
               />
             </div>
-            <div className="flex-1 mx-2 mb-2 min-w-[300px] flex">
-            <div className="flex-1 mx-2 mb-2 min-w-[90px] space-y-2">
+            <div className="flex-1 mx-2 mb-2 min-w-[300px] flex space-x-2">
+            <div className="flex-1 mb-2 min-w-[70px] space-y-2">
               <label htmlFor="length">L (in cm)</label>
               <input required
                 className="w-full border py-2 px-4 rounded-3xl"
@@ -246,7 +246,7 @@ const Domestic = () => {
                 onChange={(e)=>handleBoxes(index,e)}
               />
             </div>
-            <div className="flex-1 mx-2 mb-2 min-w-[90px] space-y-2">
+            <div className="flex-1 mb-2 min-w-[70px] space-y-2">
               <label htmlFor="breadth">B (in cm)</label>
               <input required
                 className="w-full border py-2 px-4 rounded-3xl"
@@ -259,7 +259,7 @@ const Domestic = () => {
                 onChange={(e)=>handleBoxes(index,e)}
               />
             </div>
-            <div className="flex-1 mx-2 mb-2 min-w-[90px] space-y-2">
+            <div className="flex-1 mb-2 min-w-[70px] space-y-2">
               <label htmlFor="height">H (in cm)</label>
               <input required
                 className="w-full border py-2 px-4 rounded-3xl"
@@ -269,6 +269,19 @@ const Domestic = () => {
                 min={1}
                 placeholder="Ex. 2.5"
                 value={box.height}
+                onChange={(e)=>handleBoxes(index,e)}
+              />
+            </div>
+            <div className="flex-1 mb-2 min-w-[70px] space-y-2">
+              <label htmlFor="quantity">Quantity</label>
+              <input required
+                className="w-full border py-2 px-4 rounded-3xl"
+                type="text"
+                id="quantity"
+                name="quantity"
+                min={1}
+                placeholder="Ex. 2.5"
+                value={box.quantity}
                 onChange={(e)=>handleBoxes(index,e)}
               />
             </div>

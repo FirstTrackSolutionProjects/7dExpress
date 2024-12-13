@@ -1068,7 +1068,6 @@ const ShipCard = ({ price, shipment, setIsShipped, setIsShip }) => {
     }).then(response => response.json()).then(async result => {
       if (result.success) {
         setIsShipped(true)
-        console.log(result)
         alert("Your shipment has been created successfully")
         setIsLoading(false)
         setIsShip(false)
@@ -1076,8 +1075,8 @@ const ShipCard = ({ price, shipment, setIsShipped, setIsShip }) => {
       }
       else {
         const failureReason = result.message || "Your shipment has not been created";
+        console.error(result)
         alert(failureReason)
-        console.log(result)
         setIsLoading(false)
       }
     });

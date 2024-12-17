@@ -84,10 +84,12 @@ const schema = z.object({
     z.number().min(1, "Invoice Amount must be a positive number")),
   invoiceUrl: z.string().optional(),
   isB2B: z.boolean()
-}).refine((data) => !data.isB2B || (data.isB2B && !!data.invoiceUrl), {
-  message: "Invoice is required for B2B shipments",
-  path: ["invoiceUrl"],
-}).refine((data) => (!data.isB2B || data.invoiceAmount < 50000) || (data.ewaybill && data.ewaybill.length > 0), {
+})
+// .refine((data) => !data.isB2B || (data.isB2B && !!data.invoiceUrl), {
+//   message: "Invoice is required for B2B shipments",
+//   path: ["invoiceUrl"],
+// })
+.refine((data) => (!data.isB2B || data.invoiceAmount < 50000) || (data.ewaybill && data.ewaybill.length > 0), {
   message: "Ewaybill is required for invoice amount of at least 50000",
   path: ["ewaybill"], // Error path
 });

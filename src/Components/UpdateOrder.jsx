@@ -1177,21 +1177,31 @@ const Card = ({ shipment }) => {
       },
       body: JSON.stringify({ order: shipment.ord_id })
     }).then(response => response.json()).then(async result => {
-      result?.label.map(async label => {
-        if (!label.includes('box_index')) return
-        const fetchLabel = await fetch(label)
-        const labelRes = await fetchLabel.json()
-        console.log(labelRes.data)
-        const url = labelRes.data
+      if (result.serviceId == 1){
+        result?.label.map(async label => {
+          if (!label.includes('box_index')) return
+          const fetchLabel = await fetch(label)
+          const labelRes = await fetchLabel.json()
+          console.log(labelRes.data)
+          const url = labelRes.data
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'label.jpg';
+          link.target = '_blank'
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+      } else if (result.serviceId == 2 || result.serviceId == 3) {
         const link = document.createElement('a');
-        link.href = url;
-        link.download = 'label.jpg';
+        link.href = result.label[0];
         link.target = '_blank'
         link.style.display = 'none';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-      })
+      }
     })
   }
   const cancelShipment = async () => {

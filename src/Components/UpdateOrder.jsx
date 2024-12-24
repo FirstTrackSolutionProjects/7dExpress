@@ -1381,7 +1381,7 @@ const PickupRequest = ({ setPickup }) => {
               >
                 <option value="">Select Service</option>
                 <option value={"1"} >Delhivery (15Kg) B2B</option>
-                {/* <option value={"2"} >Delhivery (500gm) B2C</option> */}
+                <option value={"2"} >Delhivery (500gm) B2C</option>
                 {/* <option value={"3"} >Delhivery (10Kg) B2C</option> */}
               </select>
             </div>

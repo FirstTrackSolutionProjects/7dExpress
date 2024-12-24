@@ -1,12 +1,14 @@
 // ./src/components/Login.jsx
 
 import React, { useState } from 'react';
+import ForgotPasswordModal from '../Components/ForgotPasswordModal';
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 const LoginForm = () => {
   const [showSignUp, setShowSignUp] = useState(false);
-
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   return (
+    <>
     <div className="bg-bg-login bg-cover flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         {!showSignUp ? (
@@ -35,9 +37,9 @@ const LoginForm = () => {
                   <input type="checkbox" className="form-checkbox" />
                   <span className="ml-2 text-gray-700 text-[12px] md:text-[15px]">Keep me signed in</span>
                 </label>
-                <a href="#" className="text-sky-900 hover:underline text-[12px] md:text-[15px]">
+                <div className="text-sky-900 hover:underline text-[12px] md:text-[15px] cursor-pointer" onClick={()=>setShowForgotPassword(true)} >
                   Forgot password?
-                </a>
+                </div>
               </div>
               <button
                 type="submit"
@@ -115,6 +117,8 @@ const LoginForm = () => {
         )}
       </div>
     </div>
+    {showForgotPassword ? <ForgotPasswordModal onClose={()=>setShowForgotPassword(false)} /> : null}
+    </>
   );
 };
 

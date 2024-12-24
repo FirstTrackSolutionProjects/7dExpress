@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import EmailOTPVerificationModal from '../Components/Modals/EmailOTPVerificationModal'
 import { toast } from 'react-toastify';
 import loginService from '../services/login'
+import ForgotPasswordModal from '../Components/ForgotPasswordModal';
 const API_URL = import.meta.env.VITE_APP_API_URL
 
 const LoginForm = () => {
@@ -11,6 +12,7 @@ const LoginForm = () => {
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const navigate = useNavigate();
 
   const closeEmailModal = () => {
@@ -82,7 +84,7 @@ const LoginForm = () => {
                   <input type="checkbox" className="form-checkbox" />
                   <span className="ml-2 text-gray-700 text-[12px] md:text-[15px]">Keep me signed in</span>
                 </label>
-                <p  className="text-sky-900 hover:underline text-[12px] md:text-[15px] cursor-pointer" onClick={()=>setReset(true)}>
+                <p  className="text-sky-900 hover:underline text-[12px] md:text-[15px] cursor-pointer" onClick={()=>setShowForgotPassword(true)}>
                   Forgot password?
                 </p>
               </div>
@@ -115,6 +117,7 @@ const LoginForm = () => {
             
         </form>
       </div>
+      {showForgotPassword ? <ForgotPasswordModal onClose={()=>setShowForgotPassword(false)} /> : null}
       </>
   )
 }

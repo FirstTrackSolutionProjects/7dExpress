@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 const ComparePrices = ({method, boxes, status, origin, dest, weight, payMode, codAmount, volume, quantity, isB2B, invoiceAmount}) => {
@@ -81,6 +82,34 @@ const Domestic = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (formData.origin.length !== 6 || formData.origin.length !== 6){
+      toast.error("Origin and Destination pincodes should be 6 digits")
+      return;
+    }
+    if (formData.isB2B && formData.invoiceAmount < 1){
+      toast.error("Invoice Amount should be atleast 1 for B2B")
+      return;
+    }
+    if (formData.payMode == "COD" && formData.codAmount < 1){
+      toast.error("COD Amount should be atleast 1")
+      return;
+    }
+    let boxValidationError = false;
+    boxes.map(box => {
+      if (box.weight < 50){
+        toast.error("Minimum weight for shipment is 50 gm")
+        boxValidationError = true;
+      }
+      if (!box.length || !box.breadth || !box.height){
+        toast.error("Length, Breadth and Height should be non-zero")
+        boxValidationError = true;
+      }
+      if (box.quantity < 1){
+        toast.error("Quantity should be atleast 1")
+        boxValidationError = true;
+      }
+    })
+    if (boxValidationError) return;
     setShowCompare(true)
   }
   const handleBoxes = (index, event) => {

@@ -1197,6 +1197,7 @@ const Card = ({ shipment }) => {
       } else {
         const link = document.createElement('a');
         link.href = result.label;
+        link.download = "label.pdf"
         link.target = '_blank'
         link.style.display = 'none';
         document.body.appendChild(link);

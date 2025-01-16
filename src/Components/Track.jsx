@@ -60,6 +60,21 @@ const ShipRocketCard = ({ scan }) => {
   )
 }
 
+const DTDCCard = ({ scan }) => {
+  const timestamp = `${scan.strActionDate} ${scan.strActionTime}`
+  return (
+    <>
+      <div className="w-full py-3 bg-white relative items-center px-8 flex border-b space-x-4">
+        <div>
+          <div>{scan.strAction}</div>
+          <div>{scan.strOrigin}</div>
+          <div>{timestamp}</div>
+        </div>
+      </div>
+    </>
+  )
+}
+
 const Result = ({ data }) => {
   useEffect(() => {
     console.log(data)
@@ -82,6 +97,9 @@ const Result = ({ data }) => {
         {data?.id == 4 ? data?.data.map((scan, index) => (
           <ShipRocketCard key={index} scan={scan} />
         )) : null} */}
+        {data?.id == 4? data?.data?.reverse().map((scan, index) => (
+          <DTDCCard key={index} scan={scan} />
+        )) : null}
       </div>
 
     </>

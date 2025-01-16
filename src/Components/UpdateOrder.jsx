@@ -1194,7 +1194,7 @@ const Card = ({ shipment }) => {
           link.click();
           document.body.removeChild(link);
         })
-      } else if (result.serviceId == 2 || result.serviceId == 3) {
+      } else {
         const link = document.createElement('a');
         link.href = result.label;
         link.target = '_blank'

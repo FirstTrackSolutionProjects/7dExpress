@@ -104,6 +104,26 @@ const ShiprocketStatusCard = ({ report, status }) => {
   )
 }
 
+const DTDCStatusCard = ({ report, status }) => {
+  return (
+    <div className="flex flex-col">
+      <p className="mt-5">AWB : {report.awb}</p>
+      {status.length ?
+        (status).reverse().map((scan, index) => {
+          const timestamp = `${scan.strActionDate} ${scan.strActionTime}`
+          return (
+            <div className='flex flex-col justify-center'>
+              <div className='font-bold'>{scan.strAction}</div>
+              <div>{scan.strOrigin}</div>
+              <div>{timestamp}</div>
+            </div>
+          )
+        }) : "Shipment is not yet picked up"
+      }
+    </div>
+  )
+}
+
 const View = ({ report, setIsView }) => {
   const [status, setStatus] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -147,10 +167,10 @@ const View = ({ report, setIsView }) => {
           {
             status && (report.serviceId == 2 || report.serviceId == 3) ? <DelhiveryStatusCard report={report} status={status} /> : null
           }
-          {/* {
-            status && report.serviceId == 4 ? <DelhiveryStatusCard report={report} status={status} /> : null
-          }
           {
+            status && report.serviceId == 4 ? <DTDCStatusCard report={report} status={status} /> : null
+          }
+          {/* {
             status && report.serviceId == 5 ? <MovinStatusCard report={report} status={status} /> : null
           }
           {

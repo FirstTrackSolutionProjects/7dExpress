@@ -1180,7 +1180,6 @@ const Card = ({ shipment }) => {
     }).then(response => response.json()).then(async result => {
       if (result.serviceId == 1){
         result?.label.map(async label => {
-          if (!label.includes('box_index')) return
           const fetchLabel = await fetch(label)
           const labelRes = await fetchLabel.json()
           console.log(labelRes.data)

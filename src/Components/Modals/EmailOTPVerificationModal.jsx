@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, Grid, Typography } from "@mui/material";
-import requestVerifyEmailOTP from "../../../services/requestVerifyEmailOTP";
-import verifyEmailService from "../../../services/verifyEmail";
+import requestVerifyEmailOTP from "../../services/requestVerifyEmailOTP";
+import verifyEmailService from "../../services/verifyEmail";
 import { toast } from "react-toastify";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const OTPModal = ({ open, onClose }) => {

@@ -12,7 +12,7 @@ const ComparePrices = ({method, boxes, status, origin, dest, weight, payMode, co
         headers: { 'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-          body : JSON.stringify({method: method, boxes : boxes, status : status, origin : origin, dest : dest, weight : weight, payMode : payMode, codAmount : codAmount,volume, quantity, isB2B : isB2B, invoiceAmount : invoiceAmount}),
+          body : JSON.stringify({method: method, boxes : boxes, status : status, origin : origin, dest : dest, weight : weight, payMode : payMode, codAmount : codAmount,volume, quantity, isB2B : isB2B, invoiceAmount : invoiceAmount, priceCalc : true}),
         
       }).then(response => response.json()).then(result => {console.log(result); setPrices(result.prices)}).catch(error => console.log(error + " " + error.message))
     }  

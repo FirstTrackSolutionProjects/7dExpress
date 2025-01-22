@@ -140,12 +140,12 @@ const TextForm = ({ id, onNext }) => {
         setFiles((prevFiles) => ({ ...prevFiles, [name]: null }));
         return;
       }
-      if (!['image/png','image/jpeg','image/jpg'].includes(value.type) && name=="selfie_doc"){
+      if (!['image/png','image/jpeg'].includes(value.type) && name=="selfie_doc"){
         toast.error("Only png, jpeg, jpg are supported");
         setFiles((prevFiles) => ({ ...prevFiles, [name]: null }));
         return;
       }
-      if (!['image/png','image/jpg', 'images/jpeg', 'application/pdf'].includes(value.type) && name!="selfie_doc"){
+      if (!['image/png', 'image/jpeg', 'application/pdf'].includes(value.type) && name!="selfie_doc"){
         toast.error("Only png, jpeg, jpg, pdf are supported");
         setFiles((prevFiles) => ({ ...prevFiles, [name]: null }));
         return;

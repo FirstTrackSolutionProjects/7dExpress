@@ -22,6 +22,7 @@ import UpdateOrderInternational from '../Components/UpdateOrderInternational';
 import Warehouse from '../Components/Warehouse';
 import DashboardMain from '../Components/DashboardMain';
 import UpdateProfileRequest from '../Components/UpdateProfileRequest';
+import UpdateProfileRequestSubmissions from '../Components/UpdateProfileRequestSubmissions';
 
 export const navItems = [
     {
@@ -289,7 +290,7 @@ export const menuItems = [
             isDropdown : false,
             admin : true,
             url : 'submissions/merchant-update-profile-requests',
-            component : UpdateProfileRequest,
+            component : UpdateProfileRequestSubmissions,
             dropDownOptions : [{}]
         },
         {

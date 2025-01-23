@@ -6,6 +6,8 @@ import { useAuth } from '../context/AuthContext';
 import EmailOTPVerificationModal from '../Components/Modals/EmailOTPVerificationModal';
 import registerService from '../services/register';
 import { toast } from 'react-toastify';
+import { Box, TextField } from '@mui/material';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Form = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +18,8 @@ const Form = () => {
     business_name: "",
     mobile: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { isAuthenticated, login, verified, emailVerified } = useAuth();
   const [emailModalOpen, setEmailModalOpen] = useState(false)
   const navigate = useNavigate();
@@ -106,13 +110,17 @@ const Form = () => {
         <div>
             <label htmlFor="business_name" className="block text-sm font-medium text-gray-700">Business Name</label>
             <div className='flex justify-center'>
-            <FontAwesomeIcon icon={faUserTag} className=" justify-center mt-4 mr-2 text-sky-950" />
-            <input
+            <FontAwesomeIcon icon={faUserTag} className="w-5 justify-center mt-4 mr-2 text-sky-950" />
+            <TextField
+              size="small"
               type="text"
               id="business_name"
               name='business_name'
               value={formData.business_name}
               onChange={handleChange}
+              sx={{
+                marginTop: '2px'
+              }}
               placeholder=""
               required
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
@@ -121,13 +129,17 @@ const Form = () => {
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700"> Full Name</label>
             <div className='flex justify-center'>
-            <FontAwesomeIcon icon={faUser} className=" justify-center mt-4 mr-2 text-sky-950" />
-            <input
+            <FontAwesomeIcon icon={faUser} className="w-5 justify-center mt-4 mr-2 text-sky-950" />
+            <TextField
               type="text"
+              size="small"
               id="name"
               name='name'
               value={formData.name}
               onChange={handleChange}
+              sx={{
+                marginTop: '2px'
+              }}
               required
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
             />
@@ -135,13 +147,17 @@ const Form = () => {
           <div>
             <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">Mobile Number</label>
             <div className='flex justify-center'>
-            <FontAwesomeIcon icon={faPhone} className=" justify-center mt-4 mr-2 text-sky-950" />
-            <input
+            <FontAwesomeIcon icon={faPhone} className="w-5 justify-center mt-4 mr-2 text-sky-950" />
+            <TextField
+              size="small"
               type="text"
               id="mobile"
               name='mobile'
               value={formData.mobile}
               onChange={handleChange}
+              sx={{
+                marginTop: '2px'
+              }}
               required
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
             />
@@ -149,13 +165,17 @@ const Form = () => {
           <div>
             <label htmlFor="reg_email" className="block text-sm font-medium text-gray-700">Email</label>
             <div className='flex justify-center'>
-            <FontAwesomeIcon icon={faEnvelope} className=" justify-center mt-4 mr-2 text-sky-950" />
-            <input
+            <FontAwesomeIcon icon={faEnvelope} className="w-5 justify-center mt-4 mr-2 text-sky-950" />
+            <TextField
               type="email"
+              size="small"
               id="reg_email"
               name='reg_email'
               value={formData.reg_email}
               onChange={handleChange}
+              sx={{
+                marginTop: '2px'
+              }}
               required
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
             />
@@ -163,13 +183,20 @@ const Form = () => {
           <div>
             <label htmlFor="reg_password" className="block text-sm font-medium text-gray-700">Password</label>
             <div className='flex justify-center'>
-            <FontAwesomeIcon icon={faLock} className=" justify-center mt-4 mr-2 text-sky-950" />
-            <input
-              type="password"
+            <FontAwesomeIcon icon={faLock} className="w-5 justify-center mt-4 mr-2 text-sky-950" />
+            <TextField
+              type={showPassword?'text':'password'}
+              size="small"
               id="reg_password"
               name='reg_password'
               value={formData.reg_password}
               onChange={handleChange}
+              sx={{
+                marginTop: '2px'
+              }}
+              InputProps={{
+                endAdornment: <Box className="h-4 cursor-pointer" onClick={()=>setShowPassword((prev)=>!prev)}>{!showPassword?<FaEye/>:<FaEyeSlash/>}</Box>
+              }}
               required
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
             />
@@ -177,14 +204,21 @@ const Form = () => {
           <div>
             <label htmlFor="confirm_password" className="block text-sm font-medium text-gray-700">Confirm Password</label>
             <div className='flex justify-center'>
-            <FontAwesomeIcon icon={faLock} className=" justify-center mt-4 mr-2 text-sky-950" />
-            <input
-              type="password"
+            <FontAwesomeIcon icon={faLock} className="w-5 justify-center mt-4 mr-2 text-sky-950" />
+            <TextField
+              type={showConfirmPassword?'text':'password'}
               id="confirm_password"
+              size="small"
               name='confirm_password'
               value={formData.confirm_password}
               onChange={handleChange}
               required
+              sx={{
+                marginTop: '2px'
+              }}
+              InputProps={{
+                endAdornment: <Box className="h-4 cursor-pointer" onClick={()=>setShowConfirmPassword((prev)=>!prev)}>{!showConfirmPassword?<FaEye/>:<FaEyeSlash/>}</Box>
+              }}
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
             />
           </div></div>

@@ -416,7 +416,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
               >
                 <option value="COD">COD</option>
                 <option value="Pre-paid">Prepaid</option>
-                <option value="topay">To Pay</option>
+                {/* <option value="topay">To Pay</option> */}
               </select>
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">

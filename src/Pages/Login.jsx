@@ -5,7 +5,7 @@ import EmailOTPVerificationModal from '../Components/Modals/EmailOTPVerification
 import { toast } from 'react-toastify';
 import loginService from '../services/login'
 import ForgotPasswordModal from '../Components/ForgotPasswordModal';
-import { Box, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 const API_URL = import.meta.env.VITE_APP_API_URL
 
@@ -97,12 +97,14 @@ const LoginForm = () => {
                 </p>
               </div>
           <div>
-            <button
+            <Button
               type="submit"
+              variant='contained'
+              disabled={!email || !password}
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-950 hover:bg-sky-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Login
-            </button>
+            </Button>
           </div>
           {/* <div className="mt-4 text-center">
               <button

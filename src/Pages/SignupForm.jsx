@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import EmailOTPVerificationModal from '../Components/Modals/EmailOTPVerificationModal';
 import registerService from '../services/register';
 import { toast } from 'react-toastify';
-import { Box, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Form = () => {
@@ -222,13 +222,22 @@ const Form = () => {
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
             />
           </div></div>
-          <div>
-            <button
+          <div className='w-full flex justify-center'>
+            <Button
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-950 hover:bg-sky-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              variant='contained'
+              disabled={
+                formData.business_name.trim() === "" ||
+                formData.name.trim() === "" ||
+                formData.mobile.trim() === "" ||
+                formData.reg_email.trim() === "" ||
+                formData.reg_password.trim() === "" ||
+                formData.confirm_password.trim() === ""
+              }
+              className="w-64 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-950 hover:bg-sky-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Sign Up
-            </button>
+            </Button>
           </div>
           <div className="mt-4 text-center">
               <p className="text-gray-700">

@@ -1,4 +1,5 @@
 import { useEffect , useState  } from 'react'
+import formatDateAndTime from '../utils/formatDateAndTime'
 const API_URL = import.meta.env.VITE_APP_API_URL
 
 
@@ -13,6 +14,7 @@ const Card = ({merchant}) => {
                 <p>Business Name : {merchant.businessName}</p>
                 <p>Phone : {merchant.phone}</p>
                 <p>Email : {merchant.email}</p>
+                <p className='text-gray-400'>{formatDateAndTime(merchant.createdAt)}</p>
             </div>
         </>
     )

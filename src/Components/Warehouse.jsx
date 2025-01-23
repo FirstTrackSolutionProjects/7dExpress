@@ -225,11 +225,11 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
   return (
     <>
       <div
-        className={`fixed inset-0 bg-[rgba(0,0,0,0.4)] z-20 bg-white w-full p-4 flex flex-col items-center justify-center ${isManage ? "" : "hidden"
+        className={`fixed inset-0 bg-[rgba(0,0,0,0.4)] z-20 w-full p-4 flex flex-col items-center justify-center ${isManage ? "" : "hidden"
           }`}
       >
        <div className="p-4 bg-white rounded-lg max-h-[95%] overflow-y-auto">
-       <div className="w-[728px] h-16 px-4  relative flex">
+       <div className="w-full md:w-[600px] h-16 px-4  relative flex">
           <div className="text-2xl font-medium">WAREHOUSE</div>
           <div
             onClick={(e) => {
@@ -257,7 +257,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
             </div>
           </div>
           <div className="w-full flex mb-2 flex-wrap ">
-            <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+            <div className="flex-1 mx-2 mb-2 min-w-[280px] space-y-2">
               <label htmlFor="phone">Mobile Number</label>
               <TextField
                 size={'small'}
@@ -266,7 +266,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
               />
             </div>
           </div>
-          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+          <div className="flex-1 mx-2 mb-2 min-w-[280px] space-y-2">
             <label htmlFor="address">Address</label>
             <TextField
               size="small"
@@ -275,7 +275,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
               value={formData.address}
             />
           </div>
-          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+          <div className="flex-1 mx-2 mb-2 min-w-[280px] space-y-2">
             <label htmlFor="state">City</label>
             <TextField
               size="small"
@@ -284,7 +284,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
               value={formData.city}
             />
           </div>
-          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+          <div className="flex-1 mx-2 mb-2 min-w-[280px] space-y-2">
             <label htmlFor="address">State</label>
             <TextField
               size="small"
@@ -293,7 +293,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
               value={formData.state}
             />
           </div>
-          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+          <div className="flex-1 mx-2 mb-2 min-w-[280px] space-y-2">
             <label htmlFor="address">Country</label>
             <TextField
               size="small"
@@ -303,7 +303,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
             />
           </div>
           <div className="w-full flex mb-2 flex-wrap ">
-            <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+            <div className="flex-1 mx-2 mb-2 min-w-[280px] space-y-2">
               <label htmlFor="pin">Pincode</label>
               <TextField
                 size="small"

@@ -1,5 +1,6 @@
 import { useEffect , useState  } from 'react'
 import UserDiscountModal from './Modals/UserDiscountModal'
+import formatDateAndTime from '../utils/formatDateAndTime'
 const API_URL = import.meta.env.VITE_APP_API_URL
 const View = ({merchant, balance ,fullName, email, phone,isActive, uid  , gst, setView, businessName, cin, aadhar_number, pan_number, address, city, state, pin, accountNumber, ifsc, bank}) => {
     const [isActivated, setIsActivated] = useState(isActive)
@@ -122,6 +123,7 @@ const Card = ({merchant}) => {
                 <p>User Id : {merchant.uid}</p>
                 <p>Name : {merchant.fullName}</p>
                 <p>Business Name : {merchant.businessName}</p>
+                <p className='text-gray-400'>{formatDateAndTime(merchant.createdAt)}</p>
             </div>
         </>
     )
@@ -180,7 +182,7 @@ const MerchantManage =  () => {
     </div>
       <div className='w-full bg-white p-8'>
         {filteredMerchants.length > 0 ? (
-        filteredMerchants.map(((merchant,index)=>(
+        filteredMerchants.reverse().map(((merchant,index)=>(
             <Card key={index}  merchant={merchant}/>
         )))
       ) : (

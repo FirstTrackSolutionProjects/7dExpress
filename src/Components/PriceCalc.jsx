@@ -79,8 +79,8 @@ const Domestic = () => {
     }
     let boxValidationError = false;
     boxes.map(box => {
-      if (box.weight < 50){
-        toast.error("Minimum weight for shipment is 50 gm")
+      if (!box.weight){
+        toast.error("Weight is required")
         boxValidationError = true;
       }
       if (!box.length || !box.breadth || !box.height){
@@ -239,7 +239,6 @@ const Domestic = () => {
                 type="text"
                 id="weight"
                 name="weight"
-                min={50}
                 placeholder="Ex. 1500"
                 value = {box.weight}
                 onChange={(e)=>handleBoxes(index,e)}

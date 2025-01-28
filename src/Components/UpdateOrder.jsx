@@ -722,7 +722,6 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
                   type="text"
                   id="weight"
                   name="weight"
-                  min={50}
                   placeholder="Weight"
                   value={box.weight}
                   onChange={(e) => handleBoxes(index, e)}

@@ -85,7 +85,7 @@ const schema = z.object({
   invoiceUrl: z.string().optional(),
   isB2B: z.boolean()
 })
-.refine((data) => !data.isB2B || (data.isB2B && !data.invoiceUrl), {
+.refine((data) => !data.isB2B || (data.isB2B && data.invoiceUrl), {
   message: "Invoice is required for B2B shipments",
   path: ["invoiceUrl"],
 })

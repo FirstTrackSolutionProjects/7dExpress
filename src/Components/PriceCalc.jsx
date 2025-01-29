@@ -2,17 +2,17 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 const API_URL = import.meta.env.VITE_APP_API_URL
-const ComparePrices = ({method, boxes, status, origin, dest, weight, payMode, codAmount, volume, quantity, isB2B, invoiceAmount}) => {
+const ComparePrices = ({method, boxes, status, origin, dest, payMode, codAmount, isB2B, invoiceAmount}) => {
   const [prices,setPrices] = useState([])
   useEffect(()=>{
-    console.log({method, status, origin, dest, weight, payMode, codAmount, volume, quantity})
+    console.log({method, status, origin, dest, payMode, codAmount})
     const data = async () => {
       await fetch(`${API_URL}/shipment/domestic/price`, {
         method: 'POST',
         headers: { 'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-          body : JSON.stringify({method: method, boxes : boxes, status : status, origin : origin, dest : dest, weight : weight, payMode : payMode, codAmount : codAmount,volume, quantity, isB2B : isB2B, invoiceAmount : invoiceAmount, priceCalc : true}),
+          body : JSON.stringify({method: method, boxes : boxes, status : status, origin : origin, dest : dest, payMode : payMode, codAmount : codAmount, isB2B : isB2B, invoiceAmount : invoiceAmount, priceCalc : true}),
         
       }).then(response => response.json()).then(result => {console.log(result); setPrices(result.prices)}).catch(error => console.log(error + " " + error.message))
     }  
@@ -44,7 +44,7 @@ const ComparePrices = ({method, boxes, status, origin, dest, weight, payMode, co
 
 
 const Domestic = () => {
-  const [boxes, setBoxes] = useState([{weight : 0, length : 0, breadth : 0, height : 0, quantity : 1}])
+  const [boxes, setBoxes] = useState([{weight : 0, weight_unit : 'g', length : 0, breadth : 0, height : 0, quantity : 1}])
   const [formData, setFormData] = useState({
     method : 'S',
     status: 'Delivered',
@@ -52,26 +52,9 @@ const Domestic = () => {
     dest : '',
     payMode : 'COD',
     codAmount : '0',
-    weight : 0,
-    volume : 0,
-    quantity : 0,
     invoiceAmount : 0,
     isB2B : false
   })
-  useEffect(()=>{
-    let totalVolume = 0;
-    let totalWeight = 0;
-    boxes.map((box,index)=>{
-        totalVolume += parseInt(box.length) * parseInt(box.breadth) * parseInt(box.height)
-        totalWeight += parseInt(box.weight)*parseInt(box.quantity)
-    })
-    setFormData((prevData) => ({
-     ...prevData,
-      weight : totalWeight,
-      volume : totalVolume,
-      quantity : boxes.length
-    }));
-  },[boxes])
   const [showCompare, setShowCompare] = useState(false)
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -96,8 +79,8 @@ const Domestic = () => {
     }
     let boxValidationError = false;
     boxes.map(box => {
-      if (box.weight < 50){
-        toast.error("Minimum weight for shipment is 50 gm")
+      if (!box.weight){
+        toast.error("Weight is required")
         boxValidationError = true;
       }
       if (!box.length || !box.breadth || !box.height){
@@ -119,7 +102,7 @@ const Domestic = () => {
     setBoxes(updatedBoxes);
   };
   const addBox = () => {
-    setBoxes([...boxes, {  length: 0 , breadth : 0 , height : 0  , weight: 0, quantity: 1 }]);
+    setBoxes([...boxes, {  length: 0 , breadth : 0 , height : 0  , weight: 0, weight_unit : 'g', quantity: 1 }]);
   };
   const removeBox = (index) => {
     const updatedBoxes = boxes.filter((_, i) => i !== index);
@@ -249,17 +232,28 @@ const Domestic = () => {
             <>
               <div className="w-full relative z-0 flex mb-2 flex-wrap ">
               <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-              <label htmlFor="weight">Weight (In grams)</label>
+              <label htmlFor="weight">Weight</label>
+              <div className="w-full flex space-x-2">
               <input required
                 className="w-full border py-2 px-4 rounded-3xl"
                 type="text"
                 id="weight"
                 name="weight"
-                min={50}
                 placeholder="Ex. 1500"
                 value = {box.weight}
                 onChange={(e)=>handleBoxes(index,e)}
               />
+              <select
+                name="weight_unit"
+                id="weight_unit"
+                className="border py-2 px-4 rounded-3xl"
+                value={box.weight_unit}
+                onChange={(e)=>handleBoxes(index,e)}
+              >
+                <option value={'g'}>g</option>
+                <option value={'kg'}>kg</option>
+              </select>
+              </div>
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] flex space-x-2">
             <div className="flex-1 mb-2 min-w-[70px] space-y-2">

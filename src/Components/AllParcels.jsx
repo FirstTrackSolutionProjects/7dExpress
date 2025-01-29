@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 const API_URL = import.meta.env.VITE_APP_API_URL
 const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
   const [boxes, setBoxes] = useState([
-    { box_no: 1, length: 0, breadth: 0, height: 0, weight: 0, quantity: 1 }
+    { box_no: 1, length: 0, breadth: 0, height: 0, weight: 0, weight_unit: 'g', quantity: 1 }
   ]);
   const [orders, setOrders] = useState([
     { box_no: 1, product_name: '', product_quantity: 0, selling_price: 0, tax_in_percentage: '' }
@@ -166,7 +166,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
     setOrders([...orders, { box_no: 1, product_name: '', product_quantity: 0, selling_price: 0, tax_in_percentage: '' }]);
   };
   const addBox = () => {
-    setBoxes([...boxes, { box_no: boxes.length + 1, length: 0, breadth: 0, height: 0, weight: 0, quantity: 1 }]);
+    setBoxes([...boxes, { box_no: boxes.length + 1, length: 0, breadth: 0, height: 0, weight: 0, weight_unit: 'g', quantity: 1 }]);
   };
   const removeProduct = (index) => {
     const updatedOrders = orders.filter((_, i) => i !== index);
@@ -714,17 +714,28 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
                 />
               </div>
               <div className="flex-1 mx-2 mb-2 min-w-[150px] space-y-2">
-                <label htmlFor="weight">Weight (in g)</label>
+                <label htmlFor="weight">Weight</label>
+                <div className="w-full flex space-x-2"> 
                 <input
                   className="w-full border py-2 px-4 rounded-3xl"
                   type="text"
                   id="weight"
                   name="weight"
-                  min={50}
                   placeholder="Weight"
                   value={box.weight}
                   onChange={(e) => handleBoxes(index, e)}
                 />
+                <select
+                name="weight_unit"
+                id="weight_unit"
+                className="border py-2 px-4 rounded-3xl"
+                value={box.weight_unit}
+                onChange={(e)=>handleBoxes(index,e)}
+              >
+                <option value={'g'}>g</option>
+                <option value={'kg'}>kg</option>
+              </select>
+                </div>
               </div>
               <div className="flex-1 mx-2 mb-2 min-w-[150px] space-y-2">
                 <label htmlFor="quantity">Quantity</label>

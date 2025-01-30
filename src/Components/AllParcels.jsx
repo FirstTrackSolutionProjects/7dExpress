@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 const API_URL = import.meta.env.VITE_APP_API_URL
 const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
   const [boxes, setBoxes] = useState([
-    { box_no: 1, length: 0, breadth: 0, height: 0, weight: 0, weight_unit: 'g', quantity: 1 }
+    { box_no: 1, length: 0, breadth: 0, height: 0, weight: 0, weight_unit: 'kg', quantity: 1 }
   ]);
   const [orders, setOrders] = useState([
     { box_no: 1, product_name: '', product_quantity: 0, selling_price: 0, tax_in_percentage: '' }
@@ -166,7 +166,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
     setOrders([...orders, { box_no: 1, product_name: '', product_quantity: 0, selling_price: 0, tax_in_percentage: '' }]);
   };
   const addBox = () => {
-    setBoxes([...boxes, { box_no: boxes.length + 1, length: 0, breadth: 0, height: 0, weight: 0, weight_unit: 'g', quantity: 1 }]);
+    setBoxes([...boxes, { box_no: boxes.length + 1, length: 0, breadth: 0, height: 0, weight: 0, weight_unit: 'kg', quantity: 1 }]);
   };
   const removeProduct = (index) => {
     const updatedOrders = orders.filter((_, i) => i !== index);

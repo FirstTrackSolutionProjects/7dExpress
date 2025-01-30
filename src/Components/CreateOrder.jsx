@@ -109,7 +109,7 @@ const FullDetails = () => {
       BaddressType: "home",
       shippingType: "Surface",
       orders: [{ box_no: '1', product_name: '', product_quantity: 0, selling_price: 0, tax_in_percentage: 0 }],
-      boxes: [{ box_no: 1, length: 0, breadth: 0, height: 0, weight: 0, weight_unit: 'g', quantity: 1}],
+      boxes: [{ box_no: 1, length: 0, breadth: 0, height: 0, weight: 0, weight_unit: 'kg', quantity: 1}],
       invoiceAmount: 1,
       isB2B: false,
       invoiceUrl: ''

@@ -600,7 +600,7 @@ const FullDetails = () => {
                   id={`boxes[${index}].weight_unit`}
                   {...register(`boxes[${index}].weight_unit`)}
                 >
-                  <option value="g">g</option>
+                  <option value="g">gm</option>
                   <option value="kg">kg</option>
                 </select>
                 </div>

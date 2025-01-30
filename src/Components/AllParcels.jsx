@@ -732,7 +732,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
                 value={box.weight_unit}
                 onChange={(e)=>handleBoxes(index,e)}
               >
-                <option value={'g'}>g</option>
+                <option value={'g'}>gm</option>
                 <option value={'kg'}>kg</option>
               </select>
                 </div>

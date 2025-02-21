@@ -27,7 +27,7 @@ const LoginForm = () => {
       navigate('/dashboard')
     } else if(isAuthenticated && emailVerified){
       navigate('/verify')
-    } else if (isAuthenticated){
+    } else if (isAuthenticated && !emailVerified){
       setEmailModalOpen(true)
     }
   },[isAuthenticated])

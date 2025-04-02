@@ -330,7 +330,7 @@ const Listing = () => {
       .then(response => response.json())
       .then(result => {
         if (result.success) {
-          result.rows.sort((a, b) => parseInt(a.ref_id) - parseInt(b.ref_id)).reverse();
+          result.rows.sort((a, b) => a.date - b.date).reverse();
           setReports(result.rows);
         } else {
           alert('Fetch failed: ' + result.message)

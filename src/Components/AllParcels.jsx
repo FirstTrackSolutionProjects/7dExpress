@@ -110,7 +110,8 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
     invoiceDate: shipment.invoice_date,
     invoiceAmount: shipment.invoice_amount,
     invoiceUrl: shipment.invoice_url,
-    isB2B: shipment.is_b2b
+    isB2B: shipment.is_b2b,
+    customer_reference_number: shipment?.customer_reference_number
   })
   useEffect(() => {
 
@@ -398,7 +399,18 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
                 onChange={handleChange}
               />
             </div>
-
+            <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+              <label htmlFor="customer_reference_number">Customer Reference Number</label>
+              <input
+                className="w-full border py-2 px-4 rounded-3xl"
+                type="text"
+                id="customer_reference_number"
+                name="customer_reference_number"
+                placeholder=""
+                value={formData.customer_reference_number}
+                onChange={handleChange}
+              />
+            </div>
           </div>
 
 
@@ -1054,7 +1066,7 @@ const Card = ({ shipment }) => {
     <>
       <div className="w-full h-24 bg-white relative items-center px-4 sm:px-8 flex border-b">
         <div>
-          <div className="text-sm font-bold">{shipment.ord_id}</div>
+          <div className="text-sm font-bold">{shipment.ord_id} {shipment?.customer_reference_number?`(${shipment?.customer_reference_number})`:null}</div>
           <div className="text-[10px] text-gray-500">{shipment.fullName}</div>
           <div className="text-[10px] text-gray-500">{shipment.email}</div>
           <div className="text-[10px] text-gray-500">{shipment.date ? shipment.date.toString().split('T')[0] + ' ' + shipment.date.toString().split('T')[1].split('.')[0] : null}</div>
@@ -1075,7 +1087,8 @@ const Listing = ({ step, setStep }) => {
   const [filters, setFilters] = useState({
     email: "",
     orderId: "",
-    name: ""
+    name: "",
+    customer_reference_number: "",
   });
   useEffect(() => {
 
@@ -1112,7 +1125,8 @@ const Listing = ({ step, setStep }) => {
       return (
         (filters.name === "" || shipment.fullName.toLowerCase().startsWith(filters.name.toLowerCase())) &&
         (filters.email === "" || shipment.email.toString().startsWith(filters.email)) &&
-        (filters.orderId === "" || (shipment.ord_id.toLowerCase() == filters.orderId.toLowerCase()))
+        (filters.orderId === "" || (shipment.ord_id.toLowerCase() == filters.orderId.toLowerCase())) &&
+        (filters?.customer_reference_number === "" || (shipment?.customer_reference_number?.toLowerCase().startsWith(filters?.customer_reference_number?.toLowerCase())))
       );
     });
     setFilteredShipments(filteredData)
@@ -1154,7 +1168,7 @@ const Listing = ({ step, setStep }) => {
         </div>
         <details className="w-full p-2 bg-blue-500 rounded-xl text-white">
           <summary>Filters</summary>
-          <div className="grid space-y-2 lg:grid-rows-1 lg:grid-cols-3 lg:space-y-0 lg:space-x-4 p-2 rounded-xl w-full bg-blue-500 text-black justify-evenly">
+          <div className="grid space-y-2 lg:grid-rows-1 lg:grid-cols-4 lg:space-y-0 lg:space-x-4 p-2 rounded-xl w-full bg-blue-500 text-black justify-evenly">
             <input
               className="p-1 rounded-xl min-w-[260px] lg:min-w-0"
               type="text"
@@ -1177,6 +1191,14 @@ const Listing = ({ step, setStep }) => {
               name="orderId"
               placeholder="Order Id"
               value={filters.orderId}
+              onChange={handleChange}
+            />
+            <input
+              className="p-1 rounded-xl"
+              type="text"
+              name="customer_reference_number"
+              placeholder="Customer Reference Number"
+              value={filters.customer_reference_number}
               onChange={handleChange}
             />
           </div>

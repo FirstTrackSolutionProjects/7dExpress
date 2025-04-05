@@ -17,7 +17,7 @@ const DelhiveryB2BStatusCard = ({report , status}) => {
   return (
     <div>
       <p>AWB : {report.awb}</p>
-      <p>Ref Id: FTL{report.ref_id}</p>
+      <p>Ref Id: {report.ref_id}</p>
       <p>LRN : {report.lrn}</p>
       <p>Status : {status.status}</p>
       <div>{formattedTimestamp} | {status?.location} | {status?.scan_remark} </div>
@@ -29,7 +29,7 @@ const DelhiveryStatusCard = ({ report, status }) => {
   return (
     <div>
       <p>AWB : {report.awb}</p>
-      <p>Ref Id: FTL{report.ref_id}</p>
+      <p>Ref Id: {report.ref_id}</p>
       <p>Status : {status.Status.Status}</p>
       {
         (status.Scans).map((scan, index) => {
@@ -191,7 +191,7 @@ const Card = ({ report }) => {
       <div className="w-full h-24 bg-white relative items-center px-4 sm:px-8 flex border-b">
         <div>
           <div className="text-sm font-bold">
-            FTL{report.ref_id}
+            {report.ref_id}
             <span className="text-gray-500">({report.ord_id})</span>
           </div>
           <div className="text-[10px] text-gray-500">
@@ -220,7 +220,8 @@ const Listing = () => {
     email: "",
     orderId: "",
     name: "",
-    awb: ""
+    awb: "",
+    customer_reference_number: ""
   });
   useEffect(() => {
 
@@ -254,8 +255,9 @@ const Listing = () => {
       return (
         (filters.name === "" || report.customer_name.toLowerCase().startsWith(filters.name.toLowerCase())) &&
         (filters.email === "" || report.customer_email.toString().startsWith(filters.email)) &&
-        (filters.orderId === "" || (report.ord_id.toLowerCase() == filters.orderId.toLowerCase())) &&
-        (filters.awb === "" || (report.awb.toLowerCase() == filters.awb.toLowerCase()))
+        (filters.orderId === "" || ((report.ord_id.toLowerCase() == filters.orderId.toLowerCase()) || (report.ref_id.toLowerCase() == filters.orderId.toLowerCase()))) &&
+        (filters.awb === "" || (report.awb.toLowerCase() == filters.awb.toLowerCase())) &&
+        (filters?.customer_reference_number === "" || (report?.customer_reference_number?.toLowerCase().startsWith(filters?.customer_reference_number?.toLowerCase())))
       );
     });
     setFilteredReports(filteredData)
@@ -274,7 +276,7 @@ const Listing = () => {
         </div>
         <details className="w-full p-2 bg-blue-500 rounded-xl text-white">
           <summary>Filters</summary>
-          <div className="grid space-y-2 lg:grid-rows-1 lg:grid-cols-4 lg:space-y-0 lg:space-x-4 p-2 rounded-xl w-full bg-blue-500 text-black justify-evenly">
+          <div className="grid space-y-2 lg:grid-rows-1 lg:grid-cols-5 lg:space-y-0 lg:space-x-4 p-2 rounded-xl w-full bg-blue-500 text-black justify-evenly">
             <input
               className="p-1 rounded-xl min-w-[260px] lg:min-w-0"
               type="text"
@@ -295,7 +297,7 @@ const Listing = () => {
               className="p-1 rounded-xl"
               type="text"
               name="orderId"
-              placeholder="Order Id"
+              placeholder="Order Id/Ref Id"
               value={filters.orderId}
               onChange={handleChange}
             />
@@ -305,6 +307,14 @@ const Listing = () => {
               name="awb"
               placeholder="AWB"
               value={filters.awb}
+              onChange={handleChange}
+            />
+            <input
+              className="p-1 rounded-xl"
+              type="text"
+              name="customer_reference_number"
+              placeholder="Customer Reference Number"
+              value={filters.customer_reference_number}
               onChange={handleChange}
             />
           </div>

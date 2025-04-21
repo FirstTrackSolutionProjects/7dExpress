@@ -29,10 +29,16 @@ const Contact = () => {
         formData.subject,
         formData.message
       );
-      toast.success('Message sent successfully!');
-      setFormData({ name: '', email: '', mobile: '', subject: '', message: '' });
+      if (response?.success){
+        toast.success('Message sent successfully!');
+        setFormData({ name: '', email: '', mobile: '', subject: '', message: '' });
+      } else {
+        toast.error('Failed to send message. Please try again.');
+      }
     } catch (error) {
-      toast.error('Failed to send message. Please try again.');
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setStatus('');
     }
   };
 

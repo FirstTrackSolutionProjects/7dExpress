@@ -59,7 +59,7 @@ const Contact = () => {
         </p>
         
         <p className="text-gray-700 mb-2">
-          <strong>Email:</strong> info@7dexpress.com 
+          <strong>Email:</strong> 7dxpress@gmail.com
         </p>
         <p className="text-gray-700">
           <strong>Business Hours:</strong> Monday - Saturday, 9:00 AM - 8:00 PM

@@ -198,8 +198,13 @@ const Card = ({ report }) => {
             {report.customer_name}
           </div>
           <div className="text-[10px] text-gray-500">
-            {report.awb}
+            {"AWB: "+report.awb}
           </div>
+          { report?.lrn ?
+            <div className="text-[10px] text-gray-500">
+            {"LRN: "+report.lrn}
+            </div> : null
+          }
           <div className="text-[10px] text-gray-500">
             {report.date ? report.date.toString().split('T')[0] + ' ' + report.date.toString().split('T')[1].split('.')[0] : null}
           </div>
@@ -256,8 +261,8 @@ const Listing = () => {
         (filters.name === "" || report.customer_name.toLowerCase().startsWith(filters.name.toLowerCase())) &&
         (filters.email === "" || report.customer_email.toString().startsWith(filters.email)) &&
         (filters.orderId === "" || ((report.ord_id.toLowerCase() == filters.orderId.toLowerCase()) || (report.ref_id.toLowerCase() == filters.orderId.toLowerCase()))) &&
-        (filters.awb === "" || (report.awb.toLowerCase() == filters.awb.toLowerCase())) &&
-        (filters?.customer_reference_number === "" || (report?.customer_reference_number?.toLowerCase().startsWith(filters?.customer_reference_number?.toLowerCase())))
+        (filters.awb === "" || (report?.awb?.toLowerCase() == filters?.awb?.toLowerCase()) || (report?.lrn?.toLowerCase() == filters?.awb?.toLowerCase())) &&
+        (filters?.customer_reference_number === "" || (report?.customer_reference_number?.toLowerCase() == filters?.customer_reference_number?.toLowerCase()))
       );
     });
     setFilteredReports(filteredData)
@@ -305,7 +310,7 @@ const Listing = () => {
               className="p-1 rounded-xl"
               type="text"
               name="awb"
-              placeholder="AWB"
+              placeholder="AWB/LRN"
               value={filters.awb}
               onChange={handleChange}
             />

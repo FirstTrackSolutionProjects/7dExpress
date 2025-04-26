@@ -261,12 +261,32 @@ const getTodaysDate = () => {
 }
 
 const ShipmentReportDownloadDialog = () => {
+
   const [downloading, setDownloading] = useState(false)
+  const [services, setServices] = useState([])
   const todayDate = getTodaysDate()
   const [formData, setFormData] = useState({
     startDate: todayDate,
-    endDate: todayDate
+    endDate: todayDate,
+    serviceId: null,
   })
+
+  useEffect(() => {
+    const getServices = async () => {
+      await fetch(`${API_URL}/services`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': localStorage.getItem('token'),
+        },
+      }).then(response => response.json()).then((result) => {
+        if (result.success) {
+          setServices(result.services)
+        }
+      })
+    }
+    getServices()
+  },[])
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -286,14 +306,14 @@ const ShipmentReportDownloadDialog = () => {
     const worksheet = XLSX.utils.json_to_sheet(dataResponse.data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    XLSX.writeFile(workbook, 'data.xlsx');
+    XLSX.writeFile(workbook, `shipment_reports_${formData.startDate}-${formData.endDate}_${formData.serviceId?services[parseInt(formData.serviceId)-1]?.service_name:'All_Services'}.xlsx`);
     setDownloading(false)
   };
   return (
     <>
       <div className="flex flex-wrap justify-evenly items-center w-full bg-blue-300 mx-4 p-3 rounded-xl space-y-2 sm:space-y-0 sm:space-x-2 ">
         <input
-          className="p-2 rounded-xl flex-[2] min-w-48"
+          className="p-2 rounded-xl flex-[2] min-w-32"
           type="date"
           name="startDate"
           value={formData.startDate}
@@ -301,12 +321,23 @@ const ShipmentReportDownloadDialog = () => {
         />
         {/* <p className="mx-2 font-medium">to</p> */}
         <input
-          className="p-2 rounded-xl flex-[2] min-w-48"
+          className="p-2 rounded-xl flex-[2] min-w-32"
           type="date"
           name="endDate"
           value={formData.endDate}
           onChange={handleChange}
         />
+        <select
+          className="p-2 rounded-xl flex-[2] min-w-32"
+          name="serviceId"
+          value={formData.serviceId}
+          onChange={handleChange}
+        >
+          <option value={null}>All Services</option>
+          {services.map((service, index) => (
+            <option key={index} value={service.service_id}>{service.service_name}</option>
+          ))}
+        </select>
         <button className="flex-1 min-w-48 bg-blue-700 p-3 rounded-xl text-white" onClick={downloading ? null : handleDownload}>{downloading ? 'Downloading...' : 'Download Report'}</button>
       </div>
     </>

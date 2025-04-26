@@ -206,6 +206,9 @@ const Card = ({ report }) => {
             </div> : null
           }
           <div className="text-[10px] text-gray-500">
+            {`${report.service_name} (${report.is_b2b==1?'B2B':'B2C'})`}
+          </div>
+          <div className="text-[10px] text-gray-500">
             {report.date ? report.date.toString().split('T')[0] + ' ' + report.date.toString().split('T')[1].split('.')[0] : null}
           </div>
         </div>

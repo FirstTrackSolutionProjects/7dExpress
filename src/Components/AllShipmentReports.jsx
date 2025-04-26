@@ -215,7 +215,7 @@ const Card = ({ report }) => {
   return (
     <>
       {view ? <View report={report} setIsView={setIsView} /> : null}
-      <div className="w-full h-28 bg-white relative items-center px-4 sm:px-8 flex border-b">
+      <div className="w-full h-32 bg-white relative items-center px-4 sm:px-8 flex border-b">
         <div>
           <div className="text-sm font-bold">
             {report.ref_id}
@@ -235,6 +235,9 @@ const Card = ({ report }) => {
             {`LRN: ${report.lrn}`}
             </div> : null
           }
+          <div className="text-[10px] text-gray-500">
+            {`${report.service_name} (${report.is_b2b==1?'B2B':'B2C'})`}
+          </div>
           <div className="text-[10px] text-gray-500">
             {report.date ? report.date.toString().split('T')[0] + ' ' + report.date.toString().split('T')[1].split('.')[0] : null}
           </div>

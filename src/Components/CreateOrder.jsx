@@ -77,6 +77,10 @@ const schema = z.object({
   Cgst: z.string().optional(),
   pickupDate: z.string(),
   pickupTime: z.preprocess((a) => a + ':00', z.string()),
+  shipmentValue: z.preprocess(
+    (a) => parseInt(a, 10),
+    z.number().min(1, "Shipment Amount must be greater than 0")
+  ),
   ewaybill: z.string().optional(),
   invoiceNumber: z.string().optional(),
   invoiceDate: z.string().optional(),
@@ -91,8 +95,8 @@ const schema = z.object({
   message: "Invoice is required for B2B shipments",
   path: ["invoiceUrl"],
 })
-.refine((data) => (!data.isB2B || data.invoiceAmount < 50000) || (data.ewaybill && data.ewaybill.length > 0), {
-  message: "Ewaybill is required for invoice amount of at least 50000",
+.refine((data) => (data.shipmentValue < 50000) || (data.ewaybill && data.ewaybill.length > 0), {
+  message: "Ewaybill is required for shipment value of at least 50000",
   path: ["ewaybill"], // Error path
 });
 const FullDetails = () => {
@@ -113,7 +117,8 @@ const FullDetails = () => {
       boxes: [{ box_no: 1, length: 0, breadth: 0, height: 0, weight: 0, weight_unit: 'kg', quantity: 1}],
       invoiceAmount: 1,
       isB2B: false,
-      invoiceUrl: ''
+      invoiceUrl: '',
+      shipmentValue: 0
     }
   });
   useEffect(() => {
@@ -763,6 +768,19 @@ const FullDetails = () => {
                 {errors.cod && <span className='text-red-500'>{errors.cod.message}</span>}
               </div>
             </div>
+          </> : null
+        }
+        <div className="w-full flex mb-2 flex-wrap">
+              <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+              <label htmlFor="shipmentValue">Shipment Value</label>
+              <input
+                className="w-full border py-2 px-4 rounded-3xl"
+                type="text"
+                id="shipmentValue"
+                {...register("shipmentValue")}
+              />
+              {errors.shipmentValue && <span className='text-red-500'>{errors.shipmentValue.message}</span>}
+            </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="ewaybill">E-Waybill</label>
               <input
@@ -773,8 +791,7 @@ const FullDetails = () => {
               />
               {errors.ewaybill && <span className='text-red-500'>{errors.ewaybill.message}</span>}
             </div>
-          </> : null
-        }
+            </div>
         <div className="w-full flex mb-2 flex-wrap">
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="discount">Discount</label>

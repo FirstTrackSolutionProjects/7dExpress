@@ -1217,7 +1217,7 @@ const Card = ({ shipment }) => {
       },
       body: JSON.stringify({ order: shipment.ord_id })
     }).then(response => response.json()).then(async result => {
-      if (result.serviceId == 1){
+      if (result.serviceId == 1 && false){
         result?.label.map(async label => {
           const fetchLabel = await fetch(label)
           const labelRes = await fetchLabel.json()
@@ -1236,7 +1236,7 @@ const Card = ({ shipment }) => {
         const link = document.createElement('a');
         link.href = result.label;
         link.download = "label.pdf"
-        link.target = '_blank'
+        link.target = '_top'
         link.style.display = 'none';
         document.body.appendChild(link);
         link.click();

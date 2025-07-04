@@ -10,7 +10,8 @@ const ComparePrices = ({method, boxes, status, origin, dest, payMode, codAmount,
       await fetch(`${API_URL}/shipment/domestic/price`, {
         method: 'POST',
         headers: { 'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `${localStorage.getItem('token')}`
         },
           body : JSON.stringify({method: method, boxes : boxes, status : status, origin : origin, dest : dest, payMode : payMode, codAmount : codAmount, isB2B : isB2B, invoiceAmount : invoiceAmount, priceCalc : true}),
         

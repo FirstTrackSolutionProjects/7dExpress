@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import convertUTCToIST from "../helpers/convertUTCToIST";
 const API_URL = import.meta.env.VITE_APP_API_URL
 
 const timestampToDate = (timestamp) => {
@@ -185,6 +186,9 @@ const Card = ({ report }) => {
 
 
   const [view, setIsView] = useState(false)
+  const date = report.date;
+  const istDate  = convertUTCToIST(date);
+  const formattedDate = istDate.toISOString().split('T')[0] + ' ' + istDate.toISOString().split('T')[1].split('.')[0]
   return (
     <>
       {view && <View report={report} setIsView={setIsView} />}
@@ -209,7 +213,7 @@ const Card = ({ report }) => {
             {`${report.service_name} (${report.is_b2b==1?'B2B':'B2C'})`}
           </div>
           <div className="text-[10px] text-gray-500">
-            {report.date ? report.date.toString().split('T')[0] + ' ' + report.date.toString().split('T')[1].split('.')[0] : null}
+            {formattedDate}
           </div>
         </div>
         <div className="absolute right-4 sm:right-8 flex space-x-2">

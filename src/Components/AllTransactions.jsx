@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
+import convertUTCToIST from "../helpers/convertUTCToIST";
 const API_URL = import.meta.env.VITE_APP_API_URL
 
 const Card = ({transaction}) => {
     const date = transaction.date;
-    const formattedDate = date.toString().split('T')[0] + ' ' + date.toString().split('T')[1].split('.')[0]
+    const istDate  = convertUTCToIST(date);
+    const formattedDate = istDate.toISOString().split('T')[0] + ' ' + istDate.toISOString().split('T')[1].split('.')[0]
     return (
         <>
             {transaction.type ==="recharge" && <div className='p-4 border'>
@@ -25,6 +27,7 @@ const Card = ({transaction}) => {
                 <p>Order Expense</p>
                 <p>{transaction.fullName}<span className="text-gray-500">({transaction.uid})</span></p>
                 <p>Order Id : {transaction.expense_order}</p>
+                <p>Service : {transaction.service_name} ({transaction.is_b2b?'B2B':'B2C'})</p>
                 <p>Amount : -{transaction.expense_cost}</p>
                 <p>{formattedDate}</p>
             </div>}
@@ -32,6 +35,7 @@ const Card = ({transaction}) => {
                 <p>Order Refund</p>
                 <p>{transaction.fullName}<span className="text-gray-500">({transaction.uid})</span></p>
                 <p>Order Id : {transaction.refund_order}</p>
+                <p>Service : {transaction.service_name} ({transaction.is_b2b?'B2B':'B2C'})</p>
                 <p>Amount : +{transaction.refund_amount}</p>
                 <p>{formattedDate}</p>
             </div>}

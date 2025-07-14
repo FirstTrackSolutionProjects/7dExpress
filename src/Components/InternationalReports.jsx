@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import convertUTCToIST from "../helpers/convertUTCToIST";
 const API_URL = import.meta.env.VITE_APP_API_URL
 const View  = ({report, setIsView}) => {
   const [status, setStatus] = useState(null)
@@ -49,6 +50,9 @@ const Card = ({ report }) => {
   
   
   const [view, setIsView] = useState(false)
+  const date = report.date;
+  const istDate  = convertUTCToIST(date);
+  const formattedDate = istDate.toISOString().split('T')[0] + ' ' + istDate.toISOString().split('T')[1].split('.')[0]
   return (
     <>
       {view && <View report={report} setIsView={setIsView}/>}

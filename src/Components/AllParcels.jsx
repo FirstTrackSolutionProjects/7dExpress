@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import convertUTCToIST from "../helpers/convertUTCToIST";
 const API_URL = import.meta.env.VITE_APP_API_URL
 const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
   const [boxes, setBoxes] = useState([
@@ -1062,6 +1063,9 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
 const Card = ({ shipment }) => {
   const [isManage, setIsManage] = useState(false);
   const [isShipped, setIsShipped] = useState(shipment.awb ? true : false)
+  const date = shipment.date;
+  const istDate  = convertUTCToIST(date);
+  const formattedDate = istDate.toISOString().split('T')[0] + ' ' + istDate.toISOString().split('T')[1].split('.')[0]
   return (
     <>
       <div className="w-full h-24 bg-white relative items-center px-4 sm:px-8 flex border-b">
@@ -1069,7 +1073,7 @@ const Card = ({ shipment }) => {
           <div className="text-sm font-bold">{shipment.ord_id} {shipment?.customer_reference_number?`(${shipment?.customer_reference_number})`:null}</div>
           <div className="text-[10px] text-gray-500">{shipment.fullName}</div>
           <div className="text-[10px] text-gray-500">{shipment.email}</div>
-          <div className="text-[10px] text-gray-500">{shipment.date ? shipment.date.toString().split('T')[0] + ' ' + shipment.date.toString().split('T')[1].split('.')[0] : null}</div>
+          <div className="text-[10px] text-gray-500">{formattedDate}</div>
         </div>
         <div className="absolute right-4 sm:right-8 flex space-x-2">
           <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={() => setIsManage(true)}>{isShipped ? "View" : "Manage"}</div>

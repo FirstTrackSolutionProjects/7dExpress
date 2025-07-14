@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid"
+import convertUTCToIST from "../helpers/convertUTCToIST";
 const API_URL = import.meta.env.VITE_APP_API_URL
 const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
   const [boxes, setBoxes] = useState([
@@ -1314,6 +1315,9 @@ const Card = ({ shipment }) => {
     })
     setIsRefreshing(false);
   }
+  const date = shipment.date;
+  const istDate  = convertUTCToIST(date);
+  const formattedDate = istDate.toISOString().split('T')[0] + ' ' + istDate.toISOString().split('T')[1].split('.')[0]
   return (
     <>
       {isShip && <ShipList setIsShip={setIsShip} setIsShipped={setIsShipped} shipment={shipment} />}
@@ -1322,7 +1326,7 @@ const Card = ({ shipment }) => {
           <div className="font-bold">{shipment.ord_id} {shipment?.customer_reference_number?`(${shipment?.customer_reference_number})`:null}</div>
           <div >{shipment.customer_name}</div>
           {isShipped && <div> {`AWB : ${awb}`}</div>}
-          <div>{shipment.date ? shipment.date.toString().split('T')[0] + ' ' + shipment.date.toString().split('T')[1].split('.')[0] : null}</div>
+          <div>{formattedDate}</div>
         </div>
         <div className="absolute right-4 sm:right-8 flex space-x-2">
           {!isDeleted && <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={() => setIsManage(true)}>{isShipped ? "View" : "Manage"}</div>}

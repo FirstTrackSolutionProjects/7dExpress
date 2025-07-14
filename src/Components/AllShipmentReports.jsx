@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 const API_URL = import.meta.env.VITE_APP_API_URL
 import * as XLSX from 'xlsx'
+import convertUTCToIST from "../helpers/convertUTCToIST";
+import convertToUTCISOString from "../helpers/convertToUTCISOString";
 
 const timestampToDate = (timestamp) => {
   const date = new Date(timestamp);
@@ -212,6 +214,9 @@ const Card = ({ report }) => {
       }
     })
   }
+  const date = report.date;
+  const istDate  = convertUTCToIST(date);
+  const formattedDate = istDate.toISOString().split('T')[0] + ' ' + istDate.toISOString().split('T')[1].split('.')[0]
   return (
     <>
       {view ? <View report={report} setIsView={setIsView} /> : null}
@@ -239,7 +244,7 @@ const Card = ({ report }) => {
             {`${report.service_name} (${report.is_b2b==1?'B2B':'B2C'})`}
           </div>
           <div className="text-[10px] text-gray-500">
-            {report.date ? report.date.toString().split('T')[0] + ' ' + report.date.toString().split('T')[1].split('.')[0] : null}
+            {formattedDate}
           </div>
         </div>
         <div className="absolute right-4 sm:right-8 flex space-x-2">
@@ -296,6 +301,12 @@ const ShipmentReportDownloadDialog = () => {
   }
   const handleDownload = async () => {
     setDownloading(true)
+    const endDateLocal = `${formData.endDate}T23:59:59.999Z`;
+    const finalPayload = {
+      startDate: convertToUTCISOString(formData.startDate),
+      endDate: convertToUTCISOString(endDateLocal),
+      serviceId: formData.serviceId ? parseInt(formData.serviceId) : null,
+    }
     const dataRequest = await fetch(`${API_URL}/shipment/domestic/reports/download`, {
       method: 'POST',
       headers: {
@@ -303,7 +314,7 @@ const ShipmentReportDownloadDialog = () => {
         'Content-Type': 'application/json',
         'Authorization': localStorage.getItem('token')
       },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(finalPayload)
     })
     const dataResponse = await dataRequest.json();
     const worksheet = XLSX.utils.json_to_sheet(dataResponse.data);

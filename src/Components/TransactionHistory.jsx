@@ -13,27 +13,30 @@ const Card = ({transaction}) => {
         <>
             {transaction.type ==="recharge" && <div className='p-4 border'>
                 <p>Recharge</p>
+                <p>{transaction.fullName}<span className="text-gray-500">({transaction.uid})</span></p>
                 <p>Order Id : {transaction.order_id}</p>
                 <p>Amount : {transaction.amount > 0? "+"+transaction.amount :transaction.amount}</p>
                 <p>{formattedDate}</p>
             </div>}
             {transaction.type ==="manual" && <div className='p-4 border'>
                 <p>Manual Recharge</p>
-                <p>Beneficiary Id : {transaction.beneficiary_id}</p>
+                <p>{transaction.fullName}<span className="text-gray-500">({transaction.beneficiary_id})</span></p>
                 <p>Order Id : {transaction.recharge_id}</p>
                 <p>Amount : {transaction.amount > 0? "+"+transaction.amount :transaction.amount}</p>
                 <p>Reason : {transaction.reason}</p>
                 <p>{formattedDate}</p>
             </div>}
-            {transaction.type === "expense" && <div className='p-4 border'>
+            {transaction.type ==="expense" && <div className='p-4 border'>
                 <p>Order Expense</p>
+                <p>{transaction.fullName}<span className="text-gray-500">({transaction.uid})</span></p>
                 <p>Order Id : {transaction.expense_order}</p>
                 <p>Service : {transaction.service_name} ({transaction.is_b2b?'B2B':'B2C'})</p>
                 <p>Amount : -{transaction.expense_cost}</p>
                 <p>{formattedDate}</p>
             </div>}
-            {transaction.type === "refund" && <div className='p-4 border'>
+            {transaction.type ==="refund" && <div className='p-4 border'>
                 <p>Order Refund</p>
+                <p>{transaction.fullName}<span className="text-gray-500">({transaction.uid})</span></p>
                 <p>Order Id : {transaction.refund_order}</p>
                 <p>Service : {transaction.service_name} ({transaction.is_b2b?'B2B':'B2C'})</p>
                 <p>Amount : +{transaction.refund_amount}</p>

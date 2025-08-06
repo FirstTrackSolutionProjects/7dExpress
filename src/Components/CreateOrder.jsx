@@ -4,6 +4,22 @@ import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 const API_URL = import.meta.env.VITE_APP_API_URL
+
+const getTodaysDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+const getCurrentTime = () => {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0'); // Hours in 24-hour format
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  return `${hours}:${minutes}`;
+}
+
 const schema = z.object({
   wid: z.string().min(1, "Pickup Warehouse Name is required"),
   // order: z.string().min(1, "Order ID is required"),
@@ -59,7 +75,7 @@ const schema = z.object({
       weight: z.preprocess(
         (a) => parseInt(a, 10),
         z.number().min(1, "Weight must be at greater than 0")),
-      weight_unit: z.enum(['g','kg']),
+        weight_unit: z.enum(['g','kg']),
       quantity: z.preprocess(
         (a) => parseInt(a, 10),
         z.number().min(1, "Quantity must be at least 1")
@@ -78,8 +94,8 @@ const schema = z.object({
   pickupDate: z.string(),
   pickupTime: z.preprocess((a) => a + ':00', z.string()),
   shipmentValue: z.preprocess(
-    (a) => parseInt(a, 10),
-    z.number().min(1, "Shipment Amount must be greater than 0")
+    (a) => parseFloat(a),
+    z.number().min(1, "Shipment value must be greater than 0")
   ),
   ewaybill: z.string().optional(),
   invoiceNumber: z.string().optional(),
@@ -90,13 +106,11 @@ const schema = z.object({
   invoiceUrl: z.string().optional(),
   isB2B: z.boolean(),
   customer_reference_number: z.string().max(15, "Customer Reference Number cannot exceed 15 characters")
-})
-.refine((data) => !data.isB2B || (data.isB2B && data.invoiceUrl), {
+}).refine((data) => !data.isB2B || (data.isB2B && !!data.invoiceUrl), {
   message: "Invoice is required for B2B shipments",
   path: ["invoiceUrl"],
-})
-.refine((data) => (data.shipmentValue < 50000) || (data.ewaybill && data.ewaybill.length > 0), {
-  message: "Ewaybill is required for shipment value of at least 50000",
+}).refine((data) => (data.shipmentValue < 50000) || (data.ewaybill && data.ewaybill.length > 0), {
+  message: "Ewaybill is required for invoice amount of at least 50000",
   path: ["ewaybill"], // Error path
 });
 const FullDetails = () => {
@@ -104,21 +118,23 @@ const FullDetails = () => {
   const { register, control, handleSubmit, watch, formState: { errors }, setValue } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
+      pickupDate: getTodaysDate(),
+      pickupTime: getCurrentTime(),
       payMode: 'Pre-paid',
       postcode: '',
       Bpostcode: '',
       same: true,
+      shipmentValue: 0,
       discount: 0,
       cod: 0,
       addressType: "home",
       BaddressType: "home",
       shippingType: "Surface",
       orders: [{ box_no: '1', product_name: '', product_quantity: 0, selling_price: 0, tax_in_percentage: 0 }],
-      boxes: [{ box_no: 1, length: 0, breadth: 0, height: 0, weight: 0, weight_unit: 'kg', quantity: 1}],
+      boxes: [{ box_no: 1, length: 0, breadth: 0, height: 0, weight: 0, weight_unit: 'kg', quantity: 1 }],
       invoiceAmount: 1,
       isB2B: false,
-      invoiceUrl: '',
-      shipmentValue: 0
+      invoiceUrl: ''
     }
   });
   useEffect(() => {
@@ -187,6 +203,18 @@ const FullDetails = () => {
   }, []);
 
   const onSubmit = async (data) => {
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
+    const istDate = new Date(now.getTime() + (now.getTimezoneOffset() * 60 * 1000) + istOffset);
+        
+    // Combine shipment pickup date and time into a single Date object
+    const pickupDateAndTime = new Date(`${data.pickupDate}T${data.pickupTime}`);
+        
+    // Compare pickup time with the current IST time
+    if (pickupDateAndTime < istDate) {
+        alert('Pickup time is already passed. Please update and try again');
+        return;
+    }
     let boxFlag = 0
     for (let i = 0; i < data.boxes.length; i++) {
       for (let j = 0; j < data.orders.length; j++) {
@@ -311,6 +339,7 @@ const FullDetails = () => {
             <input required
               className="w-full border py-2 px-4 rounded-3xl"
               type="date"
+              min={getTodaysDate()}
               id="pickupDate"
               {...register("pickupDate")}
             />
@@ -335,7 +364,7 @@ const FullDetails = () => {
             >
               <option value="COD">COD</option>
               <option value="Pre-paid">Prepaid</option>
-              {/* <option value="topay">To Pay</option> */}
+              <option value="topay">To Pay</option>
             </select>
             {errors.payMode && <span className='text-red-500'>{errors.payMode.message}</span>}
           </div>
@@ -593,7 +622,7 @@ const FullDetails = () => {
                 {errors.boxes?.[index]?.height && <span className='text-red-500'>{errors.boxes?.[index]?.height.message}</span>}
               </div>
               <div className="flex-1 mx-2 mb-2  space-y-2">
-                <label htmlFor={`boxes[${index}].length`}>Weight</label>
+                <label htmlFor={`boxes[${index}].weight`}>Weight</label>
                 <div className='w-full flex space-x-2'>
                 <input
                   className="w-full border py-2 px-4 rounded-3xl"
@@ -612,7 +641,7 @@ const FullDetails = () => {
                 </div>
                 {errors.boxes?.[index]?.weight && <span className='text-red-500'>{errors.boxes?.[index]?.weight.message}</span>}
               </div>
-              <div className="flex-1 mx-2 mb-2  space-y-2">
+              <div className="flex-1 mx-2 mb-2 space-y-2">
                 <label htmlFor={`boxes[${index}].quantity`}>Quantity</label>
                 <input
                   className="w-full border py-2 px-4 rounded-3xl"
@@ -771,27 +800,27 @@ const FullDetails = () => {
           </> : null
         }
         <div className="w-full flex mb-2 flex-wrap">
-              <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-              <label htmlFor="shipmentValue">Shipment Value</label>
-              <input
-                className="w-full border py-2 px-4 rounded-3xl"
-                type="text"
-                id="shipmentValue"
-                {...register("shipmentValue")}
-              />
-              {errors.shipmentValue && <span className='text-red-500'>{errors.shipmentValue.message}</span>}
-            </div>
-            <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-              <label htmlFor="ewaybill">E-Waybill</label>
-              <input
-                className="w-full border py-2 px-4 rounded-3xl"
-                type="text"
-                id="ewaybill"
-                {...register("ewaybill")}
-              />
-              {errors.ewaybill && <span className='text-red-500'>{errors.ewaybill.message}</span>}
-            </div>
-            </div>
+          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+            <label htmlFor="shipmentValue">Shipment Value</label>
+            <input
+              className="w-full border py-2 px-4 rounded-3xl"
+              type="number"
+              id="shipmentValue"
+              {...register("shipmentValue")}
+            />
+            {errors.shipmentValue && <span className='text-red-500'>{errors.shipmentValue.message}</span>}
+          </div>
+          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+            <label htmlFor="ewaybill">E-Waybill</label>
+            <input
+              className="w-full border py-2 px-4 rounded-3xl"
+              type="text"
+              id="ewaybill"
+              {...register("ewaybill")}
+            />
+            {errors.ewaybill && <span className='text-red-500'>{errors.ewaybill.message}</span>}
+          </div>
+        </div>
         <div className="w-full flex mb-2 flex-wrap">
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="discount">Discount</label>

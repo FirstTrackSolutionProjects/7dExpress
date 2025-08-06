@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react"
 import getTodaysDate from "../helpers/getTodaysDate";
 import getFilterStartDate from "../helpers/getFilterStartDate";
-import convertUTCToIST from "../helpers/convertUTCToIST";
 import convertToUTCISOString from "../helpers/convertToUTCISOString";
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 const Card = ({transaction}) => {
     const date = transaction.date;
-    const istDate  = convertUTCToIST(date);
-    const formattedDate = istDate.toISOString().split('T')[0] + ' ' + istDate.toISOString().split('T')[1].split('.')[0]
+    const formattedDate = new Date(date).toLocaleString();
     return (
         <>
             {transaction.type ==="recharge" && <div className='p-4 border'>
@@ -40,6 +38,14 @@ const Card = ({transaction}) => {
                 <p>Order Id : {transaction.refund_order}</p>
                 <p>Service : {transaction.service_name} ({transaction.is_b2b?'B2B':'B2C'})</p>
                 <p>Amount : +{transaction.refund_amount}</p>
+                <p>{formattedDate}</p>
+            </div>}
+            {transaction.type ==="dispute_charge" && <div className='p-4 border'>
+                <p>Dispute Charge</p>
+                <p>{transaction.fullName}<span className="text-gray-500">({transaction.uid})</span></p>
+                <p>Order Id : {transaction.dispute_order}</p>
+                <p>Service : {transaction.service_name}</p>
+                <p>Amount : -{transaction.dispute_charge}</p>
                 <p>{formattedDate}</p>
             </div>}
         </>
@@ -95,6 +101,15 @@ const TransactionHistory =  () => {
             })
             const refunds = await refund.json();
             data.push(...refunds.data)
+
+            const disputeCharge = await fetch(`${API_URL}/wallet/dispute-charges`, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json',
+                    'Authorization': localStorage.getItem('token'),
+                }
+            })
+            const disputeCharges = await disputeCharge.json();
+            data.push(...disputeCharges.data)
             
             // console.log("recharge", transactions.data)
             data.forEach(obj => {
@@ -120,7 +135,7 @@ const TransactionHistory =  () => {
             transaction?.recharge_id || 
             transaction?.refund_order || 
             transaction?.order_id || 
-            // transaction?.dispute_order || 
+            transaction?.dispute_order || 
             ''
         );
 
@@ -173,7 +188,7 @@ const TransactionHistory =  () => {
                 <option value="manual">Manual Recharge</option>
                 <option value="expense">Expense</option>
                 <option value="refund">Refund</option>
-                {/* <option value="dispute_charge">Dispute Charge</option> */}
+                <option value="dispute_charge">Dispute Charge</option>
             </select>
             <input
               className="p-1 rounded-xl"

@@ -23,6 +23,7 @@ import Warehouse from '../Components/Warehouse';
 import DashboardMain from '../Components/DashboardMain';
 import UpdateProfileRequest from '../Components/UpdateProfileRequest';
 import UpdateProfileRequestSubmissions from '../Components/UpdateProfileRequestSubmissions';
+import WeightDisputes from '../Components/WeightDisputes';
 
 export const navItems = [
     {
@@ -150,6 +151,14 @@ export const menuItems = [
         url : 'transaction-history',
         component : TransactionHistory,
         dropDownOptions : [{}]
+    },
+    {
+      icon : "/logo.webp",
+      name : "Weight Disputes",
+      isDropdown : false,
+      url : 'weight-disputes',
+      component : WeightDisputes,
+      dropDownOptions : [{}]
     },
     {
         icon : FaClipboardList,

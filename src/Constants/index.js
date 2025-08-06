@@ -23,6 +23,9 @@ import Warehouse from '../Components/Warehouse';
 import DashboardMain from '../Components/DashboardMain';
 import UpdateProfileRequest from '../Components/UpdateProfileRequest';
 import UpdateProfileRequestSubmissions from '../Components/UpdateProfileRequestSubmissions';
+import WeightDisputes from '../Components/WeightDisputes';
+import PendingCancellations from '../Components/PendingCancellations/PendingCancellations';
+import PendingRefunds from '../Components/PendingRefunds/PendingRefunds';
 
 export const navItems = [
     {
@@ -150,6 +153,40 @@ export const menuItems = [
         url : 'transaction-history',
         component : TransactionHistory,
         dropDownOptions : [{}]
+    },
+    {
+      icon : "/logo.webp",
+      name : "Weight Disputes",
+      isDropdown : false,
+      url : 'weight-disputes',
+      component : WeightDisputes,
+      dropDownOptions : [{}]
+    },
+    {
+        icon : "/logo.webp",
+        name : "Cancellations/Refunds",
+        isDropdown : true,
+        admin : true,
+        // url : 'cancellations-refunds',
+        // component : DashboardMain,
+        dropDownOptions : [
+            {
+                icon : "/logo.webp",
+                name : "Pending Cancellations",
+                isDropdown : false,
+                url : 'pending-cancellations',
+                component : PendingCancellations,
+                dropDownOptions : [{}]
+            },
+            {
+                icon : "/logo.webp",
+                name : "Pending Refunds",
+                isDropdown : false,
+                url : 'pending-refunds',
+                component : PendingRefunds,
+                dropDownOptions : [{}]
+            }
+        ]
     },
     {
         icon : FaClipboardList,

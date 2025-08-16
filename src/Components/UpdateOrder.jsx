@@ -473,7 +473,6 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
               >
                 <MenuItem value="COD">COD</MenuItem>
                 <MenuItem value="Pre-paid">Prepaid</MenuItem>
-                <MenuItem value="topay">To Pay</MenuItem>
               </Select>
             </FormControl>
              <FormControl sx={{ minWidth: 300, flex: 1 }}>
@@ -995,7 +994,7 @@ const ShipCard = ({ price, shipment, setIsShipped, setIsShip, getParcels }) => {
       },
       body: JSON.stringify({ 
         order: shipment.ord_id, 
-        price: shipment.pay_method == "topay" ? 0 : Math.round(price.price), 
+        price: Math.round(price.price), 
         serviceId: price.serviceId, 
         courierId: price.courierId, 
         courierServiceId: price.courierServiceId 
@@ -1074,7 +1073,7 @@ const ShipList = ({ shipment, isShipOpen, setIsShipOpen, setIsShipped, getParcel
         status: "Delivered", 
         origin: shipment.pin, 
         dest: shipment.shipping_postcode, 
-        payMode: shipment.pay_method == "topay" ? "COD" : shipment.pay_method, 
+        payMode: shipment.pay_method, 
         codAmount: shipment.cod_amount, 
         volume, 
         weight, 
@@ -1093,7 +1092,7 @@ const ShipList = ({ shipment, isShipOpen, setIsShipOpen, setIsShipped, getParcel
           status: "Delivered", 
           origin: shipment.pin, 
           dest: shipment.shipping_postcode, 
-          payMode: shipment.pay_method == "topay" ? "COD" : shipment.pay_method, 
+          payMode: shipment.pay_method, 
           codAmount: shipment.cod_amount, 
           volume, 
           weight, 

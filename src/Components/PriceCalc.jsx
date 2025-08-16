@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 const ComparePrices = ({method, boxes, status, origin, dest, payMode, codAmount, isB2B, invoiceAmount, setShowCompare}) => {
   const [prices,setPrices] = useState([])
+  const navigate = useNavigate()
+  const {isAuthenticated} = useAuth()
   useEffect(()=>{
     console.log({method, status, origin, dest, payMode, codAmount})
     const data = async () => {
@@ -19,6 +23,24 @@ const ComparePrices = ({method, boxes, status, origin, dest, payMode, codAmount,
     }  
     data()
   }, []) 
+
+  const handleShip = () => {
+    const shipment = {
+      payMode: payMode,
+      shippingType: method==="E"?"Express":"Surface",
+      postcode: dest,
+      isB2B: isB2B,
+      cod: codAmount,
+      invoiceAmount: invoiceAmount
+    }
+    const shipmentBoxes = boxes.map((box, index) => ({
+      box_no: index + 1,
+      ...box
+    }))
+    navigate('/dashboard/order/create', {
+      state: { shipment, boxes: shipmentBoxes }
+    })
+  }
   return (
     <>
      <div className="w-full absolute z-[1] inset-0 overflow-y-scroll px-4 pt-24 pb-4 flex flex-col bg-gray-100 items-center space-y-6">
@@ -32,7 +54,10 @@ const ComparePrices = ({method, boxes, status, origin, dest, payMode, codAmount,
               <div className="w-full h-16 bg-white relative justify-center px-4 flex flex-col border-b" >
           <div className="font-bold">{price.name+" "+price.weight}</div>
           <div>{"Chargable Weight : "+price.chargableWeight}gm</div>
-          <div className="absolute right-4">{`₹${Math.round((price.price))}`}</div>
+          <div className="absolute right-4 flex gap-2">
+            <p>{`₹${Math.round((price.price))}`}</p>
+            {isAuthenticated && <button type="button" onClick={handleShip} className="bg-blue-500 text-white py-1 px-2 rounded">Ship</button>}
+          </div>
         </div>
             ))
           : null

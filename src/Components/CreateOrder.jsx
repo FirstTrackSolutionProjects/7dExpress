@@ -3,6 +3,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useLocation } from 'react-router-dom';
 const API_URL = import.meta.env.VITE_APP_API_URL
 
 const getTodaysDate = () => {
@@ -20,11 +21,14 @@ const getCurrentTime = () => {
   return `${hours}:${minutes}`;
 }
 
-const schema = z.object({
+const FullDetails = () => {
+  const location = useLocation();
+  const { state } = location;
+  const schema = z.object({
   wid: z.string().min(1, "Pickup Warehouse Name is required"),
   // order: z.string().min(1, "Order ID is required"),
   // date: z.string().regex(/^\d{2}\/\d{2}\/\d{4}$/, "Invalid date format (DD/MM/YYYY)"),
-  payMode: z.enum(['COD', 'Pre-paid', 'topay']),
+  payMode: z.enum(['COD', 'Pre-paid']),
   name: z.string().min(1, "Buyer's name is required"),
   email: z.string().email("Invalid email address"),
   phone: z.string().regex(/^\d{10}$/, "Invalid phone number"),
@@ -113,27 +117,26 @@ const schema = z.object({
   message: "Ewaybill is required for invoice amount of at least 50000",
   path: ["ewaybill"], // Error path
 });
-const FullDetails = () => {
   const [warehouses, setWarehouses] = useState([]);
   const { register, control, handleSubmit, watch, formState: { errors }, setValue } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       pickupDate: getTodaysDate(),
       pickupTime: getCurrentTime(),
-      payMode: 'Pre-paid',
-      postcode: '',
+      payMode: state?.shipment?.payMode || 'Pre-paid',
+      postcode: state?.shipment?.postcode || '',
       Bpostcode: '',
       same: true,
       shipmentValue: 0,
       discount: 0,
-      cod: 0,
+      cod: state?.shipment?.cod || 0,
       addressType: "home",
       BaddressType: "home",
-      shippingType: "Surface",
+      shippingType: state?.shipment?.shippingType || "Surface",
       orders: [{ box_no: '1', product_name: '', product_quantity: 0, selling_price: 0, tax_in_percentage: 0 }],
-      boxes: [{ box_no: 1, length: 0, breadth: 0, height: 0, weight: 0, weight_unit: 'kg', quantity: 1 }],
-      invoiceAmount: 1,
-      isB2B: false,
+      boxes: state?.boxes || [{ box_no: '1', length: '', breadth: '', height: '', weight: '', weight_unit: 'g', quantity: 0 }],
+      invoiceAmount: state?.shipment?.invoiceAmount || 1,
+      isB2B: state?.shipment?.isB2B || false,
       invoiceUrl: ''
     }
   });
@@ -364,7 +367,6 @@ const FullDetails = () => {
             >
               <option value="COD">COD</option>
               <option value="Pre-paid">Prepaid</option>
-              <option value="topay">To Pay</option>
             </select>
             {errors.payMode && <span className='text-red-500'>{errors.payMode.message}</span>}
           </div>

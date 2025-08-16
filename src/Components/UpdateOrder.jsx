@@ -980,12 +980,10 @@ const ShipCard = ({ price, shipment, setIsShipped, setIsShip, getParcels }) => {
     const balanceData = await getBalance.json();
     const balance = balanceData.balance;
     
-    if ((parseFloat(balance) < (100 + parseFloat(price.price)))) {
-      if (shipment.pay_method !== "topay") {
-        alert('Your wallet must have over 100 rupees after shipment');
+    if ((parseFloat(balance) < (parseFloat(price.price)))) {
+        alert('Insufficient balance to create shipment');
         setIsLoading(false);
         return;
-      }
     }
     
     fetch(`${API_URL}/shipment/domestic/create`, {

@@ -150,6 +150,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
     pickupDate: shipment.pickup_date,
     pickupTime: shipment.pickup_time,
     shipmentValue: shipment.shipment_value,
+    insurance: shipment.insurance || false, // NEW insurance opt-in
     ewaybill: shipment.ewaybill,
     invoiceNumber: shipment.invoice_number,
     invoiceDate: shipment.invoice_date,
@@ -855,7 +856,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
             }
             label="Is this is a B2B shipment?"
           />
-          {formData.isB2B && (
+          {formData.isB2B ? (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, my: 2 }}>
               <FormControl sx={{ minWidth: 150, flex:1 }}>
                 <TextField
@@ -914,7 +915,17 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
                 />
               </FormControl>
             </Box>
-          )}
+          ) : null}
+          <FormControlLabel
+              control={
+                <Checkbox
+                  checked={!!formData.insurance}
+                  onChange={(e)=> setFormData(prev=>({...prev, insurance: e.target.checked}))}
+                  name="insurance"
+                />
+              }
+              label="Do you want insurance?"
+            />
           <Box sx={{ my: 4 }}>
             <div style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>Additional Info</div>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, my: 2 }}>

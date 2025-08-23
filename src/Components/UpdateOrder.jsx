@@ -1755,7 +1755,7 @@ const Listing = ({ step, setStep }) => {
       headerName: 'Actions',
       width: 400,
       renderCell: (params) => {
-        const isShipped = Boolean(params.row.awb);
+        const isShipped = Boolean(params.row.is_manifested);
         const isCancelled = params.row.cancelled;
         const isDeleted = params.row.deleted;
         const isProcessing = params.row.in_process;

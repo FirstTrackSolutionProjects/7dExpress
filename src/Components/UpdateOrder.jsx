@@ -1007,7 +1007,7 @@ const ShipCard = ({ price, shipment, setIsShipped, setIsShip, getParcels }) => {
         order: shipment.ord_id, 
         price: Math.round(price.price), 
         serviceId: price.serviceId, 
-        courierId: price.courierId, 
+        courierId: price.courierId,
         courierServiceId: price.courierServiceId 
       })
     }).then(response => response.json()).then(async result => {
@@ -1032,6 +1032,24 @@ const ShipCard = ({ price, shipment, setIsShipped, setIsShip, getParcels }) => {
     <Paper sx={{ p: 2, mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <Box>
         <div>{price.name + " " + price.weight}</div>
+        <Box sx={{ mt: 0.5 }}>
+          <Box component="span" sx={{
+            px: 1.2,
+            py: 0.3,
+            fontSize: '0.65rem',
+            fontWeight: 600,
+            borderRadius: '12px',
+            letterSpacing: 0.5,
+            display: 'inline-block',
+            textTransform: 'uppercase',
+            color: price.insurance ? '#065f46' : '#6b7280',
+            backgroundColor: price.insurance ? '#d1fae5' : '#f3f4f6',
+            border: '1px solid',
+            borderColor: price.insurance ? '#10b981' : '#d1d5db'
+          }}>
+            {price.insurance ? 'Insured' : 'Not Insured'}
+          </Box>
+        </Box>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <div>{`₹${Math.round((price.price))}`}</div>
@@ -1110,6 +1128,7 @@ const ShipList = ({ shipment, isShipOpen, setIsShipOpen, setIsShipped, getParcel
           quantity: boxesData.order.length, 
           boxes: boxesData.order, 
           isShipment: true, 
+          insurance: shipment.insurance,
           isB2B: shipment.is_b2b, 
           invoiceAmount: shipment.invoice_amount 
         }),

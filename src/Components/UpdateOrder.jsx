@@ -41,7 +41,7 @@ const getCurrentTime = () => {
 }
 
 
-const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
+const ManageForm = ({ isManage, setIsManage, shipment, isShipped, onUpdated }) => {
   if (!isManage) return null;
   
   const [boxes, setBoxes] = useState([
@@ -150,6 +150,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
     pickupDate: shipment.pickup_date,
     pickupTime: shipment.pickup_time,
     shipmentValue: shipment.shipment_value,
+    insurance: shipment.insurance || false, // NEW insurance opt-in
     ewaybill: shipment.ewaybill,
     invoiceNumber: shipment.invoice_number,
     invoiceDate: shipment.invoice_date,
@@ -372,7 +373,9 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
       .then(response => response.json())
       .then(result => {
         if (result.success) {
-          alert('Order Updated successfully')
+          alert('Order Updated successfully');
+          if (typeof onUpdated === 'function') onUpdated();
+          setIsManage(false);
         } else {
           alert('Order failed: ' + result.message)
         }
@@ -855,7 +858,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
             }
             label="Is this is a B2B shipment?"
           />
-          {formData.isB2B && (
+          {formData.isB2B ? (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, my: 2 }}>
               <FormControl sx={{ minWidth: 150, flex:1 }}>
                 <TextField
@@ -914,7 +917,17 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
                 />
               </FormControl>
             </Box>
-          )}
+          ) : null}
+          <FormControlLabel
+              control={
+                <Checkbox
+                  checked={!!formData.insurance}
+                  onChange={(e)=> setFormData(prev=>({...prev, insurance: e.target.checked}))}
+                  name="insurance"
+                />
+              }
+              label="Do you want insurance?"
+            />
           <Box sx={{ my: 4 }}>
             <div style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>Additional Info</div>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, my: 2 }}>
@@ -996,7 +1009,7 @@ const ShipCard = ({ price, shipment, setIsShipped, setIsShip, getParcels }) => {
         order: shipment.ord_id, 
         price: Math.round(price.price), 
         serviceId: price.serviceId, 
-        courierId: price.courierId, 
+        courierId: price.courierId,
         courierServiceId: price.courierServiceId 
       })
     }).then(response => response.json()).then(async result => {
@@ -1021,6 +1034,24 @@ const ShipCard = ({ price, shipment, setIsShipped, setIsShip, getParcels }) => {
     <Paper sx={{ p: 2, mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <Box>
         <div>{price.name + " " + price.weight}</div>
+        <Box sx={{ mt: 0.5 }}>
+          <Box component="span" sx={{
+            px: 1.2,
+            py: 0.3,
+            fontSize: '0.65rem',
+            fontWeight: 600,
+            borderRadius: '12px',
+            letterSpacing: 0.5,
+            display: 'inline-block',
+            textTransform: 'uppercase',
+            color: price.insurance ? '#065f46' : '#6b7280',
+            backgroundColor: price.insurance ? '#d1fae5' : '#f3f4f6',
+            border: '1px solid',
+            borderColor: price.insurance ? '#10b981' : '#d1d5db'
+          }}>
+            {price.insurance ? 'Insured' : 'Not Insured'}
+          </Box>
+        </Box>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <div>{`₹${Math.round((price.price))}`}</div>
@@ -1099,6 +1130,7 @@ const ShipList = ({ shipment, isShipOpen, setIsShipOpen, setIsShipped, getParcel
           quantity: boxesData.order.length, 
           boxes: boxesData.order, 
           isShipment: true, 
+          insurance: shipment.insurance,
           isB2B: shipment.is_b2b, 
           invoiceAmount: shipment.invoice_amount 
         }),
@@ -1723,7 +1755,7 @@ const Listing = ({ step, setStep }) => {
       headerName: 'Actions',
       width: 400,
       renderCell: (params) => {
-        const isShipped = Boolean(params.row.awb);
+        const isShipped = Boolean(params.row.is_manifested);
         const isCancelled = params.row.cancelled;
         const isDeleted = params.row.deleted;
         const isProcessing = params.row.in_process;
@@ -1922,6 +1954,7 @@ const Listing = ({ step, setStep }) => {
             setIsManage={setIsManageOpen}
             shipment={selectedShipment}
             isShipped={Boolean(selectedShipment.awb)}
+            onUpdated={getParcels}
           />
         </Modal>
       )}

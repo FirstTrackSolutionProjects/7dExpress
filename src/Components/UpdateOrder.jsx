@@ -41,7 +41,7 @@ const getCurrentTime = () => {
 }
 
 
-const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
+const ManageForm = ({ isManage, setIsManage, shipment, isShipped, onUpdated }) => {
   if (!isManage) return null;
   
   const [boxes, setBoxes] = useState([
@@ -373,7 +373,9 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
       .then(response => response.json())
       .then(result => {
         if (result.success) {
-          alert('Order Updated successfully')
+          alert('Order Updated successfully');
+          if (typeof onUpdated === 'function') onUpdated();
+          setIsManage(false);
         } else {
           alert('Order failed: ' + result.message)
         }
@@ -1952,6 +1954,7 @@ const Listing = ({ step, setStep }) => {
             setIsManage={setIsManageOpen}
             shipment={selectedShipment}
             isShipped={Boolean(selectedShipment.awb)}
+            onUpdated={getParcels}
           />
         </Modal>
       )}

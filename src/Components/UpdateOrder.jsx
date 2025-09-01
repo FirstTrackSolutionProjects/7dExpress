@@ -1562,15 +1562,44 @@ const Listing = ({ step, setStep }) => {
         },
         body: JSON.stringify({ order: shipment.ord_id })
       });
+
       const result = await response.json();
-      
-      const link = document.createElement('a');
-      link.href = result.label;
-      link.target = '_blank';
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+
+      const forceDownload = async (urlOrBase64, filename) => {
+        if (urlOrBase64.startsWith("data:application/pdf;base64,")) {
+          // Handle base64 PDF
+          const base64Data = urlOrBase64.split(",")[1];
+          const byteCharacters = atob(base64Data);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: "application/pdf" });
+          const blobUrl = URL.createObjectURL(blob);
+        
+          const link = document.createElement("a");
+          link.href = blobUrl;
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(blobUrl);
+        } else {
+          // Handle normal file URL
+          const link = document.createElement("a");
+          link.href = urlOrBase64;
+          link.target = "_blank";
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      };
+
+      // Use it
+      forceDownload(result.label, "label.pdf");
+
     } catch (error) {
       console.error(error);
       alert("Failed to get label");

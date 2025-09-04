@@ -1017,13 +1017,13 @@ const ShipCard = ({ price, shipment, setIsShipped, setIsShip, getParcels }) => {
         setIsShipped(true);
         console.log(result);
         const message = (result?.message instanceof String) ? result?.message : null;
-        alert(message || "Your shipment has been created successfully");
+        toast.success(message || "Your shipment has been created successfully");
         getParcels();
         setIsLoading(false);
         setIsShip(false);
       } else {
         const failureReason = result.message || "Your shipment has not been created";
-        alert(failureReason);
+        toast.error(failureReason);
         console.log(result);
         setIsLoading(false);
       }

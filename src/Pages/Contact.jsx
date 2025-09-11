@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import sendContactEmailService from '../services/sendContactEmailService';
 import { toast } from 'react-toastify';
+import { FaWhatsapp } from "react-icons/fa";
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 
@@ -129,11 +130,24 @@ const Contact = () => {
         <p className="text-gray-700 mb-2">
           <strong>Email:</strong> 7dxpress@gmail.com
         </p>
+        <p className="text-gray-700 mb-2">
+          <strong>Phone:</strong> +919082974657 / +918898966969
+        </p>
         <p className="text-gray-700">
           <strong>Business Hours:</strong> Monday - Saturday, 9:00 AM - 8:00 PM
         </p>
       </div>
+      { /* Whatsapp */}
+       <a
+        href="https://wa.me/919082974657"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center z-50 transition-colors"
+      >
+        <FaWhatsapp className="text-3xl" />
+      </a>
     </div>
+    
   );
 };
 

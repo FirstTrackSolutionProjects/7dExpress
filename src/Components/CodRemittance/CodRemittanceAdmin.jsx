@@ -440,7 +440,7 @@ const CodRemittanceAdmin = () => {
               renderCell: (params) => (
                 <Button
                   disabled={!params.value}
-                  onClick={() => params.value && window.open(params.value, '_blank', 'noopener,noreferrer')}
+                  onClick={() => params.value && window.open(`${import.meta.env.VITE_APP_BUCKET_URL}${params.value}`, '_blank', 'noopener,noreferrer')}
                   variant="contained"
                   color={params.value ? 'primary' : 'inherit'}
                   sx={{ borderRadius: 1 }}

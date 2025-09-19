@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_APP_API_URL
 const WalletRechargeModal = ({ onClose }) => {
     const [amount, setAmount] = useState(500);
     const [order, setOrder] = useState(null);
-    const { id } = useAuth()
+    const { id, name, business_name, email } = useAuth()
     const loadRazorpayScript = () => {
         return new Promise((resolve) => {
             const script = document.createElement('script');
@@ -43,8 +43,8 @@ const WalletRechargeModal = ({ onClose }) => {
             key: import.meta.env.VITE_APP_RAZORPAY_API_ID, // Replace with your Razorpay key ID
             amount: amount * 100, // Amount is in paise (50000 paise = INR 500)
             currency: 'INR',
-            name: 'Your Company Name',
-            description: 'Test Transaction',
+            name: `${business_name} (${name})`,
+            description: 'Wallet Recharge',
             image: 'logo.webp',
             order_id: data.id,
             handler: async function (response) {
@@ -70,9 +70,9 @@ const WalletRechargeModal = ({ onClose }) => {
                 }
             },
             prefill: {
-                name: 'Your Name',
-                email: 'youremail@example.com',
-                contact: '9999999999',
+                name: `${business_name} (${name})`,
+                email: email,
+                contact: '9876543210',
             },
             notes: {
                 address: 'Corporate Office',

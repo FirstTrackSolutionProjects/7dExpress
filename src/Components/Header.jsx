@@ -5,12 +5,13 @@ import { useAuth } from "../context/AuthContext";
 import WalletRechargeModal from "./WalletRechargeModal";
 import { useNavigate, Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWallet } from "../context/WalletContext";
 const API_URL = import.meta.env.VITE_APP_API_URL
 const Header = () => {
   const navigate = useNavigate();
   const [showRecharge, setShowRecharge] = useState(false)
   const {verified, isAuthenticated, logout, business_name} = useAuth()
-  const [balance, setBalance] = useState(0)
+  const { balance, refreshBalance } = useWallet();
   const [isMenu,setIsMenu] = useState(false)
   const closeRechargeModal = () => {
     setShowRecharge(false);
@@ -19,24 +20,8 @@ const Header = () => {
     setIsMenu(!isMenu);
     }
   useEffect(()=>{
-    const getBalance = async () => {
-      if (verified){
-        try{
-          const response = await fetch(`${API_URL}/wallet/balance`, {
-            method : 'POST',
-            headers : {
-              'Content-Type' : 'application/json',
-              'Authorization' : localStorage.getItem('token')
-            }
-          })
-          const responseData = await response.json();
-          setBalance(responseData.balance);
-        } catch(e){
-          
-        }
-      }
-    }
-    getBalance();
+    if (!verified) return;
+    refreshBalance();
   },[isAuthenticated])
 
   const scrollToTop = () => {

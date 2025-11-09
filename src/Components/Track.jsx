@@ -75,6 +75,20 @@ const DTDCCard = ({ scan }) => {
   )
 }
 
+const EkartCard = ({ scan }) => {
+  return (
+    <>
+      <div className="w-full py-3 bg-white relative items-center px-8 flex border-b space-x-4">
+        <div>
+          <div>{scan.status}</div>
+          <div>{scan.location}</div>
+          <div>{scan.date} {scan.time}</div>
+        </div>
+      </div>
+    </>
+  )
+}
+
 const Result = ({ data }) => {
   useEffect(() => {
     console.log(data)
@@ -99,6 +113,9 @@ const Result = ({ data }) => {
         )) : null} */}
         {data?.id == 4? data?.data?.reverse().map((scan, index) => (
           <DTDCCard key={index} scan={scan} />
+        )) : null}
+        {data?.id == 5? data?.data?.map((scan, index) => (
+          <EkartCard key={index} scan={scan} />
         )) : null}
       </div>
 

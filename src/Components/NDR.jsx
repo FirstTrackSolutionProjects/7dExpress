@@ -144,6 +144,25 @@ const DTDCStatusCard = ({ report, status }) => {
   )
 }
 
+const EkartStatusCard = ({ report, status }) => {
+  return (
+    <div className="flex flex-col">
+      <p className="mt-5">AWB : {report.awb}</p>
+      {status.length ?
+        (status).reverse().map((scan, index) => {
+          return (
+            <div className='flex flex-col justify-center'>
+              <div className='font-bold'>{scan.status}</div>
+              <div>{scan.location}</div>
+              <div>{scan.date} {scan.time}</div>
+            </div>
+          )
+        }) : "Shipment is not yet picked up"
+      }
+    </div>
+  )
+}
+
 const ViewDialog = ({ isOpen, onClose, report }) => {
   const [status, setStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -198,6 +217,8 @@ const ViewDialog = ({ isOpen, onClose, report }) => {
         return <DelhiveryStatusCard report={report} status={status} />;
       case 4:
         return <DTDCStatusCard report={report} status={status} />;
+      case 5:
+        return <EkartStatusCard report={report} status={status} />;
       default:
         return null;
     }

@@ -1,6 +1,6 @@
 // import DashboardStatement from "./DashboardStatement"
 import { useAuth } from "../context/AuthContext"
-// import AnnoucementCard from "./AnnoucementCard"
+import AnnoucementCard from "./AnnoucementCard"
 import DashboardSummary from "./DashboardSummary"
 // import OwnerAnnoncement from "./OwnerAnnoncement"
 import Profile from "./Profile"

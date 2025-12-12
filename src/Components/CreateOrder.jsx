@@ -105,7 +105,7 @@ const FullDetails = () => {
     (a) => parseInt(a, 10),
     z.number().min(0, "COD must be a positive number")),
   shippingType: z.enum(['Surface', 'Express']),
-  gst: z.string(),
+  gst: z.string().optional(),
   Cgst: z.string().optional(),
   pickupDate: z.string(),
   pickupTime: z.preprocess((a) => a + ':00', z.string()),

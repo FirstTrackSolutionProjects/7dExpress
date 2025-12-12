@@ -817,7 +817,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped, onUpdated }) =
                     onChange={(e) => handleOrders(index, e)}
                   />
                 </FormControl>
-                <FormControl fullWidth sx={{ minWidth: 100, flex: 1 }}>
+                {/* <FormControl fullWidth sx={{ minWidth: 100, flex: 1 }}>
                   <TextField
                     label="Tax"
                     name="tax_in_percentage"
@@ -825,7 +825,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped, onUpdated }) =
                     value={order.tax_in_percentage}
                     onChange={(e) => handleOrders(index, e)}
                   />
-                </FormControl>
+                </FormControl> */}
                 {orders.length > 1 && (
                   <FormControl fullWidth sx={{ minWidth: 150 }}>
                     <Button
@@ -928,7 +928,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped, onUpdated }) =
               }
               label="Do you want insurance?"
             />
-          <Box sx={{ my: 4 }}>
+          {/* <Box sx={{ my: 4 }}>
             <div style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>Additional Info</div>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, my: 2 }}>
             <FormControl fullWidth sx={{ minWidth: 300, flex:1 }}>
@@ -959,7 +959,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped, onUpdated }) =
               />
             </FormControl>
             </Box>
-          </Box>
+          </Box> */}
         </form>
       </DialogContent>
       <DialogActions>

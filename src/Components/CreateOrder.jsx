@@ -21,6 +21,18 @@ const getCurrentTime = () => {
   return `${hours}:${minutes}`;
 }
 
+const getPickupTime = (string) => {
+  const currentTime = getCurrentTime();
+  //Increment by 1 hour
+  let hour = parseInt(currentTime.split(':')[0]) + 1;
+  let minute = currentTime.split(':')[1];
+  if (hour >= 24) {
+    hour = hour - 24;
+  }
+  hour = String(hour).padStart(2, '0');
+  return `${hour}:${minute}`;
+}
+
 const FullDetails = () => {
   const location = useLocation();
   const { state } = location;
@@ -123,7 +135,7 @@ const FullDetails = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       pickupDate: getTodaysDate(),
-      pickupTime: getCurrentTime(),
+      pickupTime: getPickupTime(),
       payMode: state?.shipment?.payMode || 'Pre-paid',
       postcode: state?.shipment?.postcode || '',
       Bpostcode: '',
@@ -712,7 +724,7 @@ const FullDetails = () => {
                 />
                 {errors.orders?.[index]?.selling_price && <span className='text-red-500'>{errors.orders[index].selling_price.message}</span>}
               </div>
-              <div className="flex-1 mx-2 mb-2 max-w-[150px] min-w-[150px] space-y-2">
+              {/* <div className="flex-1 mx-2 mb-2 max-w-[150px] min-w-[150px] space-y-2">
                 <label htmlFor={`orders[${index}].tax_in_percentage`}>Tax (in %)</label>
                 <input
                   className="w-full border py-2 px-4 rounded-3xl"
@@ -721,7 +733,7 @@ const FullDetails = () => {
                   {...register(`orders[${index}].tax_in_percentage`)}
                 />
                 {errors.orders?.[index]?.tax_in_percentage && <span className='text-red-500'>{errors.orders[index].tax_in_percentage.message}</span>}
-              </div>
+              </div> */}
               {watch('orders').length > 1 ? <div className="w-full text-right">
                 <button type="button" className="text-red-500" onClick={() => remove(index)}>Remove</button>
               </div> : null}
@@ -837,7 +849,7 @@ const FullDetails = () => {
           </div>
         </div>
         <div className="w-full flex mb-2 flex-wrap">
-          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+          {/* <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="discount">Discount</label>
             <input
               className="w-full border py-2 px-4 rounded-3xl"
@@ -846,7 +858,7 @@ const FullDetails = () => {
               {...register("discount")}
             />
             {errors.discount && <span className='text-red-500'>{errors.discount.message}</span>}
-          </div>
+          </div> */}
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="cod">COD</label>
             <input
@@ -886,7 +898,7 @@ const FullDetails = () => {
 
         <div className="w-full flex mb-2 flex-wrap">
 
-          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+          {/* <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="gst">Seller GSTIN</label>
             <input
               className="w-full border py-2 px-4 rounded-3xl"
@@ -895,10 +907,10 @@ const FullDetails = () => {
               {...register("gst")}
             />
             {errors.gst && <span className='text-red-500'>{errors.gst.message}</span>}
-          </div>
+          </div> */}
 
         </div>
-        <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+        {/* <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="Cgst">Customer GSTIN(For B2B)</label>
           <input
             className="w-full border py-2 px-4 rounded-3xl"
@@ -907,7 +919,7 @@ const FullDetails = () => {
             {...register("Cgst")}
           />
           {errors.Cgst && <span className='text-red-500'>{errors.Cgst.message}</span>}
-        </div>
+        </div> */}
         <div className="w-full flex justify-center mt-4">
           <button
             className="bg-green-500 text-white px-6 py-2 rounded-3xl"

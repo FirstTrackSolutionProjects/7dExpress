@@ -89,6 +89,21 @@ const EkartCard = ({ scan }) => {
   )
 }
 
+const TrackingCard = ({ scan }) => {
+    return (
+        <>
+            <div className="w-full py-3 bg-white relative items-center justify-center px-8 flex border-b space-x-4">
+                <div className='flex flex-col items-center justify-center'>
+                    <div className='font-bold'>{scan?.status}</div>
+                    {scan?.description && <div>{scan.description}</div>}
+                    {scan?.location && <div>{scan.location}</div>}
+                    <div>{scan.timestamp}</div>
+                </div>
+            </div>
+        </>
+    )
+}
+
 const Result = ({ data }) => {
   useEffect(() => {
     console.log(data)
@@ -116,6 +131,9 @@ const Result = ({ data }) => {
         )) : null}
         {data?.id == 5? data?.data?.map((scan, index) => (
           <EkartCard key={index} scan={scan} />
+        )) : null}
+        {![1,2,3,4,5].includes(data.id)? data?.data?.map((scan, index) => (
+          <TrackingCard key={index} scan={scan} />
         )) : null}
       </div>
 

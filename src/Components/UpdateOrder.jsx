@@ -1598,12 +1598,22 @@ const Listing = ({ step, setStep }) => {
         }
       };
 
-      // Use it
-      forceDownload(result.label, "label.pdf");
+      if (!result.success) {
+        throw new Error("Failed to get label");
+      }
+
+      const labels = result.label;
+      if (Array.isArray(labels)) {
+        for (let i = 0; i < labels.length; i++) {
+          await forceDownload(labels[i], `label_${i + 1}.pdf`);
+        }
+      } else {
+        await forceDownload(labels, "label.pdf");
+      }
 
     } catch (error) {
       console.error(error);
-      alert("Failed to get label");
+      toast.error("Failed to get label");
     }
   };
   const [filters, setFilters] = useState({

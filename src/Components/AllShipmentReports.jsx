@@ -169,7 +169,7 @@ const ReportCard = ({ report, status }) => {
       <div className="flex flex-col">
       <p className="mt-5">AWB : {report.awb}</p>
       {report?.lrn ? <p>LRN : {report.lrn}</p> : null}
-      {status.length ?
+      {status?.length ?
         (status).map((scan, index) => {
           return (
             <div className='flex flex-col justify-center'>

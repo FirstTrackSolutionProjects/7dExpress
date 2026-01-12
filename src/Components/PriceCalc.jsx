@@ -96,8 +96,8 @@ const Domestic = () => {
       toast.error("Origin and Destination pincodes should be 6 digits")
       return;
     }
-    if (formData.isB2B && formData.invoiceAmount < 1){
-      toast.error("Invoice Amount should be atleast 1 for B2B")
+    if (formData.invoiceAmount < 1){
+      toast.error("Invoice Amount should be atleast 1")
       return;
     }
     if (formData.payMode == "COD" && formData.codAmount < 1){

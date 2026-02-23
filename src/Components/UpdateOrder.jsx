@@ -1843,7 +1843,7 @@ const Listing = ({ step, setStep }) => {
             ) : null}
             
             {/* Label Button - only for shipped, non-cancelled, specific services */}
-            {(isShipped && !isProcessing && !isCancelled && ![6].includes(serviceId)) ? (
+            {(isShipped && !isProcessing && !isCancelled && ![].includes(serviceId)) ? (
               <Button
                 variant="contained"
                 size="small"

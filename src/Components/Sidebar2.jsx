@@ -1,74 +1,94 @@
+// src/Components/Sidebar2.jsx
 import React, { useEffect, useState } from 'react';
-import { FaBars, FaTimes } from 'react-icons/fa'; // Import FontAwesome icons
-import { menuItems } from '../Constants'; // Import sidebar items
+import { FaTimes, FaChevronRight } from 'react-icons/fa';
+import { menuItems } from '../Constants';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import SidebarItem from './SidebarItem.jsx';
-import WalletRechargeModal from './WalletRechargeModal.jsx';
-const Sidebar2 = () => {
-  const {admin, logout} = useAuth();
+// Removed import of WalletRechargeModal, now managed by App.jsx
+
+// Accept setShowRecharge as prop, which is actually setShowWalletRechargeModal from App.jsx
+const Sidebar2 = ({ sidebarOpen, toggleSidebar, setShowRecharge }) => { // Updated props
+  const { admin, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
-  const [showRecharge, setShowRecharge] = useState(false);
+  // Removed local showRecharge state, now controlled by App.jsx
 
-  const closeRechargeModal = () => {
-    setShowRecharge(false);
-  }
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+  // Function to close sidebar on mobile after item click
+  const handleItemClick = (url) => {
+    if (url) {
+        navigate(url);
+    }
+    if (window.innerWidth < 768 && sidebarOpen) {
+      toggleSidebar();
+    }
   };
 
   useEffect(()=>{
-    if (location.pathname=="/dashboard/logout") logout()
-  },[navigate])
+    if (location.pathname === "/dashboard/logout") {
+      logout();
+      if (sidebarOpen) toggleSidebar();
+    }
+  },[location.pathname, logout, toggleSidebar]);
 
   const sidebarItems = menuItems
   return (
     <>
-    {showRecharge ? <WalletRechargeModal onClose={closeRechargeModal} /> : null}
+    {/* WalletRechargeModal is now rendered in App.jsx */}
     <div>
-      {/* Menu button (Icon) - visible only below md screens */}
-      <button
-        onClick={toggleSidebar}
-        className="md:hidden p-2 absolute text-gray-700  z-40"
-      >
-        <FaBars className="h-8 w-6" /> {/* Menu icon */}
-      </button>
-
-       {/* Sidebar for md screen */}
-       <div className="bg-gray-900 h-full w-64 text-white hidden md:block left-0 overflow-y-scroll">
-      <ul className="p-4 ">
-        {sidebarItems.map((item) => {
-          if ((item.admin && !admin) || (item.merchantOnly && admin)) {
-            return;
-          }
-          return(<SidebarItem item={item} setShowRecharge={setShowRecharge}/>)
-        })}
-      </ul>
+       {/* Desktop Sidebar */}
+       <div className="bg-gray-900 h-full w-64 text-white hidden md:block flex-shrink-0 overflow-y-auto">
+        <div className="flex justify-center items-center py-4 border-b border-gray-700">
+          <img src="/images/logo2.png" alt="Brand Logo" className="h-16 w-auto" />
+        </div>
+        <ul className="p-4">
+          {sidebarItems.map((item) => {
+            if ((item.admin && !admin) || (item.merchantOnly && admin)) {
+              return null;
+            }
+            return (
+              <SidebarItem
+                key={item.url || item.name}
+                item={item}
+                setShowRecharge={setShowRecharge} // Pass the prop down
+                handleItemClick={handleItemClick}
+              />
+            );
+          })}
+        </ul>
       </div>
-       {/* Sidebar for beloe md screen */}
+
+       {/* Mobile Sidebar */}
        <div
-        className={`fixed top-0 left-0 h-full w-full bg-gray-800 text-white transform transition-transform duration-300 ease-in-out z-40 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 left-0 h-full w-[80%] max-w-[300px] bg-gray-800 text-white transform transition-transform duration-300 ease-in-out z-40 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:hidden`}
       >
-        {/* Close button (Icon) */}
         <button
           onClick={toggleSidebar}
-          className="p-4  text-white flex justify-end z-50"
+          className="p-4 absolute top-0 right-0 text-white flex justify-end z-50"
         >
-          <FaTimes className="h-7 w-7 " /> {/* Close icon */}
+          <FaTimes className="h-7 w-7" />
         </button>
-        <ul className="p-4 ">
-        {sidebarItems.map((item) => {
-          if ((item.admin && !admin) || (item.merchantOnly && admin)) {
-            return;
-          }
-          return(<SidebarItem item={item} setShowRecharge={setShowRecharge} />)
-        })}
-      </ul>
+        <div className="flex justify-center items-center py-4 pt-16 border-b border-gray-600">
+          <img src="/images/logo2.png" alt="Brand Logo" className="h-16 w-auto" />
         </div>
+        <ul className="p-4">
+          {sidebarItems.map((item) => {
+            if ((item.admin && !admin) || (item.merchantOnly && admin)) {
+              return null;
+            }
+            return(
+              <SidebarItem
+                key={item.url || item.name}
+                item={item}
+                setShowRecharge={setShowRecharge} // Pass the prop down
+                handleItemClick={handleItemClick}
+              />
+            )
+          })}
+        </ul>
+      </div>
     </div>
     </>
   );

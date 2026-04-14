@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -54,7 +54,7 @@ const ComparePrices = ({method, boxes, status, origin, dest, payMode, codAmount,
               <div className="w-full h-16 bg-white relative justify-center px-4 flex flex-col border-b" >
           <div className="font-bold">{price.name+" "+price.weight}</div>
           <div>{"Chargable Weight : "+price.chargableWeight}gm</div>
-          <div className="absolute right-4 flex gap-2">
+          <div className="absolute right-4 flex gap-2 items-center">
             <p>{`₹${Math.round((price.price))}`}</p>
             {isAuthenticated && <button type="button" onClick={handleShip} className="bg-blue-500 text-white py-1 px-2 rounded">Ship</button>}
           </div>
@@ -144,8 +144,8 @@ const Domestic = () => {
               <label htmlFor="method">Shipping Method</label>
               <select
                 name="method"
-                id="method"
-                className="border py-2 px-4 rounded-3xl"
+                id="method" 
+                className="border py-2 px-4 rounded-md"
                 value={formData.method}
                 onChange={handleChange}
               >
@@ -157,8 +157,8 @@ const Domestic = () => {
               <label htmlFor="status">Status</label>
               <select
                 name="status"
-                id="status"
-                className="border py-2 px-4 rounded-3xl"
+                id="status" 
+                className="border py-2 px-4 rounded-md"
                 value={formData.status}
                 onChange={handleChange}
               >
@@ -171,8 +171,8 @@ const Domestic = () => {
           <div className="w-full flex mb-2 flex-wrap ">
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="origin">Origin Pincode</label>
-              <input
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="origin"
                 name="origin"
@@ -183,8 +183,8 @@ const Domestic = () => {
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="dest">Destination Pincode</label>
-              <input
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="dest"
                 name="dest"
@@ -197,8 +197,8 @@ const Domestic = () => {
           <div className="w-full flex mb-2 flex-wrap ">
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
               <label htmlFor="codAmount">COD Amount</label>
-              <input
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="codAmount"
                 name="codAmount"
@@ -212,8 +212,8 @@ const Domestic = () => {
               <label htmlFor="payMode">Payment Mode</label>
               <select
                 name="payMode"
-                id="payMode"
-                className="border py-2 px-4 rounded-3xl"
+                id="payMode" 
+                className="border py-2 px-4 rounded-md"
                 value={formData.payMode}
                 onChange={handleChange}
 
@@ -230,8 +230,8 @@ const Domestic = () => {
               <label htmlFor="shipmentType">Shipment Type</label>
               <select
                 name="isB2B"
-                id="shipmentType"
-                className="border py-2 px-4 rounded-3xl"
+                id="shipmentType" 
+                className="border py-2 px-4 rounded-md"
                 value={formData.isB2B}
                 onChange={handleChange}
 
@@ -243,8 +243,8 @@ const Domestic = () => {
             
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
               <label htmlFor="invoiceAmount">Invoice Amount</label>
-              <input
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="invoiceAmount"
                 name="invoiceAmount"
@@ -256,13 +256,13 @@ const Domestic = () => {
             
           </div>
           {boxes.map((box,index)=>(
-            <>
+            <React.Fragment key={index}> {/* Added React.Fragment with key */}
               <div className="w-full relative z-0 flex mb-2 flex-wrap ">
               <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="weight">Weight</label>
               <div className="w-full flex space-x-2">
-              <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="weight"
                 name="weight"
@@ -272,8 +272,8 @@ const Domestic = () => {
               />
               <select
                 name="weight_unit"
-                id="weight_unit"
-                className="border py-2 px-4 rounded-3xl"
+                id="weight_unit" 
+                className="border py-2 px-4 rounded-md"
                 value={box.weight_unit}
                 onChange={(e)=>handleBoxes(index,e)}
               >
@@ -285,8 +285,8 @@ const Domestic = () => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] flex space-x-2">
             <div className="flex-1 mb-2 min-w-[70px] space-y-2">
               <label htmlFor="length">L (in cm)</label>
-              <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="length"
                 name="length"
@@ -298,8 +298,8 @@ const Domestic = () => {
             </div>
             <div className="flex-1 mb-2 min-w-[70px] space-y-2">
               <label htmlFor="breadth">B (in cm)</label>
-              <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="breadth"
                 name="breadth"
@@ -311,8 +311,8 @@ const Domestic = () => {
             </div>
             <div className="flex-1 mb-2 min-w-[70px] space-y-2">
               <label htmlFor="height">H (in cm)</label>
-              <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="height"
                 name="height"
@@ -324,8 +324,8 @@ const Domestic = () => {
             </div>
             <div className="flex-1 mb-2 min-w-[70px] space-y-2">
               <label htmlFor="quantity">Quantity</label>
-              <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="quantity"
                 name="quantity"
@@ -336,12 +336,12 @@ const Domestic = () => {
               />
             </div>
             </div>
-            {boxes.length > 1 && <button type="button" className="absolute w-5 h-5 text-sm flex justify-center items-center top-0 right-0  border rounded-full bg-red-500 text-white" onClick={() => removeBox(index)}>X</button>}
+            {boxes.length > 1 && <button type="button" className="absolute w-5 h-5 text-sm flex justify-center items-center top-0 right-0 border rounded-lg bg-red-500 text-white" onClick={() => removeBox(index)}>X</button>}
             </div>
-            </>
-          ))}
-            <button type="button" className="m-2 px-5 py-1 border border-sky-800 rounded-3xl bg-white text-sky-900" onClick={addBox}>Add More Boxes</button>
-            <button type="submit" className="border bg-sky-950 text-white mx-2  py-2 px-4 rounded-3xl">
+            </React.Fragment>
+          ))} {/* Closing React.Fragment */}
+            <button type="button" className="m-2 px-5 py-1 border border-sky-800 rounded-lg bg-white text-sky-900" onClick={addBox}>Add More Boxes</button>
+            <button type="submit" className="border bg-sky-950 text-white mx-2 py-2 px-4 rounded-lg">
               Submit and Compare
             </button>
         </form>

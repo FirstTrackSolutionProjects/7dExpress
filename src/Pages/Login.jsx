@@ -68,7 +68,7 @@ const LoginForm = () => {
               size='small'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
+              required 
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
             />
           </div>
@@ -84,7 +84,7 @@ const LoginForm = () => {
                 endAdornment: <Box className="h-4 cursor-pointer" onClick={()=>setShowPassword((prev)=>!prev)}>{!showPassword?<FaEye/>:<FaEyeSlash/>}</Box>
               }}
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm" // Changed to rounded-md
             />
           </div>
           <div className="flex items-center justify-between">

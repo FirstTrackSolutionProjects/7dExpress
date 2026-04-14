@@ -82,7 +82,7 @@ const AddForm = ({ setMode }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="name">Warehouse Name</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="name"
                 name="name"
@@ -97,7 +97,7 @@ const AddForm = ({ setMode }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="phone">Mobile Number</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="phone"
                 name="phone"
@@ -111,7 +111,7 @@ const AddForm = ({ setMode }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="email">Email</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="email"
                 name="email"
@@ -124,7 +124,7 @@ const AddForm = ({ setMode }) => {
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="address">Address</label>
             <input required
-              className="w-full border py-2 px-4 rounded-3xl"
+              className="w-full border py-2 px-4 rounded-md"
               type="text"
               maxLength={100}
               id="address"
@@ -138,7 +138,7 @@ const AddForm = ({ setMode }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="pin">Pincode</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="pin"
                 name="pin"
@@ -152,7 +152,7 @@ const AddForm = ({ setMode }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="city">City</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="city"
                 name="city"
@@ -166,7 +166,7 @@ const AddForm = ({ setMode }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
               <label htmlFor="state">State</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="state"
                 name="state"
@@ -178,7 +178,7 @@ const AddForm = ({ setMode }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="country">Country</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="country"
                 name="country"
@@ -190,7 +190,7 @@ const AddForm = ({ setMode }) => {
           </div>
           {/* <div className="flex-1 mx-2 mb-2 min-w-[300px] flex justify-center space-x-3">
             <input
-                className=" border py-2 px-4 rounded-3xl"
+                className=" border py-2 px-4 rounded-md"
                 type="checkbox"
                 id="same"
                 name="same"
@@ -202,7 +202,7 @@ const AddForm = ({ setMode }) => {
             </div> */}
           <button
             type="submit"
-            className="border bg-white mx-2  py-2 px-4 rounded-3xl"
+            className="border bg-white mx-2 py-2 px-4 rounded-lg"
           >
             Create Warehouse
           </button>

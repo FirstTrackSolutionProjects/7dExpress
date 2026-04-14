@@ -65,7 +65,7 @@ const AddDiscountModal = ({ open, onClose, uid }) => {
                     <label htmlFor="service_id" className="font-semibold">Service Name</label>
                     <select
                         name="service_id"
-                        id="service_id"
+                        id="service_id" 
                         className="border-2 py-2 px-4 rounded-full"
                         required
                         value={formData.service_id}
@@ -84,7 +84,7 @@ const AddDiscountModal = ({ open, onClose, uid }) => {
                     <input
                         type="number"
                         name="discount"
-                        id="discount"
+                        id="discount" 
                         className="border-2 py-2 px-4 rounded-full"
                         placeholder="Discount (%)"
                         required
@@ -94,7 +94,7 @@ const AddDiscountModal = ({ open, onClose, uid }) => {
                         max={100}
                     />
                 </div>
-                <button type="submit" className="w-full px-4 py-2 mt-4 rounded-full text-white bg-blue-500 hover:bg-blue-700">
+                <button type="submit" className="w-full px-4 py-2 mt-4 rounded-lg text-white bg-blue-500 hover:bg-blue-700">
                   Submit
                 </button>
             </form>

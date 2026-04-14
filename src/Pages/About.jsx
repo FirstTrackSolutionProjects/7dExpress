@@ -38,7 +38,7 @@ const teamMembers = [
 
 
           <div className="container bg-white rounded-md mt-24 mx-auto py-5 px-4">
-          <div className="text-2xl md:text-4xl font-bold text-center ">Why 7D Express</div>
+          <div className="text-2xl md:text-4xl font-bold text-center">Why 7D Express</div>
           <div className="grid grid-cols-1 md:grid-cols-3 md:gap-8">
             {teamMembers.map((member, index) => (
               <div key={index} className="bg-white shadow-lg rounded-lg overflow-hidden my-3 md:my-10 mx-5 ">

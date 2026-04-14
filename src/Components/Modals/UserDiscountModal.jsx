@@ -15,8 +15,10 @@ const UserDiscountModal = ({ open, onClose, uid }) => {
         getDiscounts();
     }
     const [openUpdateDiscount, setOpenUpdateDiscount] = useState(false)
+    const [selectedDiscount, setSelectedDiscount] = useState(null)
     const closeUpdateDiscount = () => {
         setOpenUpdateDiscount(false)
+        setSelectedDiscount(null)
         getDiscounts();
     }
     const getDiscounts = async () => {
@@ -80,13 +82,21 @@ const UserDiscountModal = ({ open, onClose, uid }) => {
                     <h2 className="text-lg font-bold">{discount?.service_name}</h2>
                     <p>{discount?.discount_percentage}%</p>
                   </div>
-                  <div className="text-xl absolute right-10 transition-all duration-500 hover:text-2xl" onClick={()=>setOpenUpdateDiscount(true)}>
+                  <div 
+                    className="text-xl absolute right-10 cursor-pointer transition-all duration-500 hover:text-2xl" 
+                    onClick={() => {
+                        setSelectedDiscount(discount);
+                        setOpenUpdateDiscount(true);
+                    }}
+                  >
                     <MdModeEditOutline />
                   </div>
-                  <div className="text-xl absolute right-2 transition-all text-red-500 duration-500 hover:text-2xl" onClick={()=>handleDeleteDiscount(discount?.service_id)}>
+                  <div 
+                    className="text-xl absolute right-2 cursor-pointer transition-all text-red-500 duration-500 hover:text-2xl" 
+                    onClick={() => handleDeleteDiscount(discount?.service_id)}
+                  >
                     <FaTrashCan />
                   </div>
-                  <UpdateDiscountModal open={openUpdateDiscount} onClose={closeUpdateDiscount} uid={uid} serviceId={discount?.service_id} discount={discount?.discount_percentage} />
                 </div>
             )) : <div className="text-center">No discounts applied</div>}
           </div>
@@ -99,6 +109,15 @@ const UserDiscountModal = ({ open, onClose, uid }) => {
             </button>
           </div>
         </div>
+        {openUpdateDiscount && (
+            <UpdateDiscountModal 
+                open={openUpdateDiscount} 
+                onClose={closeUpdateDiscount} 
+                uid={uid} 
+                serviceId={selectedDiscount?.service_id} 
+                discount={selectedDiscount?.discount_percentage} 
+            />
+        )}
         <AddDiscountModal open={openAddDiscount} onClose={closeAddDiscount} uid={uid} />
       </div>
     );

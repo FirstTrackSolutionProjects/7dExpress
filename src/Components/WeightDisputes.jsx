@@ -89,7 +89,7 @@ const Listing = () => {
       >
         <div className="w-full h-16 px-4  relative flex justify-between">
           <div className="text-2xl font-medium">WEIGHT DISPUTES</div>
-          {admin ? <div><button type='button' onClick={toggleCreateDisputePopup} className="mx-2 px-5 py-1 border rounded-3xl bg-blue-500 text-white">Create</button></div> : null}
+          {admin ? <div><button type='button' onClick={toggleCreateDisputePopup} className="mx-2 px-5 py-1 border rounded-lg bg-blue-500 text-white">Create</button></div> : null}
         </div>
 
         <details className="w-full p-2 bg-blue-500 rounded-xl text-white">

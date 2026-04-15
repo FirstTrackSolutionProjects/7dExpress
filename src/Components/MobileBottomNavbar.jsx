@@ -1,7 +1,8 @@
 // src/Components/MobileBottomNavbar.jsx
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaHome, FaBox, FaClipboardList, FaHistory, FaWallet, FaPlusSquare, FaInfoCircle, FaPhone, FaRss, FaTags } from 'react-icons/fa';
+import { FaHome, FaBox, FaClipboardList, FaHistory, FaWallet, FaPlusSquare, FaInfoCircle, FaPhone, FaRss, FaTags, FaUsers, FaUserCheck } from 'react-icons/fa';
+import { FaMoneyBillTransfer } from 'react-icons/fa6';
 import { useAuth } from '../context/AuthContext';
 import { useWallet } from '../context/WalletContext';
 
@@ -10,19 +11,27 @@ const MobileBottomNavbar = ({ isDashboardRoute, sidebarOpen, closeSidebar, setSh
     const { admin, verified } = useAuth();
     const { balance } = useWallet();
 
-    const dashboardNavItems = [
-        { icon: FaHome, name: 'Dash', path: '/dashboard', adminOnly: false },
-        { icon: FaBox, name: 'Parcels', path: '/dashboard/parcels/domestic', adminOnly: false },
-        { icon: FaPlusSquare, name: 'Create', path: '/dashboard/order/create', adminOnly: false, merchantOnly: true },
-        { icon: FaClipboardList, name: 'Reports', path: '/dashboard/shipment/reports', adminOnly: false },
-        { icon: FaHistory, name: 'History', path: '/dashboard/transaction-history', adminOnly: false },
+    const merchantDashboardItems = [
+        { icon: FaHome, name: 'Dash', path: '/dashboard' },
+        { icon: FaBox, name: 'Parcels', path: '/dashboard/parcels/domestic' },
+        { icon: FaPlusSquare, name: 'Create', path: '/dashboard/order/create' },
+        { icon: FaClipboardList, name: 'Reports', path: '/dashboard/shipment/reports' },
+        { icon: FaHistory, name: 'History', path: '/dashboard/transaction-history' },
         {
             icon: FaWallet,
             name: 'Wallet',
             path: '/dashboard/wallet-recharge',
-            action: 'openWalletModal',
-            adminOnly: false
+            action: 'openWalletModal'
         },
+    ];
+
+    const adminDashboardItems = [
+        { icon: FaHome, name: 'Dash', path: '/dashboard' },
+        { icon: FaUsers, name: 'Merchants', path: '/dashboard/manage/merchant/verified' },
+        { icon: FaBox, name: 'Shipments', path: '/dashboard/manage/merchant/shipments/domestic' },
+        { icon: FaUserCheck, name: 'Verify', path: '/dashboard/submissions/merchant-verification' },
+        { icon: FaMoneyBillTransfer, name: 'Manual', path: '/dashboard/manual-recharge' },
+        { icon: FaHistory, name: 'History', path: '/dashboard/transaction-history' },
     ];
 
     const publicNavItems = [
@@ -35,11 +44,7 @@ const MobileBottomNavbar = ({ isDashboardRoute, sidebarOpen, closeSidebar, setSh
     ];
 
     const currentNavItems = isDashboardRoute
-        ? dashboardNavItems.filter(item => {
-            if (item.adminOnly && !admin) return false;
-            if (item.merchantOnly && admin) return false;
-            return true;
-        })
+        ? (admin ? adminDashboardItems : merchantDashboardItems)
         : publicNavItems;
 
     const handleLinkClick = (itemPath, itemAction) => {
@@ -62,6 +67,9 @@ const MobileBottomNavbar = ({ isDashboardRoute, sidebarOpen, closeSidebar, setSh
                     (item.path === '/dashboard/parcels/domestic' && location.pathname.startsWith('/dashboard/parcels')) ||
                     (item.path === '/dashboard/shipment/reports' && location.pathname.startsWith('/dashboard/shipment/reports')) ||
                     (item.path === '/dashboard/transaction-history' && location.pathname.startsWith('/dashboard/transaction-history')) ||
+                    (item.path === '/dashboard/manage/merchant/verified' && location.pathname.startsWith('/dashboard/manage/merchant')) ||
+                    (item.path === '/dashboard/manage/merchant/shipments/domestic' && location.pathname.startsWith('/dashboard/manage/merchant/shipments')) ||
+                    (item.path === '/dashboard/submissions/merchant-verification' && location.pathname.startsWith('/dashboard/submissions')) ||
                     (item.path === '/pricing' && location.pathname.startsWith('/pricing'));
 
                 if (item.action === 'openWalletModal' && isDashboardRoute && verified) {

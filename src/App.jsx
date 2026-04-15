@@ -39,8 +39,9 @@ const App = () => {
   const isPublicRouteWithNavbar = publicNavbarRoutes.includes(location.pathname);
 
   // Determine if mobile bottom navbar should be visible (for padding calculation)
-  const isMobileNavbarVisible = isDashboardRoute || isPublicRouteWithNavbar;
-  const mobileNavbarPaddingClass = isMobileNavbarVisible ? 'pb-[60px] md:pb-0' : '';
+  // Dashboard routes handle their own padding internally to prevent fixed-height layout issues
+  const isMobileNavbarVisible = isPublicRouteWithNavbar;
+  const mobileNavbarPaddingClass = isMobileNavbarVisible ? 'pb-[80px] md:pb-0' : '';
 
 
   return (
@@ -71,14 +72,13 @@ const App = () => {
           <Route path='/dashboard/*' element={<Dashboard sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} setShowWalletRechargeModal={setShowWalletRechargeModal} />}></Route>
           <Route path='/verify' element={<Verify />}></Route>
         </Routes>
-
+        {!isDashboardRoute && <Footer />}
       </div>
       {/* Render MobileBottomNavbar if on dashboard route or a specified public route */}
       {(isDashboardRoute || isPublicRouteWithNavbar) && (
         // Add sidebarOpen prop here
         <MobileBottomNavbar isDashboardRoute={isDashboardRoute} sidebarOpen={sidebarOpen} closeSidebar={toggleSidebar} setShowWalletRechargeModal={setShowWalletRechargeModal} />
       )}
-      {!isDashboardRoute && <Footer />}
 
       {/* Render WalletRechargeModal globally, controlled by App.jsx state */}
       <WalletRechargeModal onClose={() => setShowWalletRechargeModal(false)} open={showWalletRechargeModal} />

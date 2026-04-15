@@ -86,7 +86,7 @@ const Sidebar2 = ({ sidebarOpen, toggleSidebar, setShowRecharge }) => {
       <div
         className={`fixed top-0 left-0 h-full w-[80%] max-w-[300px] bg-gray-800 text-white transform transition-transform duration-300 ease-in-out z-40 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:hidden overflow-y-auto scrollbar-thin`}
+        } md:hidden overflow-y-auto scrollbar-thin pb-20`}
       >
         <button
           onClick={toggleSidebar}

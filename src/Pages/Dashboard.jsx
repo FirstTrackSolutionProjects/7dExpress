@@ -57,7 +57,7 @@ const Dashboard = ({ sidebarOpen, toggleSidebar, setShowWalletRechargeModal }) =
         )}
 
         {/* Main content area */}
-        <main className={`flex-grow overflow-y-auto transition-all duration-300 ease-in-out 
+        <main className={`flex-grow overflow-y-auto transition-all duration-300 ease-in-out pb-20 md:pb-0
                          ${sidebarOpen ? 'ml-0' : 'md:ml-sidebar-expanded'} 
                          ${sidebarOpen ? '' : 'md:block' /* Ensure main content is visible on desktop */}`}>
             <Routes>

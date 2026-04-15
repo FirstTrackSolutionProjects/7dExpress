@@ -27,10 +27,9 @@ const MobileBottomNavbar = ({ isDashboardRoute, sidebarOpen, closeSidebar, setSh
 
     const adminDashboardItems = [
         { icon: FaHome, name: 'Dash', path: '/dashboard' },
-        { icon: FaUsers, name: 'Merchants', path: '/dashboard/manage/merchant/verified' },
-        { icon: FaBox, name: 'Shipments', path: '/dashboard/manage/merchant/shipments/domestic' },
-        { icon: FaUserCheck, name: 'Verify', path: '/dashboard/submissions/merchant-verification' },
-        { icon: FaMoneyBillTransfer, name: 'Manual', path: '/dashboard/manual-recharge' },
+        { icon: FaUsers, name: 'Merchant', path: '/dashboard/manage/merchant/verified' },
+        { icon: FaBox, name: 'Shipment', path: '/dashboard/manage/merchant/shipments/domestic' },
+        { icon: FaClipboardList, name: 'Report', path: '/dashboard/manage/merchant/shipments/reports' },
         { icon: FaHistory, name: 'History', path: '/dashboard/transaction-history' },
     ];
 
@@ -67,8 +66,9 @@ const MobileBottomNavbar = ({ isDashboardRoute, sidebarOpen, closeSidebar, setSh
                     (item.path === '/dashboard/parcels/domestic' && location.pathname.startsWith('/dashboard/parcels')) ||
                     (item.path === '/dashboard/shipment/reports' && location.pathname.startsWith('/dashboard/shipment/reports')) ||
                     (item.path === '/dashboard/transaction-history' && location.pathname.startsWith('/dashboard/transaction-history')) ||
-                    (item.path === '/dashboard/manage/merchant/verified' && location.pathname.startsWith('/dashboard/manage/merchant')) ||
-                    (item.path === '/dashboard/manage/merchant/shipments/domestic' && location.pathname.startsWith('/dashboard/manage/merchant/shipments')) ||
+                    (item.path === '/dashboard/manage/merchant/verified' && location.pathname === '/dashboard/manage/merchant/verified') ||
+                    (item.path === '/dashboard/manage/merchant/shipments/domestic' && location.pathname.startsWith('/dashboard/manage/merchant/shipments/domestic')) ||
+                    (item.path === '/dashboard/manage/merchant/shipments/reports' && location.pathname.startsWith('/dashboard/manage/merchant/shipments/reports')) ||
                     (item.path === '/dashboard/submissions/merchant-verification' && location.pathname.startsWith('/dashboard/submissions')) ||
                     (item.path === '/pricing' && location.pathname.startsWith('/pricing'));
 

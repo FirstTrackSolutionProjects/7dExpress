@@ -1,24 +1,23 @@
 // src/Components/Sidebar2.jsx
 import React, { useEffect, useState } from 'react';
-import { FaTimes, FaChevronRight } from 'react-icons/fa';
+import { FaTimes, FaChevronRight, FaBars } from 'react-icons/fa'; // Added FaBars for collapsed indicator
 import { menuItems } from '../Constants';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import SidebarItem from './SidebarItem.jsx';
-// Removed import of WalletRechargeModal, now managed by App.jsx
 
-// Accept setShowRecharge as prop, which is actually setShowWalletRechargeModal from App.jsx
-const Sidebar2 = ({ sidebarOpen, toggleSidebar, setShowRecharge }) => { // Updated props
+const Sidebar2 = ({ sidebarOpen, toggleSidebar, setShowRecharge }) => {
   const { admin, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  // Removed local showRecharge state, now controlled by App.jsx
+  const [isDesktopExpanded, setIsDesktopExpanded] = useState(false); // State for desktop hover expand
 
   // Function to close sidebar on mobile after item click
   const handleItemClick = (url) => {
     if (url) {
         navigate(url);
     }
+    // Only toggle mobile sidebar if it's currently open and on a small screen
     if (window.innerWidth < 768 && sidebarOpen) {
       toggleSidebar();
     }
@@ -27,21 +26,45 @@ const Sidebar2 = ({ sidebarOpen, toggleSidebar, setShowRecharge }) => { // Updat
   useEffect(()=>{
     if (location.pathname === "/dashboard/logout") {
       logout();
-      if (sidebarOpen) toggleSidebar();
+      if (sidebarOpen) toggleSidebar(); // Close mobile sidebar if open on logout
     }
-  },[location.pathname, logout, toggleSidebar]);
+  },[location.pathname, logout, toggleSidebar, sidebarOpen]);
 
-  const sidebarItems = menuItems
+  // Handle desktop hover events
+  const handleMouseEnter = () => {
+    setIsDesktopExpanded(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDesktopExpanded(false);
+  };
+
+  const sidebarItems = menuItems;
+
   return (
     <>
-    {/* WalletRechargeModal is now rendered in App.jsx */}
-    <div>
-       {/* Desktop Sidebar */}
-       <div className="bg-gray-900 h-full w-64 text-white hidden md:block flex-shrink-0 overflow-y-auto">
-        <div className="flex justify-center items-center py-4 border-b border-gray-700">
-          <img src="/images/logo2.png" alt="Brand Logo" className="h-16 w-auto" />
+      {/* Desktop Sidebar */}
+      <div
+        className={`hidden md:flex flex-col bg-gray-900 text-white h-full sticky top-16 z-20 
+                    transition-all duration-700 ease-in-out overflow-y-auto scrollbar-thin 
+                    ${isDesktopExpanded ? 'w-sidebar-expanded' : 'w-sidebar-collapsed'}`}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div className={`flex items-center border-b border-gray-700 py-4 
+                          ${isDesktopExpanded ? 'justify-start px-4' : 'justify-center'}`}> {/* Removed flex-col when collapsed, just center */}
+          <img 
+            src="/images/logo2.png" 
+            alt="Brand Logo" 
+            className={`h-14 w-auto ${!isDesktopExpanded ? 'mx-auto' : ''}`} // Consistent height, w-auto, centered when collapsed
+          /> 
+          {isDesktopExpanded && ( // Only show text when expanded
+            <span className="ml-3 text-xl font-bold text-white">7D Express</span>
+          )}
         </div>
-        <ul className="p-4">
+        
+        {/* Scrollable menu items for desktop */}
+        <ul className="p-2 flex-grow overflow-y-auto scrollbar-thin">
           {sidebarItems.map((item) => {
             if ((item.admin && !admin) || (item.merchantOnly && admin)) {
               return null;
@@ -50,19 +73,20 @@ const Sidebar2 = ({ sidebarOpen, toggleSidebar, setShowRecharge }) => { // Updat
               <SidebarItem
                 key={item.url || item.name}
                 item={item}
-                setShowRecharge={setShowRecharge} // Pass the prop down
+                setShowRecharge={setShowRecharge}
                 handleItemClick={handleItemClick}
+                isExpanded={isDesktopExpanded} // Pass expanded state to item
               />
             );
           })}
         </ul>
       </div>
 
-       {/* Mobile Sidebar */}
-       <div
+      {/* Mobile Sidebar (remains as a fixed overlay) */}
+      <div
         className={`fixed top-0 left-0 h-full w-[80%] max-w-[300px] bg-gray-800 text-white transform transition-transform duration-300 ease-in-out z-40 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:hidden`}
+        } md:hidden overflow-y-auto scrollbar-thin`}
       >
         <button
           onClick={toggleSidebar}
@@ -73,7 +97,8 @@ const Sidebar2 = ({ sidebarOpen, toggleSidebar, setShowRecharge }) => { // Updat
         <div className="flex justify-center items-center py-4 pt-16 border-b border-gray-600">
           <img src="/images/logo2.png" alt="Brand Logo" className="h-16 w-auto" />
         </div>
-        <ul className="p-4">
+        {/* Scrollable menu items for mobile */}
+        <ul className="p-4 flex-grow overflow-y-auto scrollbar-thin">
           {sidebarItems.map((item) => {
             if ((item.admin && !admin) || (item.merchantOnly && admin)) {
               return null;
@@ -82,14 +107,14 @@ const Sidebar2 = ({ sidebarOpen, toggleSidebar, setShowRecharge }) => { // Updat
               <SidebarItem
                 key={item.url || item.name}
                 item={item}
-                setShowRecharge={setShowRecharge} // Pass the prop down
+                setShowRecharge={setShowRecharge}
                 handleItemClick={handleItemClick}
+                isExpanded={true} // Mobile sidebar is always expanded
               />
             )
           })}
         </ul>
       </div>
-    </div>
     </>
   );
 };

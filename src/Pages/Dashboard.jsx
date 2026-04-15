@@ -5,8 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { menuItems } from '../Constants';
 import { useNavigate } from 'react-router-dom';
 
-// Accept setShowWalletRechargeModal as a prop
-const Dashboard = ({ sidebarOpen, toggleSidebar, setShowWalletRechargeModal }) => { // Updated props
+const Dashboard = ({ sidebarOpen, toggleSidebar, setShowWalletRechargeModal }) => {
   const { admin, isAuthenticated, verified } = useAuth();
   const navigate = useNavigate();
 
@@ -21,6 +20,7 @@ const Dashboard = ({ sidebarOpen, toggleSidebar, setShowWalletRechargeModal }) =
   if (!isAuthenticated || !verified) {
     return null;
   }
+  
   const generateRoutes = (items, admin) => {
     return items.flatMap((item, index) => {
       if ((item.admin && !admin) || (item.merchantOnly && admin)) {
@@ -39,11 +39,15 @@ const Dashboard = ({ sidebarOpen, toggleSidebar, setShowWalletRechargeModal }) =
       return routes;
     });
   };
+
   return (
     <>
       <div className='flex h-[calc(100vh-64px)] font-inter bg-gray-200 relative'>
-        {/* Pass setShowWalletRechargeModal to Sidebar2 */}
-        <Sidebar2 sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} setShowRecharge={setShowWalletRechargeModal} />
+        <Sidebar2
+          sidebarOpen={sidebarOpen}
+          toggleSidebar={toggleSidebar}
+          setShowRecharge={setShowWalletRechargeModal}
+        />
 
         {sidebarOpen && (
           <div
@@ -52,10 +56,13 @@ const Dashboard = ({ sidebarOpen, toggleSidebar, setShowWalletRechargeModal }) =
           ></div>
         )}
 
-        <main className={`flex-grow overflow-y-auto transition-all duration-300 ease-in-out ${sidebarOpen ? 'md:ml-64' : 'md:ml-0'}`}>
-          <Routes>
-            {generateRoutes(menuItems, admin)}
-          </Routes>
+        {/* Main content area */}
+        <main className={`flex-grow overflow-y-auto transition-all duration-300 ease-in-out 
+                         ${sidebarOpen ? 'ml-0' : 'md:ml-sidebar-expanded'} 
+                         ${sidebarOpen ? '' : 'md:block' /* Ensure main content is visible on desktop */}`}>
+            <Routes>
+                {generateRoutes(menuItems, admin)}
+            </Routes>
         </main>
       </div>
     </>

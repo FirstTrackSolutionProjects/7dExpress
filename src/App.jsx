@@ -38,6 +38,11 @@ const App = () => {
   const publicNavbarRoutes = ['/', '/about', '/track', '/blog', '/pricing', '/contact'];
   const isPublicRouteWithNavbar = publicNavbarRoutes.includes(location.pathname);
 
+  // Determine if mobile bottom navbar should be visible (for padding calculation)
+  const isMobileNavbarVisible = isDashboardRoute || isPublicRouteWithNavbar;
+  const mobileNavbarPaddingClass = isMobileNavbarVisible ? 'pb-[60px] md:pb-0' : '';
+
+
   return (
     <>
       <ToastContainer />
@@ -48,7 +53,8 @@ const App = () => {
         <Header toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} setShowWalletRechargeModal={setShowWalletRechargeModal} />
       )}
       <div className={!isDashboardRoute ? `h-[72px]` : 'h-16'}></div>
-      <div className={isDashboardRoute ? 'pb-[60px] md:pb-0' : ''}>
+      {/* Apply padding-bottom if mobile navbar is visible */}
+      <div className={mobileNavbarPaddingClass}> 
         <Routes>
           <Route path='/' element={<Landing />}></Route>
           <Route path='/login' element={<Login />} />

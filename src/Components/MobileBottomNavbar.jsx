@@ -5,7 +5,6 @@ import { FaHome, FaBox, FaClipboardList, FaHistory, FaWallet, FaPlusSquare, FaIn
 import { useAuth } from '../context/AuthContext';
 import { useWallet } from '../context/WalletContext';
 
-// Accept sidebarOpen as a prop
 const MobileBottomNavbar = ({ isDashboardRoute, sidebarOpen, closeSidebar, setShowWalletRechargeModal }) => {
     const location = useLocation();
     const { admin, verified } = useAuth();
@@ -49,13 +48,14 @@ const MobileBottomNavbar = ({ isDashboardRoute, sidebarOpen, closeSidebar, setSh
         }
         // ONLY call closeSidebar (which is App.jsx's toggleSidebar) if the sidebar is currently OPEN
         // and we are on a mobile device. This ensures it only closes the sidebar, not opens it.
-        if (window.innerWidth < 768 && sidebarOpen && closeSidebar) {
-            closeSidebar();
+        // The mobile bottom navbar is for mobile devices only.
+        if (closeSidebar && sidebarOpen) { // check if sidebar is open
+            closeSidebar(); // Toggle it to close
         }
     };
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 flex justify-around py-2 md:hidden z-50">
+        <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 flex justify-around py-4 md:hidden z-50"> {/* Increased py-2 to py-4 */}
             {currentNavItems.map((item) => {
                 const isActive = location.pathname === item.path ||
                     (item.path === '/dashboard' && location.pathname === '/dashboard/') ||
@@ -71,6 +71,7 @@ const MobileBottomNavbar = ({ isDashboardRoute, sidebarOpen, closeSidebar, setSh
                             onClick={() => handleLinkClick(item.path, item.action)}
                             className={`flex flex-col items-center text-xs px-1 py-0.5 rounded-md cursor-pointer text-center flex-1 min-w-0 ${isActive ? 'text-blue-600 bg-blue-50' : 'text-gray-600'}`}
                         >
+                            {/* Adjusted text size for wallet balance to be more compact */}
                             <item.icon className="text-xl mb-0.5" />
                             <span className={`font-semibold text-[10px] ${balance < 250 ? "text-red-500" : "text-green-600"} whitespace-nowrap overflow-hidden text-ellipsis max-w-full block`}>₹{balance}</span>
                             <span className="text-gray-600 text-[9px] whitespace-nowrap overflow-hidden text-ellipsis max-w-full block">{item.name}</span>

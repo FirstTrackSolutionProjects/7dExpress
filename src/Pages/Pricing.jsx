@@ -10,7 +10,7 @@ const Pricing = () => {
     
       <div className="text-sky-950 text-2xl md:text-4xl text-center py-5">Calculate Your Shipping Price</div>
       <div className="mx-6 mb-5">
-      <PriceCalc/>
+        <PriceCalc/>
     </div>
     </div>
   );

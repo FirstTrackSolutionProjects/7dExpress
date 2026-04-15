@@ -967,6 +967,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped, onUpdated }) =
           variant="contained" 
           onClick={handleSubmit}
           disabled={isShipped}
+          sx={{ borderRadius: '8px' }}
         >
           Submit
         </Button>

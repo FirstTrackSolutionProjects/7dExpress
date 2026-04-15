@@ -1,99 +1,85 @@
-import NavItem from "./NavItem";
-import { navItems } from "../Constants";
-import {  useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
-import WalletRechargeModal from "./WalletRechargeModal";
-import { useNavigate, Link } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWallet } from "../context/WalletContext";
-const API_URL = import.meta.env.VITE_APP_API_URL
-const Header = () => {
-  const navigate = useNavigate();
-  const [showRecharge, setShowRecharge] = useState(false)
-  const {verified, isAuthenticated, logout, business_name} = useAuth()
-  const { balance, refreshBalance } = useWallet();
-  const [isMenu,setIsMenu] = useState(false)
-  const closeRechargeModal = () => {
-    setShowRecharge(false);
-  }
-  const toggleMenu = () => {
-    setIsMenu(!isMenu);
-    }
-  useEffect(()=>{
-    if (!verified) return;
-    refreshBalance();
-  },[isAuthenticated])
+// src/Components/Header.jsx
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaBars, FaTimes, FaWallet } from 'react-icons/fa';
+import { navItems } from '../Constants'; // Assuming navItems are for public pages, not dashboard links
+import { useAuth } from '../context/AuthContext';
+import { useWallet } from '../context/WalletContext';
+import NavItem from './NavItem';
 
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  };
+// Accept setShowWalletRechargeModal as a prop
+const Header = ({ toggleSidebar, sidebarOpen, setShowWalletRechargeModal }) => {
+  const navigate = useNavigate();
+  const { isAuthenticated, business_name, name, logout, verified } = useAuth();
+  const { balance, refreshBalance } = useWallet();
+
+  useEffect(() => {
+    // Only refresh balance if authenticated and verified
+    if (isAuthenticated && verified) {
+      refreshBalance();
+    }
+  }, [isAuthenticated, verified, refreshBalance]);
+
+  const displayName = business_name || name || 'User';
+
   return (
     <>
-    {showRecharge && <WalletRechargeModal onClose={closeRechargeModal}/>}
-    
-    <div className="fixed bg-bg-header bg-cover z-10 top-0 flex justify-center items-center w-full h-16 ">
-    <div className="">
-    <button onClick={toggleMenu} className={`fixed block md:hidden z-50 top-3 right-4 px-4 py-2 bg-blue-600 text-white font-bold rounded-md`}>
-        {isMenu ? 'X' : '☰'}
-      </button>
-      {isMenu && (
-        <div className="fixed md:hidden z-10 py-8 top-16 items-center flex flex-col w-full h-full justify-center bg-slate-200 space-y-2">
-          {isAuthenticated &&<p className="text-sky-950 text-xl font-bold bg-[rgba(255,255,255,0.6)] px-5 py-2 rounded-xl" onClick={()=>navigate('/dashboard')}>{business_name}</p>}
-          <Link to="/" className="text-sky-950 text-xl pt-4 font-bold">Home</Link>
-          <Link to="/about" className="text-sky-950 text-xl pt-4 font-bold">About</Link>
-          <Link to="/track" className="text-sky-950 text-xl pt-4 font-bold">Tracking</Link>
-          <Link to="/blog" className="text-sky-950 text-xl pt-4 font-bold">Blogs</Link>
-          <Link to="/pricing" onClick={{scrollToTop}}className="text-sky-950 text-xl pt-4 font-bold">Pricing</Link>
-          <Link to="/contact" className="text-sky-950 text-xl pt-4 font-bold">Contact</Link>
-          {isAuthenticated && <p className="text-red-600 text-xl pt-4 font-bold" onClick={()=>{logout(); setIsOpen(false)}}>Logout</p>}
-        </div>
-      )}
-      
-        <Link to="/" className="flex md:items-center">
-          <img src="/images/logo2.png" alt="" className="h-14" />
-        </Link>
-        </div>
-        <nav className="w-full relative z-3 lg:w-4/5 flex justify-evenly text-black items-center h-16">
-        <div className="hidden md:flex justify-evenly items-center flex-1">
-        {navItems.map((item, index) => (
-          <NavItem key={index} name={item.name} url={item.url} isDropdown={item.isDropdown} options={item.options} />
-        ))}
-        </div>
-        
+      <div className="fixed bg-bg-header bg-cover z-50 top-0 flex items-center w-full h-16 px-4 shadow-md">
+        {/* Mobile Hamburger/Close Button (always on left on mobile, hidden on desktop) */}
+        <button
+          onClick={toggleSidebar}
+          className="md:hidden p-2 text-sky-950 focus:outline-none"
+          aria-label="Toggle sidebar"
+        >
+          {sidebarOpen ? <FaTimes className="h-6 w-6" /> : <FaBars className="h-6 w-6" />}
+        </button>
 
+        {/* Logo (always visible on left) */}
+        <Link to="/" className="flex items-center">
+          <img src="/images/logo2.png" alt="Logo" className="h-14" />
+        </Link>
+        
+        {/* Desktop Navigation Links (hidden on mobile) */}
+        <nav className="hidden md:flex flex-grow justify-center items-center h-full space-x-6 text-black px-4">
+          {navItems.map((item, index) => (
+            <NavItem key={index} name={item.name} url={item.url} isDropdown={item.isDropdown} options={item.options} />
+          ))}
+        </nav>
+
+        {/* User Info, Wallet, and Logout - Aligned to extreme right */}
         {isAuthenticated && (
-          <div className="h-16 flex space-x-3 items-center">
-            {verified? (<>
-              <div onClick={()=>setShowRecharge(true)} className={`relative bg-blue-600 ${balance < 250 ? "text-red-400" : "text-green-400"} flex items-center font-medium rounded-tl-xl rounded-br-xl px-3 min-w-14 py-2 cursor-pointer border-l-4 border-t-4 border-blue-900`}>
-              {balance < 250 && <p className="absolute -mt-5 top-0 right-[2px] text-red-400 text-3xl">!</p>}
-                <p><FontAwesomeIcon icon={'fa-solid fa-house'} />{`₹${balance}`}</p>
-              </div>
-              {/* <div className="bg-white flex items-center font-medium rounded-xl px-3 py-2 ">
-                <p>R</p>
-              </div> */}
+          <div className="flex items-center h-full space-x-3 text-black ml-auto"> {/* ml-auto pushes this block to the far right */}
+            {verified ? (
+              <>
+                {/* Wallet Balance - Always visible in dashboard header (mobile & desktop) */}
+                <div
+                  onClick={() => setShowWalletRechargeModal(true)}
+                  className={`relative bg-blue-600 ${balance < 250 ? "text-red-400" : "text-green-400"} flex items-center font-medium rounded-lg px-2 py-1 cursor-pointer border-l-4 border-t-4 border-blue-900 text-sm`} // Reduced px/py, used text-sm for better mobile fit
+                >
+                  {balance < 250 && <p className="absolute -mt-5 top-0 right-[2px] text-red-400 text-3xl">!</p>}
+                  <p><FaWallet className="inline-block mr-1" />{`₹${balance}`}</p>
+                </div>
               </>
-            ):null}
-            <div className="hidden md:flex space-x-4">
-              <p className="bg-white text-black flex items-center font-medium rounded-xl px-2 py-2 cursor-pointer" onClick={()=>navigate('/dashboard')}>
-                {business_name}
-              </p>
-              <p
-                className="bg-red-400 text-white flex items-center font-medium rounded-xl px-2 py-2 cursor-pointer"
-                onClick={() => {
-                  logout();
-                  navigate("/");
-                }}
-              >
-                Logout
-              </p>
-            </div>
+            ) : null}
+
+            {/* User Name / Business Name - Hidden on mobile, visible on md and up */}
+            <p className="hidden md:flex bg-white text-black items-center font-medium rounded-xl px-2 py-2 cursor-pointer">
+              {displayName}
+            </p>
+
+            {/* Logout Button - Hidden on mobile, visible on md and up */}
+            <p
+              className="hidden md:flex bg-red-400 text-white items-center font-medium rounded-xl px-2 py-2 cursor-pointer"
+              onClick={() => {
+                logout();
+                navigate("/");
+              }}
+            >
+              Logout
+            </p>
           </div>
         )}
-      </nav>
-    </div>
+      </div>
     </>
   );
 };

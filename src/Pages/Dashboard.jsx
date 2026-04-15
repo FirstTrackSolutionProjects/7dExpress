@@ -1,21 +1,26 @@
-import React, { createElement } from 'react';
+import React, { createElement, useEffect } from 'react';
 import Sidebar2 from '../Components/Sidebar2';
-import { Routes,Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { menuItems } from '../Constants';
 import { useNavigate } from 'react-router-dom';
 
-const Dashboard = () => {
-  const {admin, isAuthenticated, verified} = useAuth()
+const Dashboard = ({ sidebarOpen, toggleSidebar, setShowWalletRechargeModal }) => {
+  const { admin, isAuthenticated, verified } = useAuth();
   const navigate = useNavigate();
-  if (!isAuthenticated) {
-    navigate('/login');
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    } else if (!verified) {
+      navigate('/verify');
+    }
+  }, [isAuthenticated, verified, navigate]);
+
+  if (!isAuthenticated || !verified) {
     return null;
   }
-  if (!verified) {
-    navigate('/verify');
-    return null;
-  }
+  
   const generateRoutes = (items, admin) => {
     return items.flatMap((item, index) => {
       if ((item.admin && !admin) || (item.merchantOnly && admin)) {
@@ -34,17 +39,31 @@ const Dashboard = () => {
       return routes;
     });
   };
-return (
-    <>
-    <div className='h-[calc(100vh-64px)] flex font-inter bg-gray-200'>
-      <Sidebar2 />
-        <main className="flex-grow justify-center items-center overflow-y-auto">
-          <Routes>
-            {generateRoutes(menuItems, admin)}
-          </Routes>
-        </main>
 
-    </div>
+  return (
+    <>
+      <div className='flex h-[calc(100vh-64px)] font-inter bg-gray-200 relative'>
+        <Sidebar2
+          sidebarOpen={sidebarOpen}
+          toggleSidebar={toggleSidebar}
+          setShowRecharge={setShowWalletRechargeModal}
+        />
+
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+            onClick={toggleSidebar}
+          ></div>
+        )}
+
+        {/* Main content area */}
+        <main className={`flex-grow overflow-y-auto transition-all duration-300 ease-in-out pb-20 md:pb-0
+                         ${sidebarOpen ? 'ml-0' : ''}`}>
+            <Routes>
+                {generateRoutes(menuItems, admin)}
+            </Routes>
+        </main>
+      </div>
     </>
   );
 };

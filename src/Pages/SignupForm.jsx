@@ -118,9 +118,6 @@ const Form = () => {
               name='business_name'
               value={formData.business_name}
               onChange={handleChange}
-              sx={{
-                marginTop: '2px'
-              }}
               placeholder=""
               required
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
@@ -137,9 +134,6 @@ const Form = () => {
               name='name'
               value={formData.name}
               onChange={handleChange}
-              sx={{
-                marginTop: '2px'
-              }}
               required
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
             />
@@ -155,9 +149,6 @@ const Form = () => {
               name='mobile'
               value={formData.mobile}
               onChange={handleChange}
-              sx={{
-                marginTop: '2px'
-              }}
               required
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
             />
@@ -173,9 +164,6 @@ const Form = () => {
               name='reg_email'
               value={formData.reg_email}
               onChange={handleChange}
-              sx={{
-                marginTop: '2px'
-              }}
               required
               className="mt-1 block w-full px-3 py-2 border border-sky-900 shadow-sky-900 rounded-md shadow-sm focus:outline-none focus:ring-sky-950 focus:border-sky-950 sm:text-sm"
             />
@@ -191,9 +179,6 @@ const Form = () => {
               name='reg_password'
               value={formData.reg_password}
               onChange={handleChange}
-              sx={{
-                marginTop: '2px'
-              }}
               InputProps={{
                 endAdornment: <Box className="h-4 cursor-pointer" onClick={()=>setShowPassword((prev)=>!prev)}>{!showPassword?<FaEye/>:<FaEyeSlash/>}</Box>
               }}
@@ -213,9 +198,6 @@ const Form = () => {
               value={formData.confirm_password}
               onChange={handleChange}
               required
-              sx={{
-                marginTop: '2px'
-              }}
               InputProps={{
                 endAdornment: <Box className="h-4 cursor-pointer" onClick={()=>setShowConfirmPassword((prev)=>!prev)}>{!showConfirmPassword?<FaEye/>:<FaEyeSlash/>}</Box>
               }}
@@ -234,7 +216,7 @@ const Form = () => {
                 formData.reg_password.trim() === "" ||
                 formData.confirm_password.trim() === ""
               }
-              className="w-64 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-950 hover:bg-sky-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-64 flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-950 hover:bg-sky-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Sign Up
             </Button>

@@ -907,6 +907,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
           variant="contained" 
           onClick={handleSubmit}
           disabled={isShipped}
+          sx={{ borderRadius: '8px' }}
         >
           Submit
         </Button>
@@ -1238,7 +1239,7 @@ const Listing = ({ step, setStep }) => {
               setSelectedShipment(params.row);
               setIsManageOpen(true);
             }}
-            sx={{ borderRadius: '24px' }}
+            sx={{ borderRadius: '8px' }}
           >
             {isShipped ? 'View' : 'Manage'}
           </Button>

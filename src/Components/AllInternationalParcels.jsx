@@ -198,8 +198,8 @@ const ManageForm = ({ shipment }) => {
           <div className="w-full flex mb-2 flex-wrap ">
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="wid">Pickup Warehouse Name</label>
-              <select required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <select required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="wid"
                 name="wid"
@@ -210,7 +210,7 @@ const ManageForm = ({ shipment }) => {
                 <option value="">Select Warehouse</option>
                 {warehouses.length ?
                   warehouses.map((warehouse, index) => (
-                    <option value={warehouse.wid} >{warehouse.warehouseName}</option>
+                    <option value={warehouse.wid} key={index}>{warehouse.warehouseName}</option>
                   )) : null
                 }
               </select>
@@ -221,8 +221,8 @@ const ManageForm = ({ shipment }) => {
           <div className="w-full flex mb-2 flex-wrap ">
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="contents">Contents</label>
-              <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="contents"
                 name="contents"
@@ -233,8 +233,8 @@ const ManageForm = ({ shipment }) => {
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="serviceCode">Service</label>
-              <select required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <select required 
+                className="w-full border py-2 px-4 rounded-md"
                 id="serviceCode"
                 name="serviceCode"
                 value={formData.serviceCode}
@@ -257,8 +257,8 @@ const ManageForm = ({ shipment }) => {
           <div className="w-full flex mb-2 flex-wrap ">
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="consigneeName">Consignee Name</label>
-              <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="consigneeName"
                 name="consigneeName"
@@ -269,8 +269,8 @@ const ManageForm = ({ shipment }) => {
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="consigneeCompany">Consignee Company</label>
-              <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="consigneeCompany"
                 name="consigneeCompany"
@@ -284,8 +284,8 @@ const ManageForm = ({ shipment }) => {
           <div className="w-full flex mb-2 flex-wrap ">
             <div className="flex-1 mx-2 mb-2 max-w-[100px] space-y-2">
               <label htmlFor="countryCode">Country Code</label>
-              <select required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <select required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="countryCode"
                 name="countryCode"
@@ -302,8 +302,8 @@ const ManageForm = ({ shipment }) => {
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="consigneeContact">Consignee Contact</label>
-              <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="number"
                 id="consigneeContact"
                 name="consigneeContact"
@@ -313,8 +313,8 @@ const ManageForm = ({ shipment }) => {
               />
               <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
                 <label htmlFor="consigneeEmail">Consignee Email</label>
-                <input required
-                  className="w-full border py-2 px-4 rounded-3xl"
+                <input required 
+                  className="w-full border py-2 px-4 rounded-md"
                   type="text"
                   id="consigneeEmail"
                   name="consigneeEmail"
@@ -330,8 +330,8 @@ const ManageForm = ({ shipment }) => {
           <div className="w-full flex mb-2 flex-wrap ">
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="consigneeAddress">Consignee Address</label>
-              <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="consigneeAddress"
                 name="consigneeAddress"
@@ -346,8 +346,8 @@ const ManageForm = ({ shipment }) => {
           </div>
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="consigneeAddress2">Consignee Address 2</label>
-            <input required
-              className="w-full border py-2 px-4 rounded-3xl"
+            <input required 
+              className="w-full border py-2 px-4 rounded-md"
               type="text"
               id="consigneeAddress2"
               name="consigneeAddress2"
@@ -358,8 +358,8 @@ const ManageForm = ({ shipment }) => {
           </div>
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="consigneeAddress3">Consignee Address 3</label>
-            <input required
-              className="w-full border py-2 px-4 rounded-3xl"
+            <input required 
+              className="w-full border py-2 px-4 rounded-md"
               type="text"
               id="consigneeAddress3"
               name="consigneeAddress3"
@@ -371,8 +371,8 @@ const ManageForm = ({ shipment }) => {
           {/* <div className="w-full flex mb-2 flex-wrap ">
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="addressType">Shipping Address Type</label>
-              <select
-                className="w-full border py-2 px-4 rounded-3xl"
+              <select 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="addressType"
                 name="addressType"
@@ -385,8 +385,8 @@ const ManageForm = ({ shipment }) => {
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="addressType2">Alternate Shipping Address Type</label>
-              <select
-                className="w-full border py-2 px-4 rounded-3xl"
+              <select 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="addressType2"
                 name="addressType2"
@@ -403,8 +403,8 @@ const ManageForm = ({ shipment }) => {
           <div className="w-full flex mb-2 flex-wrap ">
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="consigneeZipCode">Consignee Zip Code</label>
-              <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="consigneeZipCode"
                 name="consigneeZipCode"
@@ -415,8 +415,8 @@ const ManageForm = ({ shipment }) => {
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="consigneeCity">Consignee City</label>
-              <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="consigneeCity"
                 name="consigneeCity"
@@ -432,8 +432,8 @@ const ManageForm = ({ shipment }) => {
           <div className="w-full flex mb-2 flex-wrap ">
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="consigneeState">Consignee State</label>
-              <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="consigneeState"
                 name="consigneeState"
@@ -444,8 +444,8 @@ const ManageForm = ({ shipment }) => {
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="consigneeCountry">Consignee Country</label>
-              <select required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <select required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="consigneeCountry"
                 name="consigneeCountry"
@@ -464,8 +464,8 @@ const ManageForm = ({ shipment }) => {
           <div className="w-full flex mb-2 flex-wrap ">
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="shippingType">Shipment Type</label>
-              <select required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <select required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="shippingType"
                 name="shippingType"
@@ -479,8 +479,8 @@ const ManageForm = ({ shipment }) => {
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="gst">Seller GST</label>
-              <input
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="gst"
                 name="gst"
@@ -491,8 +491,8 @@ const ManageForm = ({ shipment }) => {
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="actual_weight">Actual Weight (in Kg)</label>
-              <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input required 
+                className="w-full border py-2 px-4 rounded-md"
                 type="number"
                 id="actual_weight"
                 min={0}
@@ -509,79 +509,74 @@ const ManageForm = ({ shipment }) => {
                 <label>Box no.</label>
                 <input required
                   type="number"
-                  className="flex-1 border py-2 px-4 rounded-3xl"
+                  className="flex-1 border py-2 px-4 rounded-md"
                   min={1}
                   name="box_no"
                   placeholder="Box Number"
                   disabled
                   value={docket.box_no}
                   onChange={(event) => handleDocket(index, event)}
-                  style={{ marginLeft: '10px' }}
                 />
               </div>
               <div className="flex-1 mx-2 mb-2 min-w-[150px] space-y-2">
                 <label>Docket Weight</label>
                 <input required
                   type="number"
-                  className="flex-1 border py-2 px-4 rounded-3xl"
+                  className="flex-1 border py-2 px-4 rounded-md"
                   name="docket_weight"
                   min={0}
                   placeholder="Docket Weight (in Kg)"
                   value={docket.docket_weight}
                   onChange={(event) => handleDocket(index, event)}
-                  style={{ marginLeft: '10px' }}
                 />
               </div>
               <div className="flex-1 mx-2 mb-2 min-w-[150px] space-y-2">
                 <label>Length</label>
                 <input required
                   type="number"
-                  className="flex-1 border py-2 px-4 rounded-3xl"
+                  className="flex-1 border py-2 px-4 rounded-md"
                   name="length"
                   min={0}
                   placeholder="Length"
                   value={docket.length}
                   onChange={(event) => handleDocket(index, event)}
-                  style={{ marginLeft: '10px' }}
                 />
               </div>
               <div className="flex-1 mx-2 mb-2 min-w-[150px] space-y-2">
                 <label>Breadth</label>
                 <input required
                   type="number"
-                  className="flex-1 border py-2 px-4 rounded-3xl"
+                  className="flex-1 border py-2 px-4 rounded-md"
                   name="breadth"
                   min={0}
                   placeholder="Breadth"
                   value={docket.breadth}
                   onChange={(event) => handleDocket(index, event)}
-                  style={{ marginLeft: '10px' }}
                 />
               </div>
               <div className="flex-1 mx-2 mb-2 min-w-[150px] space-y-2">
                 <label>Height</label>
                 <input required
                   type="number"
-                  className="flex-1 border py-2 px-4 rounded-3xl"
+                  className="flex-1 border py-2 px-4 rounded-md"
                   name="height"
                   min={0}
                   placeholder="Height"
                   value={docket.height}
                   onChange={(event) => handleDocket(index, event)}
-                  style={{ marginLeft: '10px' }}
                 />
               </div>
-              <button type="button" className="mx-2 px-5 py-1 border rounded-3xl bg-red-500 text-white" onClick={() => handleDeleteDocket(index)}>Remove</button>
+              <button type="button" className="mx-2 px-5 py-1 border rounded-lg bg-red-500 text-white" onClick={() => handleDeleteDocket(index)}>Remove</button>
             </div>
           ))}
-          <button type="button" className="m-2 px-5 py-1 border rounded-3xl bg-blue-500 text-white" onClick={handleAddDocket}>Add Docket</button>
+          <button type="button" className="m-2 px-5 py-1 border rounded-lg bg-blue-500 text-white" onClick={handleAddDocket}>Add Docket</button>
           {items.map((item, index) => (
 
             <div key={index} className="product-form flex space-x-2 flex-wrap items-center">
               <div className="flex-1 mx-2 mb-2 min-w-[150px] space-y-2">
                 <label htmlFor="hscode">HS Code</label>
-                <input
-                  className="w-full border py-2 px-4 rounded-3xl"
+                <input 
+                  className="w-full border py-2 px-4 rounded-md"
                   type="text"
                   id="hscode"
                   name="hscode"
@@ -592,8 +587,8 @@ const ManageForm = ({ shipment }) => {
               </div>
               <div className="flex-1 mx-2 mb-2 min-w-[100px] space-y-2">
                 <label htmlFor="box_no">Box no.</label>
-                <input required
-                  className="w-full border py-2 px-4 rounded-3xl"
+                <input required 
+                  className="w-full border py-2 px-4 rounded-md"
                   type="text"
                   id="box_no"
                   name="box_no"
@@ -604,8 +599,8 @@ const ManageForm = ({ shipment }) => {
               </div>
               <div className="flex-1 mx-2 mb-2 min-w-[100px] space-y-2">
                 <label htmlFor="quantity">Quantity</label>
-                <input required
-                  className="w-full border py-2 px-4 rounded-3xl"
+                <input required 
+                  className="w-full border py-2 px-4 rounded-md"
                   type="number"
                   min={1}
                   id="quantity"
@@ -617,8 +612,8 @@ const ManageForm = ({ shipment }) => {
               </div>
               <div className="flex-1 mx-2 mb-2 min-w-[100px] space-y-2">
                 <label htmlFor="rate">Rate per item</label>
-                <input required
-                  className="w-full border py-2 px-4 rounded-3xl"
+                <input required 
+                  className="w-full border py-2 px-4 rounded-md"
                   type="text"
                   id="rate"
                   min={0}
@@ -630,8 +625,8 @@ const ManageForm = ({ shipment }) => {
               </div>
               <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
                 <label htmlFor="description">Description</label>
-                <input required
-                  className="w-full border py-2 px-4 rounded-3xl"
+                <input required 
+                  className="w-full border py-2 px-4 rounded-md"
                   type="text"
                   id="description"
                   name="description"
@@ -642,8 +637,8 @@ const ManageForm = ({ shipment }) => {
               </div>
               <div className="flex-1 mx-2 mb-2 min-w-[100px] space-y-2">
                 <label htmlFor="unit">Unit</label>
-                <select required
-                  className="w-full border py-2 px-4 rounded-3xl"
+                <select required 
+                  className="w-full border py-2 px-4 rounded-md"
                   type="text"
                   id="unit"
                   name="unit"
@@ -655,8 +650,8 @@ const ManageForm = ({ shipment }) => {
               </div>
               <div className="flex-1 mx-2 mb-2 min-w-[100px] space-y-2">
                 <label htmlFor="unit_weight">Unit Weight</label>
-                <input required
-                  className="w-full border py-2 px-4 rounded-3xl"
+                <input required 
+                  className="w-full border py-2 px-4 rounded-md"
                   type="number"
                   min={0}
                   id="unit_weight"
@@ -668,8 +663,8 @@ const ManageForm = ({ shipment }) => {
               </div>
               <div className="flex-1 mx-2 mb-2 min-w-[100px] space-y-2">
                 <label htmlFor="igst_amount">IGST</label>
-                <input required
-                  className="w-full border py-2 px-4 rounded-3xl"
+                <input required 
+                  className="w-full border py-2 px-4 rounded-md"
                   type="number"
                   id="igst_amount"
                   min={0}
@@ -680,17 +675,17 @@ const ManageForm = ({ shipment }) => {
                 />
               </div>
 
-              <button type="button" className="mx-2 px-5 py-1 border rounded-3xl bg-red-500 text-white" onClick={() => removeProduct(index)}>Remove</button>
+              <button type="button" className="mx-2 px-5 py-1 border rounded-lg bg-red-500 text-white" onClick={() => removeProduct(index)}>Remove</button>
             </div>
           ))}
-          <button type="button" className="m-2 px-5 py-1 border rounded-3xl bg-blue-500 text-white" onClick={addProduct}>Add More Product</button>
+          <button type="button" className="m-2 px-5 py-1 border rounded-lg bg-blue-500 text-white" onClick={addProduct}>Add More Product</button>
           {/* <div className="w-full flex mb-2 flex-wrap "> */}
 
 
           {/* <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="price">Shipment Cost(As provided)</label>
               <input
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded-md"
                 type="number"
                 id="price"
                 name="price"
@@ -704,7 +699,7 @@ const ManageForm = ({ shipment }) => {
               <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
                 <label htmlFor="shippingType">Shipping Type</label>
                 <select
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="shippingType"
                 name="shippingType"
@@ -719,7 +714,7 @@ const ManageForm = ({ shipment }) => {
 
           {/* </div> */}
           <br />
-          <button type='submit' className="mx-2 px-5 py-1 border rounded-3xl bg-blue-500 text-white">Update</button>
+          <button type='submit' className="mx-2 px-5 py-1 border rounded-lg bg-blue-500 text-white">Update</button>
 
         </form>
       </div>
@@ -771,10 +766,10 @@ const Card = ({ shipment }) => {
           <div> {shipment.awb ? `AWB : ${shipment.awb}` : null}</div>
           <div>{shipment.created_at ? shipment.created_at.toString().split('T')[0] + ' ' + shipment.created_at.toString().split('T')[1].split('.')[0] : null}</div>
         </div>
-        <div className="absolute right-4 sm:right-8 flex space-x-2">
-          <div className="px-3 py-1 bg-blue-500 rounded-3xl text-white cursor-pointer" onClick={() => setIsManage(!isManage)}>{!isManage ? isShipped ? "View" : "Manage" : "X"}</div>
-          {isShipped ? <a className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" target="_blank" href={`https://online.flightgo.in/docket/print_pdf_tc_pdf/pdf_two_025?docket=${shipment.docket_id}&mode=tcpdf1`}>Label</a> : null}
-          {!isShipped && <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={isLoading ? () => { } : () => handleShip()}>{isLoading ? "Shipping..." : "Ship"}</div>}
+        <div className="absolute right-4 sm:right-8 flex space-x-2 items-center">
+          <button type="button" className="px-3 py-1 bg-blue-500 rounded-lg text-white cursor-pointer" onClick={() => setIsManage(!isManage)}>{!isManage ? isShipped ? "View" : "Manage" : "X"}</button>
+          {isShipped ? <a className="px-3 py-1 bg-blue-500  rounded-lg text-white cursor-pointer" target="_blank" href={`https://online.flightgo.in/docket/print_pdf_tc_pdf/pdf_two_025?docket=${shipment.docket_id}&mode=tcpdf1`}>Label</a> : null}
+          {!isShipped && <button type="button" className="px-3 py-1 bg-blue-500  rounded-lg text-white cursor-pointer" onClick={isLoading ? () => { } : () => handleShip()}>{isLoading ? "Shipping..." : "Ship"}</button>}
         </div>
       </div>
       {isManage && <ManageForm shipment={shipment} />}
@@ -839,11 +834,11 @@ const PickupRequest = ({ setPickup }) => {
           <div className="absolute right-3 top-3" onClick={() => setPickup(false)}>
             x
           </div>
-          <form action="" onSubmit={handleSubmit}>
+          <form action="" onSubmit={handleSubmit} className="space-y-4">
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="wid">Pickup Warehouse Name</label>
-              <select
-                className="w-full border py-2 px-4 rounded-3xl"
+              <select 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="wid"
                 name="wid"
@@ -854,15 +849,15 @@ const PickupRequest = ({ setPickup }) => {
                 <option value="">Select Warehouse</option>
                 {warehouses.length ?
                   warehouses.map((warehouse, index) => (
-                    <option value={warehouse.wid} >{warehouse.warehouseName}</option>
+                    <option value={warehouse.wid} key={index}>{warehouse.warehouseName}</option>
                   )) : null
                 }
               </select>
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="pickDate">Pickup Date</label>
-              <input
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="pickDate"
                 name="pickDate"
@@ -873,8 +868,8 @@ const PickupRequest = ({ setPickup }) => {
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="pickTime">Pickup Time</label>
-              <input
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input 
+                className="w-full border py-2 px-4 rounded-md"
                 type="text"
                 id="pickTime"
                 name="pickTime"
@@ -885,8 +880,8 @@ const PickupRequest = ({ setPickup }) => {
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="packages">No of packages</label>
-              <input
-                className="w-full border py-2 px-4 rounded-3xl"
+              <input 
+                className="w-full border py-2 px-4 rounded-md"
                 type="number"
                 id="packages"
                 name="packages"
@@ -895,7 +890,7 @@ const PickupRequest = ({ setPickup }) => {
                 onChange={handleChange}
               />
             </div>
-            <button className="px-5 py-1 mx-2 bg-blue-500  rounded-3xl text-white cursor-pointer" type="submit">Submit</button>
+            <button className="px-5 py-1 mx-2 bg-blue-500 rounded-lg text-white cursor-pointer" type="submit">Submit</button>
           </form>
         </div>
       </div>
@@ -944,7 +939,7 @@ const Listing = ({ step, setStep }) => {
           <div className="text-2xl font-medium">SHIPMENTS </div>
           <div
             onClick={() => setPickup(true)}
-            className="px-5 py-1 bg-blue-500 absolute rounded-3xl text-white  right-4"
+            className="px-5 py-1 bg-blue-500 absolute rounded-lg text-white right-4"
           >
             Pickup Request
           </div>

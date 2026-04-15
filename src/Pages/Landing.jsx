@@ -15,11 +15,11 @@ const Landing = () => {
   return (
     <>
     <div className='flex flex-col items-center w-full overflow-x-hidden'>
-    <div class="bg-bg-landing bg-cover flex w-full items-center justify-center min-h-screen">
+    <div className="bg-bg-landing bg-cover flex w-full items-center justify-center min-h-screen">
 
-    <div class="container mx-auto ">
+    <div className="container mx-auto ">
 
-        <div class="grid grid-rows-2 md:grid-rows-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-rows-2 md:grid-rows-1 md:grid-cols-2 gap-4">
 
           <div className=" flex flex-col justify-center items-center ">
             <img src="/images/logo1.png" alt="" className='lg:w-[200px] lg:h-[200px]  w-[160px] h-[120px] mb-5'></img>

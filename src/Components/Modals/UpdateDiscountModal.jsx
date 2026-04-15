@@ -3,13 +3,24 @@ import { toast } from "react-toastify";
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 const UpdateDiscountModal = ({ open, onClose, uid, serviceId, discount }) => {
-    if (!open) return;
     const [formData, setFormData] = useState({
         uid: uid,
         service_id: serviceId,
         discount: discount
     })
     const [services, setServices] = useState([])
+
+    useEffect(() => {
+        if (open) {
+            setFormData({
+                uid: uid,
+                service_id: serviceId,
+                discount: discount
+            })
+        }
+    }, [open, uid, serviceId, discount])
+
+    if (!open) return null;
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -65,7 +76,7 @@ const UpdateDiscountModal = ({ open, onClose, uid, serviceId, discount }) => {
                     <label htmlFor="service_id" className="font-semibold">Service Name</label>
                     <select
                         name="service_id"
-                        id="service_id"
+                        id="service_id" 
                         className="border-2 py-2 px-4 rounded-full"
                         required
                         value={formData.service_id}
@@ -84,7 +95,7 @@ const UpdateDiscountModal = ({ open, onClose, uid, serviceId, discount }) => {
                     <input
                         type="number"
                         name="discount"
-                        id="discount"
+                        id="discount" 
                         className="border-2 py-2 px-4 rounded-full"
                         placeholder="Discount (%)"
                         required
@@ -94,7 +105,7 @@ const UpdateDiscountModal = ({ open, onClose, uid, serviceId, discount }) => {
                         max={100}
                     />
                 </div>
-                <button type="submit" className="w-full px-4 py-2 mt-4 rounded-full text-white bg-blue-500 hover:bg-blue-700">
+                <button type="submit" className="w-full px-4 py-2 mt-4 rounded-lg text-white bg-blue-500 hover:bg-blue-700">
                   Submit
                 </button>
             </form>

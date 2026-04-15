@@ -1,34 +1,3 @@
-// /** @type {import('tailwindcss').Config} */
-// export default {
-//   content: [
-//     "./index.html",
-//     "./src/**/*.{js,ts,jsx,tsx}",
-//   ],
-//   theme: {
-//     extend: {
-      
-//     },
-//   },
-//   plugins: [],
-// }
-
-// /** @type {import('tailwindcss').Config} */
-// export default {
-//   content: ['index.html', 'src/**/*.{ts,js,tsx,jsx}'],
-//   theme: {
-//     extend: {
-//       boxShadow: {
-//         'all': '0 0 15px',
-//         'cabCard' : '0 0 5px',
-//         'userCard' : '0 0 3px'
-//       },
-      
-//     },
-//   },
-//   plugins: [
-//   ],
-// }
-
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['index.html', 'src/**/*.{ts,js,tsx,jsx}'],
@@ -41,12 +10,22 @@ export default {
         'bg-about': "url('/src/assets/images/logisticbg.jpg')",
         'bg-rainbow': "url('/src/assets/images/bg-rainbow.jpg')",
       },
+      // Added for sidebar transitions
       width: {
-        '0': '0',
-        'full': '100%',
+        'sidebar-collapsed': '5rem',  // Optimized collapsed width for better UX
+        'sidebar-expanded': '16rem',  // Custom width for expanded state
       },
       transitionProperty: {
         'width': 'width',
+        'spacing': 'margin, padding', // Ensure spacing changes animate
+      },
+      transitionDuration: {
+        '300': '300ms',
+        '500': '500ms',
+        '700': '700ms', // Added for smoother sidebar hover transition
+      },
+      transitionTimingFunction: {
+        'ease-in-out': 'ease-in-out',
       },
       boxShadow: {
         'all': '0 0 15px',
@@ -130,5 +109,3 @@ export default {
     },
   ],
 }
-
-

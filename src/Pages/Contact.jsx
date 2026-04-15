@@ -56,7 +56,7 @@ const Contact = () => {
               type="text"
               name="name"
               value={formData.name}
-              onChange={handleChange}
+              onChange={handleChange} 
               className="w-full mt-2 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Your Name"
               required
@@ -68,7 +68,7 @@ const Contact = () => {
               type="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={handleChange} 
               className="w-full mt-2 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Your Email"
               required
@@ -92,7 +92,7 @@ const Contact = () => {
               type="text"
               name="subject"
               value={formData.subject}
-              onChange={handleChange}
+              onChange={handleChange} 
               className="w-full mt-2 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Message Subject"
               required
@@ -103,7 +103,7 @@ const Contact = () => {
             <textarea
               name="message"
               value={formData.message}
-              onChange={handleChange}
+              onChange={handleChange} 
               className="w-full mt-2 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Your Message"
               rows="4"
@@ -137,12 +137,14 @@ const Contact = () => {
           <strong>Business Hours:</strong> Monday - Saturday, 9:00 AM - 8:00 PM
         </p>
       </div>
-      { /* Whatsapp */}
+      { /* Whatsapp */ }
        <a
         href="https://wa.me/919082974657"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center z-50 transition-colors"
+        // Changed bottom-6 to bottom-20 for mobile, and then md:bottom-6 for larger screens
+        // bottom-20 corresponds to 80px, providing enough clearance above the mobile bottom navbar (which is around 60px high)
+        className="fixed bottom-20 md:bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center z-50 transition-colors"
       >
         <FaWhatsapp className="text-3xl" />
       </a>

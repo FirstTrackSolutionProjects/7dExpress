@@ -5,7 +5,11 @@ import { toast } from 'react-toastify';
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 
-const WalletRechargeModal = ({ onClose }) => {
+// Added 'open' to the props destructuring
+const WalletRechargeModal = ({ open, onClose }) => {
+    // If the modal is not open, return null to render nothing
+    if (!open) return null;
+
     const [amount, setAmount] = useState(500);
     // Show Razorpay payment_id to the user after payment completes
     const [paymentId, setPaymentId] = useState(null);
@@ -101,7 +105,7 @@ const WalletRechargeModal = ({ onClose }) => {
 
                 {paymentId && (
                     <div className='w-full text-xs sm:text-sm bg-blue-50 border border-blue-200 text-blue-900 rounded-md p-2 break-all'>
-                        <div className='flex items-center justify-between gap-2'>
+                        <div className='flex flex-wrap items-center justify-between gap-2'>
                             <span>Payment ID:</span>
                             <span className='font-mono'>{paymentId}</span>
                             <button
@@ -121,14 +125,14 @@ const WalletRechargeModal = ({ onClose }) => {
                     value={amount}
                     min={100}
                     onChange={(e) => setAmount(e.target.value)}
-                    className='w-full border py-2 px-4 rounded-3xl'
+                    className='w-full border py-2 px-4 rounded-lg'
                 />
                 <div className='flex w-full justify-evenly'>
-                    <button className='w-20 border py-2 px-4 rounded-3xl hover:bg-blue-500 hover:text-white' onClick={() => { setAmount(500) }}>500</button>
-                    <button className='w-20 border py-2 px-4 rounded-3xl hover:bg-blue-500 hover:text-white' onClick={() => { setAmount(1000) }}>1000</button>
-                    <button className='w-20 border py-2 px-4 rounded-3xl hover:bg-blue-500 hover:text-white' onClick={() => { setAmount(2000) }}>2000</button>
+                    <button type="button" className='w-20 border py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white' onClick={() => { setAmount(500) }}>500</button>
+                    <button type="button" className='w-20 border py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white' onClick={() => { setAmount(1000) }}>1000</button>
+                    <button type="button" className='w-20 border py-2 px-4 rounded-lg hover:bg-blue-500 hover:text-white' onClick={() => { setAmount(2000) }}>2000</button>
                 </div>
-                <button type='submit' className='w-40 border py-2 px-4 rounded-3xl hover:text-white hover:bg-blue-500'>Recharge Wallet</button>
+                <button type='submit' className='w-40 border py-2 px-4 rounded-lg hover:text-white hover:bg-blue-500'>Recharge Wallet</button>
             </form>
         </div>
     )

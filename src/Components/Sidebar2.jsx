@@ -46,21 +46,22 @@ const Sidebar2 = ({ sidebarOpen, toggleSidebar, setShowRecharge }) => {
       {/* Desktop Sidebar */}
       <div
         className={`hidden md:flex flex-col bg-gray-900 text-white h-full sticky top-16 z-20 
-                    transition-all duration-700 ease-in-out overflow-y-auto scrollbar-thin 
+                    transition-all duration-300 ease-in-out overflow-y-auto scrollbar-thin 
                     ${isDesktopExpanded ? 'w-sidebar-expanded' : 'w-sidebar-collapsed'}`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div className={`flex items-center border-b border-gray-700 py-4 
-                          ${isDesktopExpanded ? 'justify-start px-4' : 'justify-center'}`}> {/* Removed flex-col when collapsed, just center */}
+        <div className={`flex items-center border-b border-gray-700 py-4 px-4 overflow-hidden h-24
+                          ${isDesktopExpanded ? 'justify-start' : 'justify-center'}`}>
           <img 
             src="/images/logo2.png" 
             alt="Brand Logo" 
-            className={`h-14 w-auto ${!isDesktopExpanded ? 'mx-auto' : ''}`} // Consistent height, w-auto, centered when collapsed
+            className={`h-14 w-auto transition-transform duration-300 shrink-0 ${!isDesktopExpanded ? 'scale-110' : ''}`}
           /> 
-          {isDesktopExpanded && ( // Only show text when expanded
-            <span className="ml-3 text-xl font-bold text-white">7D Express</span>
-          )}
+          <span className={`ml-3 text-xl font-bold text-white transition-all duration-300 whitespace-nowrap overflow-hidden
+                          ${isDesktopExpanded ? 'opacity-100 max-w-xs' : 'opacity-0 max-w-0'}`}>
+            7D Express
+          </span>
         </div>
         
         {/* Scrollable menu items for desktop */}

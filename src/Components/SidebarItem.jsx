@@ -63,19 +63,26 @@ const SidebarItem = ({ item, setShowRecharge, handleItemClick, isExpanded }) => 
 
     // Determine active styling
     const isActiveLink = isCurrentMenu; 
-    const itemClasses = `cursor-pointer w-full h-12 flex items-center transition-all duration-300 relative
+    const itemClasses = `cursor-pointer w-full h-12 flex items-center relative transition-all duration-300
                         ${isActiveLink ? 'bg-purple-700 text-white' : 'text-gray-200'}
                         hover:bg-purple-700 hover:text-white
-                        ${isExpanded ? 'px-4' : 'justify-center'}
+                        ${isExpanded ? 'px-4 justify-start' : 'px-0 justify-center'}
                         `;
 
     return (
         <>
             <li onClick={handleClick} className={itemClasses}>
-                {item.icon && <item.icon className={`${isExpanded ? 'mr-3 text-xl' : 'text-2xl'}`} />} {/* Adjust icon margin/size based on expanded state */}
-                <p className={`whitespace-nowrap ${isExpanded ? 'block' : 'hidden'}`}>{item.name}</p> {/* Hide text when collapsed on desktop */}
-                {item.isDropdown && isExpanded && ( // Only show chevron when expanded
-                    <FaChevronRight className={`ml-auto transform transition-transform duration-300 ${isOpen ? 'rotate-90' : ''}`} />
+                <div className={`flex items-center justify-center transition-all duration-300 shrink-0 ${isExpanded ? 'mr-3 w-6' : 'w-full'}`}>
+                    {item.icon && <item.icon className={`transition-all duration-300 ${isExpanded ? 'text-xl' : 'text-2xl'}`} />}
+                </div>
+                
+                <span className={`whitespace-nowrap transition-all duration-300 overflow-hidden
+                                ${isExpanded ? 'opacity-100 max-w-[160px]' : 'opacity-0 max-w-0'}`}>
+                    {item.name}
+                </span>
+
+                {item.isDropdown && isExpanded && (
+                    <FaChevronRight className={`ml-auto transition-all duration-300 transform shrink-0 ${isOpen ? 'rotate-90' : ''}`} />
                 )}
             </li>
             {item.isDropdown && isOpen && (

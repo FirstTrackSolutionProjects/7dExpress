@@ -12,7 +12,7 @@ export default {
       },
       // Added for sidebar transitions
       width: {
-        'sidebar-collapsed': '6.5rem',  // Increased collapsed width to 104px
+        'sidebar-collapsed': '5rem',  // Optimized collapsed width for better UX
         'sidebar-expanded': '16rem',  // Custom width for expanded state
       },
       transitionProperty: {

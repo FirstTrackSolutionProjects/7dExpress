@@ -5,7 +5,7 @@ import { FaBars, FaTimes, FaWallet } from 'react-icons/fa';
 import { navItems } from '../Constants'; // Assuming navItems are for public pages, not dashboard links
 import { useAuth } from '../context/AuthContext';
 import { useWallet } from '../context/WalletContext';
-// import NavItem from './NavItem'; // Not strictly needed in dashboard header, as nav items are in sidebar
+import NavItem from './NavItem';
 
 // Accept setShowWalletRechargeModal as a prop
 const Header = ({ toggleSidebar, sidebarOpen, setShowWalletRechargeModal }) => {
@@ -39,18 +39,12 @@ const Header = ({ toggleSidebar, sidebarOpen, setShowWalletRechargeModal }) => {
           <img src="/images/logo2.png" alt="Logo" className="h-14" />
         </Link>
         
-        {/* Spacer to push content to the right (only on desktop) */}
-        <div className="flex-grow hidden md:block"></div>
-
-        {/* Desktop Navigation Links (hidden on mobile, if any were intended here) 
-            Based on your Constants/index.js, navItems are public. In a dashboard header,
-            they usually aren't shown, as sidebar serves navigation.
-            Keeping this block hidden for consistency with dashboard context. */}
-        {/* <nav className="hidden md:flex items-center h-full space-x-6 text-black">
+        {/* Desktop Navigation Links (hidden on mobile) */}
+        <nav className="hidden md:flex flex-grow justify-center items-center h-full space-x-6 text-black px-4">
           {navItems.map((item, index) => (
             <NavItem key={index} name={item.name} url={item.url} isDropdown={item.isDropdown} options={item.options} />
           ))}
-        </nav> */}
+        </nav>
 
         {/* User Info, Wallet, and Logout - Aligned to extreme right */}
         {isAuthenticated && (

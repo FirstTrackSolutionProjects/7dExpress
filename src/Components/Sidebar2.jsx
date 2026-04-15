@@ -95,8 +95,11 @@ const Sidebar2 = ({ sidebarOpen, toggleSidebar, setShowRecharge }) => {
         >
           <FaTimes className="h-7 w-7" />
         </button>
-        <div className="flex justify-center items-center py-4 pt-16 border-b border-gray-600">
-          <img src="/images/logo2.png" alt="Brand Logo" className="h-16 w-auto" />
+        <div className="flex justify-center items-center py-4 pt-16 border-b border-gray-600 px-4">
+          <img src="/images/logo2.png" alt="Brand Logo" className="h-14 w-auto shrink-0" />
+          <span className="ml-3 text-xl font-bold text-white whitespace-nowrap">
+            7D Express
+          </span>
         </div>
         {/* Scrollable menu items for mobile */}
         <ul className="p-4 flex-grow overflow-y-auto scrollbar-thin">

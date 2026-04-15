@@ -26,11 +26,11 @@ const teamMembers = [
         <div className="container bg-white rounded-md py-6 mx-auto px-4">
           <div className="text-2xl md:text-4xl font-bold text-center m-5">Who We Are</div>
           <div className="text-lg md:text-xl text-left m-5">
-            Welcome to 7D EXPRESS, your reliable partner in efficient and secure delivery services. Our mission is to provide seamless, dependable, and cost-effective shipping solutions to meet all your logistics needs.
+            Welcome to <span className="font-bold text-orange-600">7D EXPRESS</span>, your reliable partner in efficient and secure delivery services. Our mission is to provide seamless, dependable, and cost-effective shipping solutions to meet all your logistics needs.
             We are a leading logistics company dedicated to providing reliable and efficient shipping solutions all over nation.
           </div>
           <div className="text-lg md:text-xl text-left m-5">
-          7D EXPRESS was born out of a passion for enhancing the delivery experience. 
+          <span className="font-bold text-orange-600">7D EXPRESS</span> was born out of a passion for enhancing the delivery experience. 
           Over the years, we have grown from a small local courier service to a nationwide logistics provider. Our dedication to innovation, customer satisfaction, and continuous improvement has been the driving force behind our expansion and success.
         </div>
           </div>

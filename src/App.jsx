@@ -17,7 +17,6 @@ import Verify from './Pages/Verify'
 import Header from './Components/Header'
 import { ToastContainer } from 'react-toastify'
 import MobileBottomNavbar from './Components/MobileBottomNavbar'
-import PublicHeader from './Components/PublicHeader'
 import { useState } from 'react'
 import WalletRechargeModal from './Components/WalletRechargeModal'
 
@@ -47,12 +46,13 @@ const App = () => {
   return (
     <>
       <ToastContainer />
-      {/* Conditionally render public or dashboard header */}
-      {!isDashboardRoute ? (
-        <PublicHeader setShowWalletRechargeModal={setShowWalletRechargeModal} />
-      ) : (
-        <Header toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} setShowWalletRechargeModal={setShowWalletRechargeModal} />
-      )}
+      {/* Render combined Header */}
+      <Header 
+        isDashboard={isDashboardRoute} 
+        toggleSidebar={toggleSidebar} 
+        sidebarOpen={sidebarOpen} 
+        setShowWalletRechargeModal={setShowWalletRechargeModal} 
+      />
       <div className={!isDashboardRoute ? `h-[72px]` : 'h-16'}></div>
       {/* Apply padding-bottom if mobile navbar is visible */}
       <div className={mobileNavbarPaddingClass}> 

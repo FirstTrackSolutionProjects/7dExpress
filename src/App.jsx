@@ -19,6 +19,7 @@ import { ToastContainer } from 'react-toastify'
 import MobileBottomNavbar from './Components/MobileBottomNavbar'
 import { useState } from 'react'
 import WalletRechargeModal from './Components/WalletRechargeModal'
+import FloatingAssistant from './Components/FloatingAssistant'
 
 const App = () => {
   const location = useLocation()
@@ -82,6 +83,7 @@ const App = () => {
 
       {/* Render WalletRechargeModal globally, controlled by App.jsx state */}
       <WalletRechargeModal onClose={() => setShowWalletRechargeModal(false)} open={showWalletRechargeModal} />
+      <FloatingAssistant />
     </>
   )
 }

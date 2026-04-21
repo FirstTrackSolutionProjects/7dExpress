@@ -29,6 +29,11 @@ import PendingCancellations from '../Components/PendingCancellations/PendingCanc
 import PendingRefunds from '../Components/PendingRefunds/PendingRefunds';
 import CodRemittanceMerchant from '../Components/CodRemittance/CodRemittanceMerchant';
 import getCodRemittanceAdmin from '../Components/CodRemittance/CodRemittanceAdmin';
+import Support from '../Pages/Support';
+import TicketDetail from '../Pages/TicketDetail';
+import AdminSupport from '../Pages/AdminSupport';
+import AdminTicketDetail from '../Pages/AdminTicketDetail';
+import AdminAnalytics from '../Pages/AdminAnalytics';
 
 export const navItems = [
     {
@@ -379,6 +384,59 @@ export const menuItems = [
         url : 'manual-recharge', // Corrected path to match component
         component : ManualRecharge,
         dropDownOptions : [{}]
+    },
+    {
+        icon : FaClipboardList,
+        name : "Support",
+        isDropdown : true,
+        admin : true,
+        url : 'admin/support',
+        dropDownOptions : [
+            {
+                icon : FaClipboardList,
+                name : "Ticket Overview",
+                isDropdown : false,
+                url : 'admin/support',
+                component : AdminSupport,
+                dropDownOptions : [{}]
+            },
+            {
+                icon : FaFileAlt,
+                name : "Support Analytics",
+                isDropdown : false,
+                url : 'admin/support/analytics',
+                component : AdminAnalytics,
+                dropDownOptions : [{}]
+            },
+            {
+                icon : FaClipboardList,
+                name : "Ticket Detail",
+                isDropdown : false,
+                url : 'admin/support/:id',
+                component : AdminTicketDetail,
+                dropDownOptions : [{}],
+                hidden: true
+            }
+        ]
+    },
+    {
+        icon : FaClipboardList,
+        name : "Support",
+        isDropdown : false,
+        merchantOnly : true,
+        url : 'support',
+        component : Support,
+        dropDownOptions : [
+            {
+                icon : FaClipboardList,
+                name : "Ticket Detail",
+                isDropdown : false,
+                url : 'support/:id',
+                component : TicketDetail,
+                dropDownOptions : [{}],
+                hidden: true
+            }
+        ]
     },
     {
         icon : MdSettings,

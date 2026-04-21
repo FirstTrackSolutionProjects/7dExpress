@@ -56,8 +56,8 @@ const SidebarItem = ({ item, setShowRecharge, handleItemClick, isExpanded }) => 
         }
     };
 
-    // Filter items based on admin/merchantOnly status
-    if ((item.admin && !admin) || (item.merchantOnly && admin)) {
+    // Filter items based on admin/merchantOnly status or if they are hidden
+    if ((item.admin && !admin) || (item.merchantOnly && admin) || item.hidden) {
         return null;
     }
 

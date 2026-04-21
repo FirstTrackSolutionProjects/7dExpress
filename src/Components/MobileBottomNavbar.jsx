@@ -15,7 +15,7 @@ const MobileBottomNavbar = ({ isDashboardRoute, sidebarOpen, closeSidebar, setSh
         { icon: FaHome, name: 'Dash', path: '/dashboard' },
         { icon: FaBox, name: 'Parcels', path: '/dashboard/parcels/domestic' },
         { icon: FaPlusSquare, name: 'Create', path: '/dashboard/order/create' },
-        { icon: FaClipboardList, name: 'Reports', path: '/dashboard/shipment/reports' },
+        { icon: FaClipboardList, name: 'Support', path: '/dashboard/support' },
         { icon: FaHistory, name: 'History', path: '/dashboard/transaction-history' },
         {
             icon: FaWallet,
@@ -29,7 +29,7 @@ const MobileBottomNavbar = ({ isDashboardRoute, sidebarOpen, closeSidebar, setSh
         { icon: FaHome, name: 'Dash', path: '/dashboard' },
         { icon: FaUsers, name: 'Merchant', path: '/dashboard/manage/merchant/verified' },
         { icon: FaBox, name: 'Shipment', path: '/dashboard/manage/merchant/shipments/domestic' },
-        { icon: FaClipboardList, name: 'Report', path: '/dashboard/manage/merchant/shipments/reports' },
+        { icon: FaClipboardList, name: 'Support', path: '/dashboard/admin/support' },
         { icon: FaHistory, name: 'History', path: '/dashboard/transaction-history' },
     ];
 

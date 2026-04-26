@@ -87,6 +87,22 @@ const CodRemittanceAdmin = () => {
   const [error, setError] = useState('');
   const apiRef = useGridApiRef();
   const [selection, setSelection] = useState({ ids: new Set() });
+  const [pendingAmount, setPendingAmount] = useState(0);
+  const [paidAmount, setPaidAmount] = useState(0);
+  const totalAmount = useMemo(() => pendingAmount + paidAmount, [pendingAmount, paidAmount]);
+
+  const fetchSummary = async () => {
+    try {
+        const [pend, paid] = await Promise.all([
+            fetch(`${API_URL}/cod-remittance/pending-amount`, { headers: { Authorization: localStorage.getItem('token') }}).then(r => r.json()),
+            fetch(`${API_URL}/cod-remittance/paid-amount`, { headers: { Authorization: localStorage.getItem('token') }}).then(r => r.json())
+        ]);
+        setPendingAmount(Number(pend.data) || 0);
+        setPaidAmount(Number(paid.data) || 0);
+    } catch (e) { console.error(e); }
+  };
+
+  useEffect(() => { fetchSummary(); }, []);
 
   const selectedIds = useMemo(() => {
     if (apiRef.current) {
@@ -94,6 +110,12 @@ const CodRemittanceAdmin = () => {
     }
     return [];
   }, [apiRef, selection]);
+
+  const selectedTotalAmount = useMemo(() => {
+    return rows
+      .filter(row => selectedIds.includes(row.ord_id))
+      .reduce((sum, row) => sum + (Number(row.amount) || 0), 0);
+  }, [rows, selectedIds]);
 
   useEffect(() => {
     console.log('Selected IDs:', selectedIds);
@@ -396,9 +418,25 @@ const CodRemittanceAdmin = () => {
         </Box>
       </Paper>
 
+      {/* COD summary tiles */}
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2 }}>
+        <Box sx={{ flex: 1, minWidth: 200, p: 2, borderRadius: 1, bgcolor: '#fff7ed', border: '1px solid #fed7aa' }}>
+          <div className="text-xs font-semibold text-gray-600">Pending COD</div>
+          <div className="text-lg font-bold">₹ {Number(pendingAmount).toFixed(2)}</div>
+        </Box>
+        <Box sx={{ flex: 1, minWidth: 200, p: 2, borderRadius: 1, bgcolor: '#e0f2fe', border: '1px solid #bae6fd' }}>
+          <div className="text-xs font-semibold text-gray-600">Paid COD</div>
+          <div className="text-lg font-bold">₹ {Number(paidAmount).toFixed(2)}</div>
+        </Box>
+        <Box sx={{ flex: 1, minWidth: 200, p: 2, borderRadius: 1, bgcolor: '#ecfdf3', border: '1px solid #bbf7d0' }}>
+          <div className="text-xs font-semibold text-gray-600">Total COD</div>
+          <div className="text-lg font-bold">₹ {Number(totalAmount).toFixed(2)}</div>
+        </Box>
+      </Box>
+
       {/* Action bar */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-        <div className="text-sm text-gray-600">Selected: {selectedIds.length}</div>
+        <div className="text-sm text-gray-600">Selected: {selectedIds.length} | Total: ₹ {selectedTotalAmount.toFixed(2)}</div>
         <Button
           variant="contained"
           color="primary"

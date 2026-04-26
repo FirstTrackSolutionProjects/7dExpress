@@ -310,6 +310,14 @@ export const menuItems = [
                 component : InternationalReports,
                 dropDownOptions : [{}]
             },]
+        },
+        {
+            icon : FaHouseUser,
+            name : "Warehouses",
+            isDropdown : false,
+            url : 'manage/merchant/warehouses',
+            component : Warehouse,
+            dropDownOptions : [{}]
         }]
     },
     // {

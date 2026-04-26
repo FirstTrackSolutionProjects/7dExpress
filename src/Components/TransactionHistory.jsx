@@ -1,233 +1,228 @@
-import { useEffect, useState } from "react"
-import getTodaysDate from "../helpers/getTodaysDate";
-import getFilterStartDate from "../helpers/getFilterStartDate";
-import convertToUTCISOString from "../helpers/convertToUTCISOString";
+import React, { useCallback, useEffect, useState } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import { Box, IconButton } from '@mui/material';
+import DownloadIcon from '@mui/icons-material/Download';
+import * as XLSX from 'xlsx';
+import { useAuth } from '../context/AuthContext';
+import getFilterStartDate from '../helpers/getFilterStartDate';
+import getTodaysDate from '../helpers/getTodaysDate';
+import convertToUTCISOString from '../helpers/convertToUTCISOString';
 
-const API_URL = import.meta.env.VITE_APP_API_URL
-const Card = ({transaction}) => {
-    const date = transaction.date;
-    const formattedDate = new Date(date).toLocaleString();
-    return (
-        <>
-            {transaction.type ==="recharge" && <div className='p-4 border'>
-                <p>Recharge</p>
-                <p>{transaction.fullName}<span className="text-gray-500">({transaction.uid})</span></p>
-                <p>Order Id : {transaction.order_id}</p>
-                <p>Amount : {transaction.amount > 0? "+"+transaction.amount :transaction.amount}</p>
-                <p>{formattedDate}</p>
-            </div>}
-            {transaction.type ==="manual" && <div className='p-4 border'>
-                <p>Manual Recharge</p>
-                <p>{transaction.fullName}<span className="text-gray-500">({transaction.beneficiary_id})</span></p>
-                <p>Order Id : {transaction.recharge_id}</p>
-                <p>Amount : {transaction.amount > 0? "+"+transaction.amount :transaction.amount}</p>
-                <p>Reason : {transaction.reason}</p>
-                <p>{formattedDate}</p>
-            </div>}
-            {transaction.type ==="expense" && <div className='p-4 border'>
-                <p>Order Expense</p>
-                <p>{transaction.fullName}<span className="text-gray-500">({transaction.uid})</span></p>
-                <p>Order Id : {transaction.expense_order}</p>
-                <p>Service : {transaction.service_name} ({transaction.is_b2b?'B2B':'B2C'})</p>
-                <p>Amount : -{transaction.expense_cost}</p>
-                <p>{formattedDate}</p>
-            </div>}
-            {transaction.type ==="refund" && <div className='p-4 border'>
-                <p>Order Refund</p>
-                <p>{transaction.fullName}<span className="text-gray-500">({transaction.uid})</span></p>
-                <p>Order Id : {transaction.refund_order}</p>
-                <p>Service : {transaction.service_name} ({transaction.is_b2b?'B2B':'B2C'})</p>
-                <p>Amount : +{transaction.refund_amount}</p>
-                <p>{formattedDate}</p>
-            </div>}
-            {transaction.type ==="dispute_charge" && <div className='p-4 border'>
-                <p>Dispute Charge</p>
-                <p>{transaction.fullName}<span className="text-gray-500">({transaction.uid})</span></p>
-                <p>Order Id : {transaction.dispute_order}</p>
-                <p>Service : {transaction.service_name}</p>
-                <p>Amount : -{transaction.dispute_charge}</p>
-                <p>{formattedDate}</p>
-            </div>}
-        </>
-    )
-}
+const API_URL = import.meta.env.VITE_APP_API_URL;
+const PAGE_SIZE = 50;
 
+const TransactionHistory = () => {
+  const { admin } = useAuth();
+  const [rows, setRows] = useState([]);
+  const [rowCount, setRowCount] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [filters, setFilters] = useState({
+    type: 'all',
+    order_id: '',
+    merchant_email: '',
+    startDate: getFilterStartDate(),
+    endDate: getTodaysDate()
+  });
 
-
-const TransactionHistory =  () => {
-    const [transactions, setTransactions] = useState([])
-    const [filteredTransactions, setFilteredTransactions] = useState([]);
-    const [filters, setFilters] = useState({
-        type: "",
-        orderId: "",
-        fromDate: getFilterStartDate(),
-        toDate: getTodaysDate()
-    })
-    useEffect(() => {
-        const getVerifiedtransaction = async () => {
-            const recharge = await fetch(`${API_URL}/wallet/recharges`, {
-                method: 'POST',
-                headers: { 'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token'),
-                }
-            })
-            const recharges = await recharge.json();
-            const data = recharges.data
-            const manual = await fetch(`${API_URL}/wallet/manualRecharges`, {
-                method: 'POST',
-                headers: { 'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token'),
-                }
-            })
-            const manuals = await manual.json();
-            data.push(...manuals.data)
-            const expense = await fetch(`${API_URL}/wallet/expenses`, {
-                method: 'POST',
-                headers: { 'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token'),
-                }
-            })
-            const expenses = await expense.json();
-            data.push(...expenses.data)
-            const refund = await fetch(`${API_URL}/wallet/refunds`, {
-                method: 'POST',
-                headers: { 'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token'),
-                }
-            })
-            const refunds = await refund.json();
-            data.push(...refunds.data)
-
-            const disputeCharge = await fetch(`${API_URL}/wallet/dispute-charges`, {
-                method: 'GET',
-                headers: { 'Accept': 'application/json',
-                    'Authorization': localStorage.getItem('token'),
-                }
-            })
-            const disputeCharges = await disputeCharge.json();
-            data.push(...disputeCharges.data)
-            
-            // console.log("recharge", transactions.data)
-            data.forEach(obj => {
-                if (!(obj.date instanceof Date)) {
-                    obj.dateObj = new Date(obj.date);
-                }
-            });
-            data.sort((a, b) => a.dateObj - b.dateObj).reverse();
-            if (data.length)
-                setTransactions(data)
+  const columns = [
+    { field: 'date', headerName: 'Date', flex: 1, renderCell: p => new Date(p.row.date).toLocaleString(), minWidth: 175 },
+    { field: 'type', headerName: 'Type', flex: 1, minWidth: 120 },
+    { field: 'order_id', headerName: 'Order ID', flex: 1, minWidth: 120 },
+    ...(admin ? [{ 
+      field: 'merchant_details', 
+      headerName: 'Merchant Details', 
+      minWidth: 250,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 80, justifyContent: 'center' }}>
+          <div className="font-bold text-gray-800">{params.row.fullName}</div>
+          <div className="text-xs text-gray-500">{params.row.email}</div>
+        </Box>
+      )
+    }] : []),
+    { field: 'shipment_details', headerName: 'Shipment Details', minWidth: 200,
+          renderCell: (params) => (
+            <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 80, justifyContent: 'center' }}>
+              {params.row.service_name && <div className="text-sm font-medium">Service: {params.row.service_name}</div>}
+              {params.row.awb && <div className="text-xs text-blue-600 font-semibold">AWB: {params.row.awb}</div>}
+            </Box>
+          )
+        },
+    { field: 'amount', headerName: 'Amount', flex: 1, renderCell: p => {
+        const v = Number(p.value);
+        if (isNaN(v)) return '';
+        let sign = '+';
+        let cls = 'text-green-600';
+        if (['expense', 'dispute_charge', 'extra', 'rto'].includes(p.row.type)) {
+          sign = '-';
+          cls = 'text-red-600';
+        } else if (p.row.type === 'manual' && v < 0) {
+          sign = '-';
+          cls = 'text-red-600';
         }
-        getVerifiedtransaction();
-    },[]);
-    useEffect(() => {
-    if (!transactions.length) {
-        return;
+        return <span className={`font-bold ${cls}`}>{sign}{Math.abs(v)}</span>;
+      }, minWidth: 100 },
+    { field: 'reason', headerName: 'Reason', flex: 2, minWidth: 150 },
+  ];
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const queryParams = {
+        ...filters,
+        page,
+        startDate: convertToUTCISOString(`${filters.startDate}T00:00:00`),
+        endDate: convertToUTCISOString(`${filters.endDate}T23:59:59.999`)
+      };
+      if (!admin) delete queryParams.merchant_email;
+
+      const query = new URLSearchParams(queryParams).toString();
+      const endpoint = admin ? 'admin' : 'merchant';
+      const res = await fetch(`${API_URL}/wallet/transactions/${endpoint}?${query}`, {
+        headers: { 'Authorization': localStorage.getItem('token') }
+      });
+      const result = await res.json();
+      if (result.success) {
+        setRows(result.data.rows);
+        setRowCount(result.data.totalRecords);
+        setTotalPages(result.data.totalPages || 1);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
+  }, [page, filters]);
 
-    const filteredData = transactions.filter((transaction) => {
-        // Get the relevant ID based on transaction type and convert to string
-        const searchId = String(
-            transaction?.expense_order || 
-            transaction?.recharge_id || 
-            transaction?.refund_order || 
-            transaction?.order_id || 
-            transaction?.dispute_order || 
-            ''
-        );
+  useEffect(() => { fetchData(); }, [fetchData]);
 
-        // Type filtering - normalize strings and handle null/undefined
-        const transactionType = String(transaction.type || '').toLowerCase();
-        const searchType = String(filters.type || '').toLowerCase();
-        const typeMatch = !searchType || transactionType.includes(searchType);
-
-        // Order ID filtering - normalize strings
-        const normalizedSearchId = searchId.toLowerCase();
-        const searchOrderId = String(filters?.orderId || '').toLowerCase();
-        const orderMatch = !searchOrderId || normalizedSearchId.includes(searchOrderId);
-
-        // Date filtering
-        const fromDate = new Date(convertToUTCISOString(filters.fromDate));
-        
-        const toDateLocal = `${filters.toDate}T23:59:59.999Z`;
-        const toDate = new Date(convertToUTCISOString(toDateLocal));
-
-        const dateMatch = transaction.dateObj >= fromDate && transaction.dateObj <= toDate;
-
-        return typeMatch && orderMatch && dateMatch;
-    });
-
-    // Sort by date in descending order using dateObj
-    const sortedData = [...filteredData].sort((a, b) => b.dateObj - a.dateObj);
-
-    setFilteredTransactions(sortedData);
-}, [transactions, filters]);
-  const handleChange = (e) => {
+  const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters({ ...filters, [name]: value });
-  }
-  return (
-    <>
-    <div className=" py-16 w-full h-full flex flex-col items-center overflow-x-hidden overflow-y-auto">
-      <div className='w-full p-8 flex flex-col items-center space-y-8'>
-      <div className='text-center text-3xl font-medium text-black'>Transaction History</div>
-      <details className="w-full p-2 bg-blue-500 rounded-xl text-white">
-          <summary>Filters</summary>
-          <div className="grid space-y-2 lg:grid-rows-1 lg:grid-cols-4 lg:space-y-0 lg:space-x-4 p-2 rounded-xl w-full bg-blue-500 text-black justify-evenly">
-            <select
-                className="p-1 rounded-xl"
-                name="type"
-                value={filters?.type}
-                onChange={handleChange}
-                >
-                <option value="">All Types</option>
-                <option value="recharge">Recharge</option>
-                <option value="manual">Manual Recharge</option>
-                <option value="expense">Expense</option>
-                <option value="refund">Refund</option>
-                <option value="dispute_charge">Dispute Charge</option>
-            </select>
-            <input
-              className="p-1 rounded-xl"
-              type="text"
-              name="orderId"
-              placeholder="Order ID/Recharge ID"
-              value={filters?.orderId}
-              onChange={handleChange}
-            />
-            <input
-        className="p-1 rounded-xl"
-        type="date"
-        name="fromDate"
-        value={filters.fromDate}
-        onChange={handleChange}
-    />
-    <input
-        className="p-1 rounded-xl"
-        type="date"
-        name="toDate"
-        value={filters.toDate}
-        onChange={handleChange}
-    />
-          </div>
-        </details>
-      <div className='w-full bg-white px-8 pb-8 pt-2'>
-        <p className="text-center py-2">{`Showing results from ${filters?.fromDate} to ${filters?.toDate}`}</p>
-        {filteredTransactions.length > 0 ? (
-        filteredTransactions.map(((transaction,index)=>(
-            <Card key={index}  transaction={transaction}/>
-        )))
-      ) : (
-        null
-      )}
+    setFilters(prev => ({ ...prev, [name]: value }));
+    setPage(1);
+  };
+
+  const handleDownload = async () => {
+    try {
+      const res = await fetch(`${API_URL}/wallet/report/download/${admin ? 'all' : ''}`, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': localStorage.getItem('token') 
+        },
+        body: JSON.stringify({
+            startDate: convertToUTCISOString(`${filters.startDate}T00:00:00`),
+            endDate: convertToUTCISOString(`${filters.endDate}T23:59:59.999`),
+            merchant_email: filters.merchant_email
+        })
+      });
+      const result = await res.json();
+      if (result.success) {
+        const worksheet = XLSX.utils.json_to_sheet(result.data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
+        XLSX.writeFile(workbook, `Transactions_${filters.startDate}_to_${filters.endDate}.xlsx`);
+      }
+    } catch (err) {
+      alert("Failed to download report");
+    }
+  };
+
+  const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+    const pages = [];
+    const addPage = (num) => pages.push({ number: num, isCurrent: num === currentPage });
+    addPage(1);
+    if (totalPages <= 7) {
+      for (let i = 2; i < totalPages; i++) addPage(i);
+    } else {
+      if (currentPage <= 4) {
+        for (let i = 2; i <= 5; i++) addPage(i);
+        pages.push({ number: '...', isCurrent: false });
+      } else if (currentPage >= totalPages - 3) {
+        pages.push({ number: '...', isCurrent: false });
+        for (let i = totalPages - 4; i < totalPages; i++) addPage(i);
+      } else {
+        pages.push({ number: '...', isCurrent: false });
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) addPage(i);
+        pages.push({ number: '...', isCurrent: false });
+      }
+    }
+    if (totalPages > 1) addPage(totalPages);
+    return (
+      <div className="flex items-center justify-center space-x-1 sm:space-x-2 mt-4 pb-4">
+        <button
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className={`px-3 py-1 rounded-md text-sm ${currentPage === 1 ? 'bg-gray-200 cursor-not-allowed text-gray-500' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+        >
+          Prev
+        </button>
+        {pages.map((p, idx) => (
+          <button
+            key={idx}
+            onClick={() => p.number !== '...' && onPageChange(p.number)}
+            className={`min-w-[32px] px-2 py-1 rounded-md text-sm ${p.number === '...' ? 'cursor-default' : p.isCurrent ? 'bg-blue-600 text-white' : 'bg-white hover:bg-gray-100 border'}`}
+            disabled={p.number === '...'}
+          >
+            {p.number}
+          </button>
+        ))}
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className={`px-3 py-1 rounded-md text-sm ${currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed text-gray-500' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+        >
+          Next
+        </button>
       </div>
+    );
+  };
+
+  return (
+    <div className='py-10 w-full flex flex-col items-center bg-gray-50 min-h-screen'>
+      <div className='w-full max-w-7xl px-4 flex flex-col gap-4 mt-8'>
+        <h1 className='text-3xl font-semibold text-center'>Transaction History</h1>
+        <div className='bg-blue-600 text-white p-4 rounded-lg flex flex-wrap gap-3 items-center shadow-md'>
+            <select name='type' value={filters.type} onChange={handleFilterChange} className='p-2 rounded text-black bg-white focus:outline-none'>
+              <option value='all'>All Types</option>
+              <option value='recharge'>Recharge</option>
+              <option value='manual'>Manual Recharge</option>
+              <option value='expense'>Expense</option>
+              <option value='refund'>Refund</option>
+              <option value='dispute_charge'>Dispute Charge</option>
+              <option value='rto'>RTO Charge</option>
+            </select>
+            <input name='order_id' value={filters.order_id} onChange={handleFilterChange} placeholder='Order ID' className='p-2 rounded text-black bg-white flex-1 min-w-[150px] focus:outline-none'/>
+            {admin && <input name='merchant_email' value={filters.merchant_email} onChange={handleFilterChange} placeholder='Merchant Email' className='p-2 rounded text-black bg-white flex-1 min-w-[200px] focus:outline-none'/>}
+            <input type='date' name='startDate' value={filters.startDate} onChange={handleFilterChange} className='p-2 rounded text-black bg-white focus:outline-none'/>
+            <input type='date' name='endDate' value={filters.endDate} onChange={handleFilterChange} className='p-2 rounded text-black bg-white focus:outline-none'/>
+            <IconButton onClick={handleDownload} sx={{ color: 'white', backgroundColor: 'rgba(255,255,255,0.2)', '&:hover': { backgroundColor: 'rgba(255,255,255,0.3)' } }}>
+              <DownloadIcon />
+            </IconButton>
+        </div>
+        <div style={{ width: '100%', background: 'white' }} className='rounded-xl border shadow-sm overflow-hidden'>
+          <DataGrid
+            autoHeight
+            rows={rows}
+            columns={columns}
+            loading={loading}
+            paginationMode='server'
+            rowCount={rowCount}
+            hideFooterPagination
+            rowHeight={80}
+            disableRowSelectionOnClick
+            sx={{
+                '& .MuiDataGrid-columnHeaders': { backgroundColor: '#f8fafc', fontWeight: 'bold' },
+                '& .MuiDataGrid-cell': { borderBottom: '1px solid #f1f5f9' },
+                border: 'none'
+            }}
+          />
+          <Pagination currentPage={page} totalPages={totalPages} onPageChange={(p) => setPage(p)} />
+        </div>
       </div>
     </div>
-    </>
-  )
-}
+  );
+};
 
-export default TransactionHistory
+export default TransactionHistory;

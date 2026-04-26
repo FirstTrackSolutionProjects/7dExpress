@@ -475,7 +475,19 @@ const Listing = ({ setMode }) => {
   const [isManage, setIsManage] = useState(false);
   const [checkWarehouse, setCheckWarehouse] = useState(false);
   
-  const isAdmin = localStorage.getItem('role') === 'ADMIN' || localStorage.getItem('username') === 'admin';
+  const isAdmin = (() => {
+    const role = localStorage.getItem('role')?.toUpperCase();
+    const username = localStorage.getItem('username')?.toLowerCase();
+    const token = localStorage.getItem('token');
+    let tokenAdmin = false;
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        tokenAdmin = decoded.admin === true || decoded.admin === 1;
+      } catch (e) {}
+    }
+    return role === 'ADMIN' || username === 'admin' || tokenAdmin;
+  })();
 
   useEffect(() => {
     getWarehouses();
@@ -496,6 +508,10 @@ const Listing = ({ setMode }) => {
 
   const columns = [
     { field: 'wid', headerName: 'ID', width: 70 },
+    ...(isAdmin ? [
+      { field: 'merchantName', headerName: 'Merchant', width: 180 },
+      { field: 'merchantEmail', headerName: 'Merchant Email', width: 200 },
+    ] : []),
     { field: 'warehouseName', headerName: 'Name', width: 200 },
     { field: 'phone', headerName: 'Phone', width: 130 },
     { field: 'city', headerName: 'City', width: 120 },
@@ -549,7 +565,23 @@ const Listing = ({ setMode }) => {
             rowsPerPageOptions={[10]}
             disableSelectionOnClick
             sx={{
-              '& .MuiDataGrid-columnHeaders': { backgroundColor: '#3b82f6', color: 'white' }
+              '& .MuiDataGrid-columnHeader': {
+                backgroundColor: '#3b82f6',
+                color: 'white',
+              },
+              '& .MuiDataGrid-columnHeaderTitle': {
+                fontWeight: 'bold',
+                color: 'white',
+              },
+              '& .MuiDataGrid-columnHeaders': {
+                backgroundColor: '#3b82f6',
+              },
+              '& .MuiDataGrid-iconButtonContainer .MuiButtonBase-root': {
+                color: 'white',
+              },
+              '& .MuiDataGrid-menuIcon .MuiButtonBase-root': {
+                color: 'white',
+              }
             }}
           />
         </Box>

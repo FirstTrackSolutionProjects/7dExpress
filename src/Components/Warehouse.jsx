@@ -9,12 +9,28 @@ const AddForm = ({ setMode }) => {
     phone: "",
     email: "",
     address: "",
+    internationalAddress: "",
     pin: "",
     city: "",
     state: "",
     country: "India",
     username: localStorage.getItem("username"),
   });
+
+  const fillCityState = async (pin) => {
+    try {
+      if (pin.length !== 6) return;
+      const resp = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+      const data = await resp.json();
+      if (data?.[0]?.Status === 'Success') {
+        setFormData(prev => ({
+          ...prev,
+          city: data[0].PostOffice[0].District,
+          state: data[0].PostOffice[0].State
+        }));
+      }
+    } catch (err) {}
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -132,6 +148,22 @@ const AddForm = ({ setMode }) => {
               placeholder="Enter Address"
               value={formData.address}
               onChange={handleChange}
+            />
+          </div>
+          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
+            <label htmlFor="internationalAddress">International Address (Optimized)</label>
+            <input
+              className="w-full border py-2 px-4 rounded-md"
+              type="text"
+              maxLength={60}
+              id="internationalAddress"
+              name="internationalAddress"
+              placeholder="Allowed: , . - ' / (Max 60 chars)"
+              value={formData.internationalAddress}
+              onChange={(e) => {
+                const cleaned = e.target.value.replace(/[^A-Za-z0-9\s,.\-'/]/g, '');
+                setFormData(p => ({...p, internationalAddress: cleaned}));
+              }}
             />
           </div>
           <div className="w-full flex mb-2 flex-wrap ">
@@ -432,69 +464,141 @@ const Card = ({ name, address, pin, phone, wid, justCreated, state, city }) => {
   );
 };
 
+import { DataGrid } from '@mui/x-data-grid';
+import { Paper, Box, Button, IconButton, Dialog, DialogTitle, DialogContent } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+
 const Listing = ({ setMode }) => {
   const [warehouses, setWarehouses] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedWarehouse, setSelectedWarehouse] = useState(null);
+  const [isManage, setIsManage] = useState(false);
+  const [checkWarehouse, setCheckWarehouse] = useState(false);
+  
+  const isAdmin = localStorage.getItem('role') === 'ADMIN' || localStorage.getItem('username') === 'admin';
+
   useEffect(() => {
-    const getWarehouses = async () => {
-      const response = await fetch(`${API_URL}/warehouse/warehouses`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": localStorage.getItem("token"),
-        },
-      })
-        .then((response) => response.json())
-        .catch((error) => console.error(error));
-      const rows = response.rows;
-      setWarehouses(rows);
-    };
     getWarehouses();
   }, []);
-  return (
-    <>
-      <div
-        className={`w-full p-4 flex flex-col items-center space-y-6`}
-      >
-        <div className="w-full h-16 px-4  relative flex">
-          <div className="text-2xl font-medium">WAREHOUSES</div>
-          <div
-            onClick={(e) => {
-              e.preventDefault();
-              setMode(1);
+
+  const getWarehouses = async () => {
+    setIsLoading(true);
+    const response = await fetch(`${API_URL}/warehouse/warehouses${isAdmin ? '/all' : ''}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': localStorage.getItem("token"),
+      },
+    }).then(res => res.json()).catch(() => ({rows: []}));
+    setWarehouses(response.rows || []);
+    setIsLoading(false);
+  };
+
+  const columns = [
+    { field: 'wid', headerName: 'ID', width: 70 },
+    { field: 'warehouseName', headerName: 'Name', width: 200 },
+    { field: 'phone', headerName: 'Phone', width: 130 },
+    { field: 'city', headerName: 'City', width: 120 },
+    { field: 'state', headerName: 'State', width: 120 },
+    { field: 'pin', headerName: 'Pincode', width: 100 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 250,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Button 
+            variant="contained" 
+            size="small" 
+            onClick={() => {
+              setSelectedWarehouse(params.row);
+              setCheckWarehouse(true);
             }}
-            className="px-5 py-1 bg-blue-500 absolute rounded-3xl text-white  right-4"
           >
-            Add
-          </div>
-        </div>
-        <div className="w-full">
-          {warehouses.map((warehouse, index) => (
-            <Card 
-              name={warehouse.warehouseName} 
-              address={warehouse.address} 
-              phone={warehouse.phone} 
-              pin={warehouse.pin} 
-              wid={warehouse.wid} 
-              justCreated={warehouse.just_created}
-              state={warehouse.state}
-              city={warehouse.city} 
-            />
-          ))}
-        </div>
-      </div>
-    </>
+            Check
+          </Button>
+          <Button 
+            variant="contained" 
+            size="small" 
+            onClick={() => {
+              setSelectedWarehouse(params.row);
+              setIsManage(true);
+            }}
+          >
+            Manage
+          </Button>
+        </Box>
+      )
+    }
+  ];
+
+  return (
+    <Box sx={{ width: '100%', p: 4 }}>
+      <Paper sx={{ width: '100%', mb: 2, p: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+          <h2 className="text-2xl font-medium">WAREHOUSES</h2>
+          <Button variant="contained" onClick={() => setMode(1)}>Add Warehouse</Button>
+        </Box>
+        <Box sx={{ height: 600, width: '100%' }}>
+          <DataGrid
+            rows={warehouses}
+            columns={columns}
+            getRowId={(row) => row.wid}
+            loading={isLoading}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
+            disableSelectionOnClick
+            sx={{
+              '& .MuiDataGrid-columnHeaders': { backgroundColor: '#3b82f6', color: 'white' }
+            }}
+          />
+        </Box>
+      </Paper>
+      {selectedWarehouse && (
+        <>
+          <ManageForm 
+            isManage={isManage} 
+            setIsManage={setIsManage} 
+            name={selectedWarehouse.warehouseName} 
+            address={selectedWarehouse.address} 
+            pin={selectedWarehouse.pin} 
+            phone={selectedWarehouse.phone} 
+            city={selectedWarehouse.city} 
+            state={selectedWarehouse.state} 
+          />
+          <Dialog 
+            open={checkWarehouse} 
+            onClose={() => setCheckWarehouse(false)}
+            maxWidth="md"
+            fullWidth
+          >
+            <DialogTitle>
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <div>Check Services</div>
+                <IconButton onClick={() => setCheckWarehouse(false)}>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+            </DialogTitle>
+            <DialogContent>
+              <WarehouseServiceList 
+                wid={selectedWarehouse.wid} 
+                setCheckWarehouse={setCheckWarehouse} 
+              />
+            </DialogContent>
+          </Dialog>
+        </>
+      )}
+    </Box>
   );
 };
 
 const Warehouse = () => {
   const [mode, setMode] = useState(0);
   return (
-    <>
-      <div className=" py-16 w-full h-full flex flex-col items-center overflow-x-hidden overflow-y-auto">
-        {mode == 0 ? <Listing setMode={setMode} /> : <AddForm setMode={setMode} />}
-      </div>
-    </>
+    <div className="py-16 w-full h-full flex flex-col items-center overflow-x-hidden overflow-y-auto">
+      {mode == 0 ? <Listing setMode={setMode} /> : <AddForm setMode={setMode} />}
+    </div>
   );
 };
 

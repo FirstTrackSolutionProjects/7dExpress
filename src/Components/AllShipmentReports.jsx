@@ -307,7 +307,7 @@ const OrderDetailsDialog = ({ isOpen, onClose, orderId, shipment }) => {
                 <Box display="flex" justifyContent="space-between" mb={1.5}>
                   <Typography variant="body2" fontWeight="600" color="text.secondary">Total volumetric weight</Typography>
                   <Typography variant="body2" fontWeight="800" color="text.primary">
-                    {(boxes.reduce((acc, box) => acc + (parseFloat(box.length) * parseFloat(box.breadth) * parseFloat(box.height) * parseInt(box.quantity || 1)), 0) / 5000).toFixed(3)} kg
+                    {(boxes.reduce((acc, box) => acc + (parseFloat(box.length) * parseFloat(box.breadth) * parseFloat(box.height) * parseInt(box.quantity || 1)), 0) / (shipment?.is_b2b ? 4500 : 5000)).toFixed(3)} kg
                   </Typography>
                 </Box>
                 <Divider sx={{ my: 2, borderColor: '#D1D5DB' }} />

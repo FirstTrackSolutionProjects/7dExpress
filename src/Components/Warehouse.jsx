@@ -150,22 +150,6 @@ const AddForm = ({ setMode }) => {
               onChange={handleChange}
             />
           </div>
-          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-            <label htmlFor="internationalAddress">International Address (Optimized)</label>
-            <input
-              className="w-full border py-2 px-4 rounded-md"
-              type="text"
-              maxLength={60}
-              id="internationalAddress"
-              name="internationalAddress"
-              placeholder="Allowed: , . - ' / (Max 60 chars)"
-              value={formData.internationalAddress}
-              onChange={(e) => {
-                const cleaned = e.target.value.replace(/[^A-Za-z0-9\s,.\-'/]/g, '');
-                setFormData(p => ({...p, internationalAddress: cleaned}));
-              }}
-            />
-          </div>
           <div className="w-full flex mb-2 flex-wrap ">
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="pin">Pincode</label>

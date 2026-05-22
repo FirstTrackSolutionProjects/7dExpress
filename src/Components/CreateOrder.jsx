@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useLocation } from 'react-router-dom';
 import WarehouseSelect from './Modals/WarehouseSelect';
 import geocodingGoogleMapsService from '../services/google_maps/geocoding.google_maps.service';
+import { toast } from 'react-toastify';
 const API_URL = import.meta.env.VITE_APP_API_URL
 
 const getTodaysDate = () => {
@@ -200,6 +201,8 @@ const FullDetails = () => {
       if (zipGeoTimerRef.current) clearTimeout(zipGeoTimerRef.current);
     };
   }, [watch('postcode')]);
+
+  const bZipGeoTimerRef = useRef(null);
   useEffect(() => {
     const zip = (watch('Bpostcode') || '').trim();
     // Do not query for very short inputs
@@ -207,9 +210,9 @@ const FullDetails = () => {
     // if (!zipEditedRef.current) return;
     if (!zip || zip.length !== 6) return;
 
-    if (zipGeoTimerRef.current) clearTimeout(zipGeoTimerRef.current);
+    if (bZipGeoTimerRef.current) clearTimeout(bZipGeoTimerRef.current);
 
-    zipGeoTimerRef.current = setTimeout(async () => {
+    bZipGeoTimerRef.current = setTimeout(async () => {
       try {
         const result = await geocodingGoogleMapsService(`${zip}, India`);
         if (!result) return;
@@ -227,7 +230,7 @@ const FullDetails = () => {
     }, 600);
 
     return () => {
-      if (zipGeoTimerRef.current) clearTimeout(zipGeoTimerRef.current);
+      if (bZipGeoTimerRef.current) clearTimeout(bZipGeoTimerRef.current);
     };
   }, [watch('Bpostcode')]);
 

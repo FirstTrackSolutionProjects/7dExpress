@@ -256,106 +256,106 @@ const Domestic = () => {
             
           </div>
           {boxes.map((box,index)=>(
-            <React.Fragment key={index}> {/* Added React.Fragment with key */}
-              <div className="w-full relative z-0 flex mb-2 flex-wrap ">
-              <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-              <label htmlFor="weight">Weight</label>
-              <div className="w-full flex space-x-2">
-              <input required 
-                className="w-full border py-2 px-4 rounded-md"
-                type="text"
-                id="weight"
-                name="weight"
-                placeholder="Ex. 1500"
-                value = {box.weight}
-                onChange={(e)=>handleBoxes(index,e)}
-              />
-              <select
-                name="weight_unit"
-                id="weight_unit" 
-                className="border py-2 px-4 rounded-md"
-                value={box.weight_unit}
-                onChange={(e)=>handleBoxes(index,e)}
-              >
-                <option value={'g'}>g</option>
-                <option value={'kg'}>kg</option>
-              </select>
+            <React.Fragment key={index}>
+              <div className="w-full relative z-0 flex flex-col sm:flex-row mb-2 flex-wrap">
+                {/* WEIGHT FIELD - FIXED FOR MOBILE */}
+                <div className="flex-1 mx-2 mb-2 min-w-[200px] md:min-w-[250px] space-y-2">
+                  <label htmlFor="weight">Weight</label>
+                  <div className="w-full flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                    <input required 
+                      className="w-full border py-2 px-4 rounded-md text-base"
+                      type="text"
+                      id="weight"
+                      name="weight"
+                      placeholder="Ex. 1500"
+                      value={box.weight}
+                      onChange={(e)=>handleBoxes(index,e)}
+                    />
+                    <select
+                      name="weight_unit"
+                      id="weight_unit" 
+                      className="w-full sm:w-auto border py-2 px-4 rounded-md"
+                      value={box.weight_unit}
+                      onChange={(e)=>handleBoxes(index,e)}
+                    >
+                      <option value="g">g</option>
+                      <option value="kg">kg</option>
+                    </select>
+                  </div>
+                </div>
+                
+                {/* DIMENSIONS FIELDS */}
+                <div className="flex-1 mx-2 mb-2 min-w-[200px] flex flex-wrap gap-2">
+                  <div className="flex-1 min-w-[60px] space-y-2">
+                    <label htmlFor="length" className="text-sm">L (cm)</label>
+                    <input required 
+                      className="w-full border py-2 px-4 rounded-md text-base"
+                      type="text"
+                      id="length"
+                      name="length"
+                      min={1}
+                      placeholder="2.5"
+                      value={box.length}
+                      onChange={(e)=>handleBoxes(index,e)}
+                    />
+                  </div>
+                  <div className="flex-1 min-w-[60px] space-y-2">
+                    <label htmlFor="breadth" className="text-sm">B (cm)</label>
+                    <input required 
+                      className="w-full border py-2 px-4 rounded-md text-base"
+                      type="text"
+                      id="breadth"
+                      name="breadth"
+                      min={1}
+                      placeholder="2.5"
+                      value={box.breadth}
+                      onChange={(e)=>handleBoxes(index,e)}
+                    />
+                  </div>
+                  <div className="flex-1 min-w-[60px] space-y-2">
+                    <label htmlFor="height" className="text-sm">H (cm)</label>
+                    <input required 
+                      className="w-full border py-2 px-4 rounded-md text-base"
+                      type="text"
+                      id="height"
+                      name="height"
+                      min={1}
+                      placeholder="2.5"
+                      value={box.height}
+                      onChange={(e)=>handleBoxes(index,e)}
+                    />
+                  </div>
+                  <div className="flex-1 min-w-[60px] space-y-2">
+                    <label htmlFor="quantity" className="text-sm">Qty</label>
+                    <input required 
+                      className="w-full border py-2 px-4 rounded-md text-base"
+                      type="text"
+                      id="quantity"
+                      name="quantity"
+                      min={1}
+                      placeholder="1"
+                      value={box.quantity}
+                      onChange={(e)=>handleBoxes(index,e)}
+                    />
+                  </div>
+                </div>
+                
+                {boxes.length > 1 && <button type="button" className="absolute w-5 h-5 text-sm flex justify-center items-center top-0 right-0 border rounded-lg bg-red-500 text-white" onClick={() => removeBox(index)}>X</button>}
               </div>
-            </div>
-            <div className="flex-1 mx-2 mb-2 min-w-[300px] flex space-x-2">
-            <div className="flex-1 mb-2 min-w-[70px] space-y-2">
-              <label htmlFor="length">L (in cm)</label>
-              <input required 
-                className="w-full border py-2 px-4 rounded-md"
-                type="text"
-                id="length"
-                name="length"
-                min={1}
-                placeholder="Ex. 2.5"
-                value={box.length}
-                onChange={(e)=>handleBoxes(index,e)}
-              />
-            </div>
-            <div className="flex-1 mb-2 min-w-[70px] space-y-2">
-              <label htmlFor="breadth">B (in cm)</label>
-              <input required 
-                className="w-full border py-2 px-4 rounded-md"
-                type="text"
-                id="breadth"
-                name="breadth"
-                min={1}
-                placeholder="Ex. 2.5"
-                value={box.breadth}
-                onChange={(e)=>handleBoxes(index,e)}
-              />
-            </div>
-            <div className="flex-1 mb-2 min-w-[70px] space-y-2">
-              <label htmlFor="height">H (in cm)</label>
-              <input required 
-                className="w-full border py-2 px-4 rounded-md"
-                type="text"
-                id="height"
-                name="height"
-                min={1}
-                placeholder="Ex. 2.5"
-                value={box.height}
-                onChange={(e)=>handleBoxes(index,e)}
-              />
-            </div>
-            <div className="flex-1 mb-2 min-w-[70px] space-y-2">
-              <label htmlFor="quantity">Quantity</label>
-              <input required 
-                className="w-full border py-2 px-4 rounded-md"
-                type="text"
-                id="quantity"
-                name="quantity"
-                min={1}
-                placeholder="Ex. 2.5"
-                value={box.quantity}
-                onChange={(e)=>handleBoxes(index,e)}
-              />
-            </div>
-            </div>
-            {boxes.length > 1 && <button type="button" className="absolute w-5 h-5 text-sm flex justify-center items-center top-0 right-0 border rounded-lg bg-red-500 text-white" onClick={() => removeBox(index)}>X</button>}
-            </div>
             </React.Fragment>
-          ))} {/* Closing React.Fragment */}
-            <button type="button" className="m-2 px-5 py-1 border border-sky-800 rounded-lg bg-white text-sky-900" onClick={addBox}>Add More Boxes</button>
-            <button type="submit" className="border bg-sky-950 text-white mx-2 py-2 px-4 rounded-lg">
-              Submit and Compare
-            </button>
+          ))}
+          <button type="button" className="m-2 px-5 py-1 border border-sky-800 rounded-lg bg-white text-sky-900" onClick={addBox}>Add More Boxes</button>
+          <button type="submit" className="border bg-sky-950 text-white mx-2 py-2 px-4 rounded-lg">
+            Submit and Compare
+          </button>
         </form>
     </>
   )
 }
 
-
-
-
 const PriceCalc = () => {
   return (
     <>
-      
       <div className=" relative bg-gray-200 p-2">
       <div className="bg-gray-300 ">
       <div className="w-full p-8 flex flex-col items-center space-y-6">
@@ -369,4 +369,4 @@ const PriceCalc = () => {
   );
 };
 
-export default PriceCalc
+export default PriceCalc;

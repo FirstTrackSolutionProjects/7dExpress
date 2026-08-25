@@ -12,21 +12,20 @@ const API_URL = import.meta.env.VITE_APP_API_URL
 const getTodaysDate = () => {
   const today = new Date();
   const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const month = String(today.getMonth() + 1).padStart(2, '0');
   const day = String(today.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
 
 const getCurrentTime = () => {
   const now = new Date();
-  const hours = String(now.getHours()).padStart(2, '0'); // Hours in 24-hour format
+  const hours = String(now.getHours()).padStart(2, '0');
   const minutes = String(now.getMinutes()).padStart(2, '0');
   return `${hours}:${minutes}`;
 }
 
 const getPickupTime = (string) => {
   const currentTime = getCurrentTime();
-  //Increment by 1 hour
   let hour = parseInt(currentTime.split(':')[0]) + 1;
   let minute = currentTime.split(':')[1];
   if (hour >= 24) {
@@ -41,8 +40,6 @@ const FullDetails = () => {
   const { state } = location;
   const schema = z.object({
   wid: z.string().min(1, "Pickup Warehouse Name is required"),
-  // order: z.string().min(1, "Order ID is required"),
-  // date: z.string().regex(/^\d{2}\/\d{2}\/\d{4}$/, "Invalid date format (DD/MM/YYYY)"),
   payMode: z.enum(['COD', 'Pre-paid']),
   name: z.string().min(1, "Buyer's name is required"),
   email: z.string().email("Invalid email address"),
@@ -116,7 +113,7 @@ const FullDetails = () => {
     (a) => parseFloat(a),
     z.number().min(1, "Shipment value must be greater than 0")
   ),
-  insurance: z.boolean().optional(), // changed to boolean opt-in
+  insurance: z.boolean().optional(),
   ewaybill: z.string().optional(),
   invoiceNumber: z.string().optional(),
   invoiceDate: z.string().optional(),
@@ -144,7 +141,7 @@ const FullDetails = () => {
       Bpostcode: '',
       same: true,
       shipmentValue: 0,
-      insurance: false, // boolean default
+      insurance: false,
       discount: 0,
       cod: state?.shipment?.cod || 0,
       addressType: "home",
@@ -170,12 +167,8 @@ const FullDetails = () => {
   });
 
   const zipGeoTimerRef = useRef(null);
-  // const zipEditedRef = useRef(false);
   useEffect(() => {
     const zip = (watch('postcode') || '').trim();
-    // Do not query for very short inputs
-    // Only auto-complete when user has manually edited the zip
-    // if (!zipEditedRef.current) return;
     if (!zip || zip.length !== 6) return;
 
     if (zipGeoTimerRef.current) clearTimeout(zipGeoTimerRef.current);
@@ -205,9 +198,6 @@ const FullDetails = () => {
   const bZipGeoTimerRef = useRef(null);
   useEffect(() => {
     const zip = (watch('Bpostcode') || '').trim();
-    // Do not query for very short inputs
-    // Only auto-complete when user has manually edited the zip
-    // if (!zipEditedRef.current) return;
     if (!zip || zip.length !== 6) return;
 
     if (bZipGeoTimerRef.current) clearTimeout(bZipGeoTimerRef.current);
@@ -252,13 +242,11 @@ const FullDetails = () => {
 
   const onSubmit = async (data) => {
     const now = new Date();
-    const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
+    const istOffset = 5.5 * 60 * 60 * 1000;
     const istDate = new Date(now.getTime() + (now.getTimezoneOffset() * 60 * 1000) + istOffset);
         
-    // Combine shipment pickup date and time into a single Date object
     const pickupDateAndTime = new Date(`${data.pickupDate}T${data.pickupTime}`);
         
-    // Compare pickup time with the current IST time
     if (pickupDateAndTime < istDate) {
         alert('Pickup time is already passed. Please update and try again');
         return;
@@ -325,7 +313,6 @@ const FullDetails = () => {
     const key = `invoice/${invoiceUuid}`;
     const filetype = invoice.type;
 
-
     const putUrlReq = await fetch(`${API_URL}/s3/putUrl`, {
       method: "POST",
       headers: {
@@ -353,8 +340,6 @@ const FullDetails = () => {
         alert("Failed to upload invoice!");
       }
     })
-
-
 
   }
 
@@ -529,7 +514,6 @@ const FullDetails = () => {
           />
           <label htmlFor="same">Billing Address same as Shipping Address</label>
         </div>
-        {/* Additional Billing Address Fields if 'same' is not checked */}
         {!watch("same") && (
           <>
             <div className="w-full flex mb-2 flex-wrap">
@@ -618,7 +602,7 @@ const FullDetails = () => {
           </div>
           {boxes.fields.map((field, index) => (
             <div key={field.id} className="w-full flex mb-2 flex-wrap">
-              <div className="flex-1 mx-2 mb-2 space-y-2">
+              <div className="flex-1 mx-2 mb-2 min-w-[100px] space-y-2">
                 <label htmlFor={`boxes[${index}].box_no`}>Box No.</label>
                 <input
                   className="w-full border py-2 px-4 rounded-md"
@@ -630,63 +614,71 @@ const FullDetails = () => {
                 />
                 {errors.boxes?.[index]?.box_no && <span className='text-red-500'>{errors.boxes?.[index]?.box_no.message}</span>}
               </div>
-              <div className="flex-1 mx-2 mb-2 space-y-2">
-                <label htmlFor={`boxes[${index}].length`}>Length (in cm)</label>
+              <div className="flex-1 mx-2 mb-2 min-w-[100px] space-y-2">
+                <label htmlFor={`boxes[${index}].length`}>Length (cm)</label>
                 <input
                   className="w-full border py-2 px-4 rounded-md"
                   type="text"
                   id={`boxes[${index}].length`}
                   {...register(`boxes[${index}].length`)}
+                  placeholder="0"
                 />
                 {errors.boxes?.[index]?.length && <span className='text-red-500'>{errors.boxes?.[index]?.length.message}</span>}
               </div>
-              <div className="flex-1 mx-2 mb-2 space-y-2">
-                <label htmlFor={`boxes[${index}].breadth`}>Width (in cm)</label>
+              <div className="flex-1 mx-2 mb-2 min-w-[100px] space-y-2">
+                <label htmlFor={`boxes[${index}].breadth`}>Width (cm)</label>
                 <input
                   className="w-full border py-2 px-4 rounded-md"
                   type="text"
                   id={`boxes[${index}].breadth`}
                   {...register(`boxes[${index}].breadth`)}
+                  placeholder="0"
                 />
                 {errors.boxes?.[index]?.breadth && <span className='text-red-500'>{errors.boxes?.[index]?.breadth.message}</span>}
               </div>
-              <div className="flex-1 mx-2 mb-2 space-y-2">
-                <label htmlFor={`boxes[${index}].height`}>Height (in cm)</label>
+              <div className="flex-1 mx-2 mb-2 min-w-[100px] space-y-2">
+                <label htmlFor={`boxes[${index}].height`}>Height (cm)</label>
                 <input
                   className="w-full border py-2 px-4 rounded-md"
                   type="text"
                   id={`boxes[${index}].height`}
                   {...register(`boxes[${index}].height`)}
+                  placeholder="0"
                 />
                 {errors.boxes?.[index]?.height && <span className='text-red-500'>{errors.boxes?.[index]?.height.message}</span>}
               </div>
-              <div className="flex-1 mx-2 mb-2 space-y-2">
+              {/* WEIGHT FIELD - FIXED FOR MOBILE */}
+              <div className="flex-1 mx-2 mb-2 min-w-[180px] md:min-w-[200px] space-y-2">
                 <label htmlFor={`boxes[${index}].weight`}>Weight</label>
-                <div className='w-full flex space-x-2'>
-                <input
-                  className="w-full border py-2 px-4 rounded-md"
-                  type="text"
-                  id={`boxes[${index}].weight`}
-                  {...register(`boxes[${index}].weight`)}
-                />
-                <select
-                  className="w-full border py-2 px-4 rounded-md"
-                  id={`boxes[${index}].weight_unit`}
-                  {...register(`boxes[${index}].weight_unit`)}
-                >
-                  <option value="g">gm</option>
-                  <option value="kg">kg</option>
-                </select>
+                <div className="w-full flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                  <input
+                    className="w-full border py-2 px-4 rounded-md text-base"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    id={`boxes[${index}].weight`}
+                    {...register(`boxes[${index}].weight`)}
+                    placeholder="0.0"
+                  />
+                  <select
+                    className="w-full sm:w-auto border py-2 px-4 rounded-md"
+                    id={`boxes[${index}].weight_unit`}
+                    {...register(`boxes[${index}].weight_unit`)}
+                  >
+                    <option value="g">gm</option>
+                    <option value="kg">kg</option>
+                  </select>
                 </div>
                 {errors.boxes?.[index]?.weight && <span className='text-red-500'>{errors.boxes?.[index]?.weight.message}</span>}
               </div>
-              <div className="flex-1 mx-2 mb-2 space-y-2">
-                <label htmlFor={`boxes[${index}].quantity`}>Quantity</label>
+              <div className="flex-1 mx-2 mb-2 min-w-[100px] space-y-2">
+                <label htmlFor={`boxes[${index}].quantity`}>Qty</label>
                 <input
                   className="w-full border py-2 px-4 rounded-md"
                   type="text"
                   id={`boxes[${index}].quantity`}
                   {...register(`boxes[${index}].quantity`)}
+                  placeholder="1"
                 />
                 {errors.boxes?.[index]?.quantity && <span className='text-red-500'>{errors.boxes?.[index]?.quantity.message}</span>}
               </div>
@@ -699,7 +691,7 @@ const FullDetails = () => {
             <button
               type="button"
               className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-              onClick={() => boxes.append({ box_no: watch('boxes').length + 1, product_name: '', product_quantity: 0, selling_price: 0, discount: '', tax_in_percentage: 0 })}
+              onClick={() => boxes.append({ box_no: watch('boxes').length + 1, length: '', breadth: '', height: '', weight: '', weight_unit: 'g', quantity: 1 })}
             >
               Add Boxes
             </button>
@@ -728,7 +720,7 @@ const FullDetails = () => {
                 {errors.orders?.[index]?.product_name && <span className='text-red-500'>{errors.orders[index].product_name.message}</span>}
               </div>
               <div className="flex-1 mx-2 mb-2 max-w-[150px] min-w-[150px] space-y-2">
-                <label htmlFor={`orders[${index}].product_quantity`}>Quantity</label>
+                <label htmlFor={`orders[${index}].product_quantity`}>Qty</label>
                 <input
                   className="w-full border py-2 px-4 rounded-md"
                   type="number"
@@ -747,16 +739,6 @@ const FullDetails = () => {
                 />
                 {errors.orders?.[index]?.selling_price && <span className='text-red-500'>{errors.orders[index].selling_price.message}</span>}
               </div>
-              {/* <div className="flex-1 mx-2 mb-2 max-w-[150px] min-w-[150px] space-y-2">
-                <label htmlFor={`orders[${index}].tax_in_percentage`}>Tax (in %)</label>
-                <input
-                  className="w-full border py-2 px-4 rounded-3xl"
-                  type="number"
-                  id={`orders[${index}].tax_in_percentage`}
-                  {...register(`orders[${index}].tax_in_percentage`)}
-                />
-                {errors.orders?.[index]?.tax_in_percentage && <span className='text-red-500'>{errors.orders[index].tax_in_percentage.message}</span>}
-              </div> */}
               {watch('orders').length > 1 ? <div className="w-full text-right">
                 <button type="button" className="text-red-500" onClick={() => remove(index)}>Remove</button>
               </div> : null}
@@ -872,16 +854,6 @@ const FullDetails = () => {
           </div>
         </div>
         <div className="w-full flex mb-2 flex-wrap">
-          {/* <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-            <label htmlFor="discount">Discount</label>
-            <input
-              className="w-full border py-2 px-4 rounded-3xl"
-              type="number"
-              id="discount"
-              {...register("discount")}
-            />
-            {errors.discount && <span className='text-red-500'>{errors.discount.message}</span>}
-          </div> */}
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="cod">COD</label>
             <input
@@ -918,31 +890,6 @@ const FullDetails = () => {
             {errors.customer_reference_number && <span className='text-red-500'>{errors.customer_reference_number.message}</span>}
           </div>
         </div>
-
-        <div className="w-full flex mb-2 flex-wrap">
-
-          {/* <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-            <label htmlFor="gst">Seller GSTIN</label>
-            <input
-              className="w-full border py-2 px-4 rounded-3xl"
-              type="text"
-              id="gst"
-              {...register("gst")}
-            />
-            {errors.gst && <span className='text-red-500'>{errors.gst.message}</span>}
-          </div> */}
-
-        </div>
-        {/* <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-          <label htmlFor="Cgst">Customer GSTIN(For B2B)</label>
-          <input
-            className="w-full border py-2 px-4 rounded-3xl"
-            type="text"
-            id="Cgst"
-            {...register("Cgst")}
-          />
-          {errors.Cgst && <span className='text-red-500'>{errors.Cgst.message}</span>}
-        </div> */}
         <div className="w-full flex justify-center mt-4">
           <button
             className="bg-green-500 text-white px-6 py-2 rounded-lg"
@@ -960,7 +907,6 @@ const CreateOrder = () => {
   const [step, setStep] = useState(0)
   return (
     <div className=" py-16 w-full h-full flex flex-col items-center overflow-x-hidden overflow-y-auto">
-      {/* {step==0 && <InitialDetails setStep={setStep} />} */}
       <FullDetails />
     </div>
   );

@@ -1107,11 +1107,13 @@ const ShipList = ({ shipment, isShipOpen, setIsShipOpen, setIsShipped, getParcel
   if (!isShipOpen) return null;
   const [prices, setPrices] = useState([]);
   const [boxes, setBoxes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
     if (!isShipOpen) return;
     
     const data = async () => {
+      setIsLoading(true);
       const getBoxes = await fetch(`${API_URL}/order/domestic/boxes`, {
         method: 'POST',
         headers: {
@@ -1171,8 +1173,9 @@ const ShipList = ({ shipment, isShipOpen, setIsShipOpen, setIsShipped, getParcel
           invoiceAmount: shipment.invoice_amount 
         }),
       });
-      const prices = await getPrice.json();
-      setPrices(prices.prices);
+      const pricesData = await getPrice.json();
+      setPrices(pricesData.prices);
+      setIsLoading(false);
     };
     data();
   }, [isShipOpen, shipment]);
@@ -1189,7 +1192,11 @@ const ShipList = ({ shipment, isShipOpen, setIsShipOpen, setIsShipped, getParcel
       </DialogTitle>
       <DialogContent>
         <Box sx={{ mt: 2 }}>
-          {prices.length ? prices.map((price, index) => (
+          {isLoading ? (
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <div>Loading shipping options...</div>
+            </Box>
+          ) : prices.length ? prices.map((price, index) => (
             <ShipCard 
               setIsShipped={setIsShipped} 
               setIsShip={setIsShipOpen} 
@@ -1200,7 +1207,7 @@ const ShipList = ({ shipment, isShipOpen, setIsShipOpen, setIsShipped, getParcel
             />
           )) : (
             <Box sx={{ textAlign: 'center', py: 4 }}>
-              <div>Loading shipping options...</div>
+              <div>No shipping services are available for this shipment</div>
             </Box>
           )}
         </Box>
